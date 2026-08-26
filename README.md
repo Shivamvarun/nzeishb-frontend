@@ -2,13 +2,7 @@
 
 ## Steps to run the code
 
-Start from this directory:
-
-```text
-C:\Users\TYP0655\OneDrive - TYPSA\Desktop\arva test\nzeishb-frontend
-```
-
-Run the following commands in this exact order:
+Start from root directory and Run the following commands in this exact order:
 
 ```powershell
 pnpm approve-builds
