@@ -8,70 +8,71 @@ import { GeoJsonPolygon, Plot } from '../../core/models/app.models';
   selector: 'app-gis-viewer',
   template: `
     <div class="gis-shell">
+      <div #mapContainer class="map-container"></div>
       <div class="gis-layout">
         <section class="gis-actions">
-          <div class="panel-title">Parcel selection</div>
+          <div class="panel-title">Seleccionar parcela</div>
           <div class="action-row">
             <label>
-              Inventory parcel
+              Inventario
               <select [(ngModel)]="selectedPlotId" (change)="selectPlot(selectedPlotId)">
                 <option *ngFor="let plot of inventoryPlots" [value]="plot.id">{{ plot.name }}</option>
               </select>
             </label>
-            <button class="btn-secondary" type="button" (click)="selectPlot(selectedPlotId)">Select</button>
+            <button class="btn-secondary" type="button" (click)="selectPlot(selectedPlotId)">Seleccionar</button>
           </div>
           <div class="action-row">
-            <input type="text" placeholder="Cadastral reference" [(ngModel)]="cadastralRef" />
-            <button class="btn-secondary" type="button" (click)="searchByCadastralRef()">Search</button>
+            <input type="text" placeholder="Referencia catastral" [(ngModel)]="cadastralRef" />
+            <button class="btn-secondary" type="button" (click)="searchByCadastralRef()">Buscar</button>
           </div>
           <div class="action-row file-row">
             <label class="file-upload">GeoJSON<input type="file" accept=".geojson,application/geo+json,.json" (change)="onGeoJsonSelected($event)" /></label>
             <label class="file-upload">CAD/DXF<input type="file" accept=".dxf,.dwg" (change)="onCadSelected($event)" /></label>
-            <button class="btn-secondary" type="button" [class.active]="drawingMode" (click)="toggleDrawing()">{{ drawingMode ? 'Finish drawing' : 'Draw parcel' }}</button>
-            <button class="btn-secondary" type="button" *ngIf="drawingPoints.length" (click)="clearDrawing()">Clear</button>
+            <button class="btn-secondary" type="button" [class.active]="drawingMode" (click)="toggleDrawing()">{{ drawingMode ? 'Terminar dibujo' : 'Dibujar parcela' }}</button>
+            <button class="btn-secondary" type="button" *ngIf="drawingPoints.length" (click)="clearDrawing()">Limpiar</button>
           </div>
           <div class="layer-row">
-            <label><input type="checkbox" [(ngModel)]="showParcel" (change)="renderPlot(activePlot)"> Parcel</label>
-            <label><input type="checkbox" [(ngModel)]="showEnvelope" (change)="renderPlot(activePlot)"> Buildable envelope</label>
-            <label><input type="checkbox" [(ngModel)]="showCadLayer" (change)="renderPlot(activePlot)"> CAD overlay</label>
+            <label><input type="checkbox" [(ngModel)]="showParcel" (change)="renderPlot(activePlot)"> Parcela</label>
+            <label><input type="checkbox" [(ngModel)]="showEnvelope" (change)="renderPlot(activePlot)"> Envolvente</label>
+            <label><input type="checkbox" [(ngModel)]="showCadLayer" (change)="renderPlot(activePlot)"> Superposición CAD</label>
           </div>
           <div *ngIf="importError" class="error-message">{{ importError }}</div>
         </section>
 
         <aside class="restriction-panel">
-          <div class="panel-title">Parcel restrictions</div>
+          <div class="panel-title">Datos de parcela</div>
           <dl>
-            <div><dt>Municipality</dt><dd>{{ activePlot.municipality }}</dd></div>
-            <div><dt>PGOU zone</dt><dd>{{ activePlot.pgouZone }}</dd></div>
-            <div><dt>Climate zone</dt><dd>{{ activePlot.climateZone || 'Pending catalog' }}</dd></div>
-            <div><dt>Max height</dt><dd>{{ activePlot.maxHeightStories }} floors</dd></div>
-            <div><dt>Buildable area</dt><dd>{{ activePlot.buildableAreaMaxM2 | number }} m2</dd></div>
-            <div><dt>Max dwellings</dt><dd>{{ activePlot.maxUnits }}</dd></div>
-            <div><dt>Decree-Law 1/2025</dt><dd>{{ activePlot.decreeLaw1_2025Applied ? 'Applied' : 'Not applied' }}</dd></div>
+            <div><dt>Municipio</dt><dd>{{ activePlot.municipality }}</dd></div>
+            <div><dt>Zona PGOU</dt><dd>{{ activePlot.pgouZone }}</dd></div>
+            <div><dt>Zona climática</dt><dd>{{ activePlot.climateZone || 'Pendiente de catálogo' }}</dd></div>
+            <div><dt>Altura máx.</dt><dd>{{ activePlot.maxHeightStories }} plantas</dd></div>
+            <div><dt>Edificabilidad</dt><dd>{{ activePlot.buildableAreaMaxM2 | number }} m²</dd></div>
+            <div><dt>Viviendas máx.</dt><dd>{{ activePlot.maxUnits }}</dd></div>
+            <div><dt>D.L. 1/2025</dt><dd>{{ activePlot.decreeLaw1_2025Applied ? 'Aplicado' : 'No aplicado' }}</dd></div>
           </dl>
         </aside>
       </div>
-      <div #mapContainer class="map-container"></div>
     </div>
   `,
   styles: [`
     :host { display: block; height: 100%; min-height: 0; }
-    .gis-shell { display: grid; grid-template-rows: auto minmax(420px, 1fr); gap: 14px; height: 100%; min-height: 0; overflow: hidden; }
-    .gis-layout { position: relative; z-index: 5; display: grid; grid-template-columns: minmax(0, 1.6fr) 320px; gap: 14px; }
-    .gis-actions, .restriction-panel { position: relative; z-index: 6; padding: 14px; border-radius: 8px; background: rgba(15, 23, 42, .98); border: 1px solid rgba(148, 163, 184, .12); }
+    .gis-shell { position: relative; height: 100%; min-height: 0; overflow: hidden; }
+    .map-container { position: absolute; inset: 0; border-radius: 10px; overflow: hidden; background: #e8eeec; }
+    .gis-layout { position: absolute; z-index: 5; top: 12px; left: 12px; right: 12px; display: grid; grid-template-columns: minmax(0, 1.6fr) 300px; gap: 12px; pointer-events: none; }
+    .gis-actions, .restriction-panel { pointer-events: auto; padding: 14px; border-radius: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--color-border); box-shadow: var(--shadow); }
     .action-row, .layer-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
-    label { color: #cbd5e1; font-size: .86rem; }
-    select, input[type="text"] { min-width: 220px; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, .18); background: rgba(2, 8, 23, .95); color: #e2e8f0; }
-    .file-upload { display: inline-flex; align-items: center; padding: 10px 12px; border-radius: 6px; background: rgba(56, 189, 248, .12); color: #cfe8ff; cursor: pointer; }
+    label { color: var(--color-muted); font-size: .86rem; }
+    select, input[type="text"] { min-width: 220px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--color-border); background: #fff; color: var(--color-text); }
+    .file-upload { display: inline-flex; align-items: center; padding: 10px 12px; border-radius: 6px; background: var(--color-brand-100); color: var(--color-brand-800); cursor: pointer; font-weight: 600; }
     .file-upload input { display: none; }
-    .btn-secondary.active { border-color: #38bdf8; color: #e0f2fe; }
-    .error-message { color: #fb7185; margin-top: 10px; }
+    .btn-secondary.active { border-color: var(--color-brand-500); color: var(--color-brand-800); background: var(--color-brand-50); }
+    .error-message { color: var(--color-error); margin-top: 10px; }
     .restriction-panel dl { display: grid; gap: 8px; margin: 10px 0 0; }
     .restriction-panel div { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
-    .restriction-panel dt { color: #94a3b8; }
-    .restriction-panel dd { margin: 0; color: #e2e8f0; }
-    .map-container { position: relative; z-index: 1; width: 100%; height: 100%; min-height: 420px; border-radius: 8px; overflow: hidden; }
-    @media (max-width: 980px) { .gis-shell { overflow-y: auto; } .gis-layout { grid-template-columns: 1fr; } .map-container { height: 540px; } }
+    .restriction-panel dt { color: var(--color-muted); }
+    .restriction-panel dd { margin: 0; color: var(--color-text); }
+    :host ::ng-deep .leaflet-top.leaflet-left { top: auto; bottom: 12px; }
+    @media (max-width: 980px) { .gis-layout { grid-template-columns: 1fr; } }
   `]
 })
 export class GisViewerComponent implements AfterViewInit, OnDestroy {
@@ -248,6 +249,7 @@ export class GisViewerComponent implements AfterViewInit, OnDestroy {
   private initializeMap(plot: Plot): void {
     const [lat, lng] = plot.coordinates;
     this.map = L.map(this.mapContainerRef.nativeElement, { center: [lat, lng], zoom: 17, zoomControl: true });
+    this.map.zoomControl.setPosition('bottomleft');
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(this.map);
     this.map.on('click', event => this.onMapClick(event.latlng));
     this.resizeObserver = new ResizeObserver(() => this.invalidateMapSize());

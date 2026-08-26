@@ -2,17 +2,17 @@
   <section class="glass-panel pareto-main">
     <div class="panel-header">
       <div>
-        <h3>Pareto front explorer</h3>
-        <p>Cost, energy, industrialization and repeatability projection</p>
+        <h3>Optimización · frente de Pareto</h3>
+        <p>Proyección de coste, energía, industrialización y repetibilidad</p>
       </div>
-      <button type="button" class="btn-secondary" (click)="loadMore()" [disabled]="visibleLimit >= state.variants.length">More variants</button>
+      <button type="button" class="btn-secondary" (click)="loadMore()" [disabled]="visibleLimit >= state.variants.length">Más variantes</button>
     </div>
 
     <div class="filters">
-      <label>Max cost <input type="range" min="120000" max="220000" step="5000" [(ngModel)]="maxCost" (input)="renderChart()"><span>{{ maxCost | number }} EUR</span></label>
-      <label>Max energy <input type="range" min="15" max="70" step="1" [(ngModel)]="maxEnergy" (input)="renderChart()"><span>{{ maxEnergy }} kWh/m2a</span></label>
-      <label>Min indus. <input type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization" (input)="renderChart()"><span>{{ minIndustrialization }}%</span></label>
-      <label>3D rotation <input type="range" min="-60" max="60" step="5" [(ngModel)]="rotation" (input)="renderChart()"><span>{{ rotation }} deg</span></label>
+      <label>Coste máx. <input type="range" min="120000" max="220000" step="5000" [(ngModel)]="maxCost" (input)="renderChart()"><span>{{ maxCost | number }} €</span></label>
+      <label>Energía máx. <input type="range" min="15" max="70" step="1" [(ngModel)]="maxEnergy" (input)="renderChart()"><span>{{ maxEnergy }} kWh/m²a</span></label>
+      <label>Indus. mín. <input type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization" (input)="renderChart()"><span>{{ minIndustrialization }}%</span></label>
+      <label>Rotación 3D <input type="range" min="-60" max="60" step="5" [(ngModel)]="rotation" (input)="renderChart()"><span>{{ rotation }} °</span></label>
     </div>
 
     <div class="chart-wrapper">
@@ -21,7 +21,7 @@
   </section>
 
   <aside class="glass-panel variant-panel">
-    <div class="panel-header"><h3>Non-dominated variants</h3></div>
+    <div class="panel-header"><h3>Variantes no dominadas</h3></div>
     <div class="variant-cards-list">
       <button type="button" *ngFor="let v of filteredVariants" class="variant-card" [class.selected]="state.selectedVariant.id === v.id" (click)="selectVariant(v.id)">
         <div class="variant-header">
@@ -29,11 +29,11 @@
           <span class="tag-badge {{ v.tagClass }}">{{ v.tag }}</span>
         </div>
         <div class="variant-stats">
-          <div>Cost: {{ v.costPerUnit | number }} EUR/unit</div>
-          <div>Energy: {{ v.primaryEnergyDemandKwh }} kWh/m2a</div>
-          <div>Industrialization: {{ (v.degreeIndustrialization * 100) | number:'1.0-0' }}%</div>
+          <div>Coste: {{ v.costPerUnit | number }} €/ud</div>
+          <div>Energía: {{ v.primaryEnergyDemandKwh }} kWh/m²a</div>
+          <div>Industrialización: {{ (v.degreeIndustrialization * 100) | number:'1.0-0' }}%</div>
         </div>
-        <span class="compare-chip" [class.active]="isCompared(v.id)" (click)="compareVariant(v.id, $event)">{{ isCompared(v.id) ? 'In comparison' : 'Compare' }}</span>
+        <span class="compare-chip" [class.active]="isCompared(v.id)" (click)="compareVariant(v.id, $event)">{{ isCompared(v.id) ? 'En comparación' : 'Comparar' }}</span>
       </button>
     </div>
   </aside>

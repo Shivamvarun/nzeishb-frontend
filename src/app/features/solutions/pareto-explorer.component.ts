@@ -61,8 +61,8 @@ export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
             r: 8 + v.degreeIndustrialization * 13,
             variant: v
           })),
-          backgroundColor: variants.map(v => this.isCompared(v.id) ? 'rgba(56, 189, 248, 0.72)' : 'rgba(16, 185, 129, 0.6)'),
-          borderColor: variants.map(v => this.state.selectedVariant.id === v.id ? '#facc15' : '#10b981'),
+          backgroundColor: variants.map(v => this.isCompared(v.id) ? 'rgba(47, 111, 237, 0.72)' : 'rgba(46, 158, 90, 0.6)'),
+          borderColor: variants.map(v => this.state.selectedVariant.id === v.id ? '#e39b00' : '#1b7a4a'),
           borderWidth: 2
         }]
       },
@@ -75,8 +75,8 @@ export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
           if (index !== undefined) this.selectVariant(variants[index].id);
         },
         scales: {
-          x: { title: { display: true, text: 'Cost per dwelling + rotation projection (kEUR)' } },
-          y: { title: { display: true, text: 'Primary energy + repeatability projection' } }
+          x: { title: { display: true, text: 'Coste por vivienda + proyección (k€)', color: '#5c6b66' }, ticks: { color: '#5c6b66' } },
+          y: { title: { display: true, text: 'Energía primaria + repetibilidad', color: '#5c6b66' }, ticks: { color: '#5c6b66' } }
         },
         plugins: {
           tooltip: {

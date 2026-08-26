@@ -28,13 +28,13 @@ export class ComparatorComponent implements AfterViewInit, OnDestroy {
   get rows(): { label: string; unit: string; a: number; b: number; lowerWins: boolean }[] {
     const [a, b] = this.state.comparedVariants;
     return [
-      { label: 'Cost per dwelling', unit: 'EUR', a: a.costPerUnit, b: b.costPerUnit, lowerWins: true },
-      { label: 'Cost per m2', unit: 'EUR/m2', a: a.costPerM2, b: b.costPerM2, lowerWins: true },
-      { label: 'Primary energy', unit: 'kWh/m2a', a: a.primaryEnergyDemandKwh, b: b.primaryEnergyDemandKwh, lowerWins: true },
-      { label: 'Carbon footprint', unit: 'kgCO2e/m2', a: a.carbonFootprintKgCo2, b: b.carbonFootprintKgCo2, lowerWins: true },
-      { label: 'Industrialization', unit: '%', a: a.degreeIndustrialization * 100, b: b.degreeIndustrialization * 100, lowerWins: false },
-      { label: 'Repeatability', unit: '%', a: a.repeatabilityIndex * 100, b: b.repeatabilityIndex * 100, lowerWins: false },
-      { label: 'Spatial efficiency', unit: '%', a: a.efficiencyRatio * 100, b: b.efficiencyRatio * 100, lowerWins: false },
+      { label: 'Coste por vivienda', unit: '€', a: a.costPerUnit, b: b.costPerUnit, lowerWins: true },
+      { label: 'Coste por m²', unit: '€/m²', a: a.costPerM2, b: b.costPerM2, lowerWins: true },
+      { label: 'Energía primaria', unit: 'kWh/m²a', a: a.primaryEnergyDemandKwh, b: b.primaryEnergyDemandKwh, lowerWins: true },
+      { label: 'Huella de carbono', unit: 'kgCO₂e/m²', a: a.carbonFootprintKgCo2, b: b.carbonFootprintKgCo2, lowerWins: true },
+      { label: 'Industrialización', unit: '%', a: a.degreeIndustrialization * 100, b: b.degreeIndustrialization * 100, lowerWins: false },
+      { label: 'Repetibilidad', unit: '%', a: a.repeatabilityIndex * 100, b: b.repeatabilityIndex * 100, lowerWins: false },
+      { label: 'Eficiencia espacial', unit: '%', a: a.efficiencyRatio * 100, b: b.efficiencyRatio * 100, lowerWins: false },
       { label: 'BREEAM', unit: 'pts', a: a.breeamScore, b: b.breeamScore, lowerWins: false },
       { label: 'VERDE', unit: 'pts', a: a.verdeScore, b: b.verdeScore, lowerWins: false }
     ];
@@ -57,8 +57,8 @@ export class ComparatorComponent implements AfterViewInit, OnDestroy {
     this.radarChart = new Chart(canvas, {
       type: 'radar',
       data: {
-        labels: ['Cost', 'nZEB', 'Industrialization', 'BREEAM/VERDE', 'Spatial efficiency'],
-        datasets: [this.datasetFor(v1, '#10b981'), this.datasetFor(v2, '#06b6d4')]
+        labels: ['Coste', 'nZEB', 'Industrialización', 'BREEAM/VERDE', 'Eficiencia espacial'],
+        datasets: [this.datasetFor(v1, '#2e9e5a'), this.datasetFor(v2, '#2f6fed')]
       },
       options: { responsive: false, animation: false, maintainAspectRatio: false, scales: { r: { min: 0, max: 100 } } }
     });

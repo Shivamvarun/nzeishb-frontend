@@ -17,46 +17,46 @@ interface BimElementInfo {
   selector: 'app-bim-viewer',
   template: `
     <div class="bim-viewer">
-      <div class="bim-toolbar" role="toolbar" aria-label="BIM viewer controls">
+      <div class="bim-toolbar" role="toolbar" aria-label="Controles del visor BIM">
         <label>
-          Floor
+          Planta
           <select [ngModel]="isolatedFloorLabel" (ngModelChange)="setFloor($event)">
-            <option value="all">All</option>
-            <option *ngFor="let floor of floors" [value]="floor">Floor {{ floor + 1 }}</option>
+            <option value="all">Todas</option>
+            <option *ngFor="let floor of floors" [value]="floor">Planta {{ floor + 1 }}</option>
           </select>
         </label>
-        <button type="button" class="icon-btn" title="Reset camera" (click)="resetCamera()">Reset</button>
-        <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Section cut" (click)="toggleSection()">Section</button>
-        <button type="button" class="icon-btn" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
+        <button type="button" class="icon-btn" title="Restablecer cámara" (click)="resetCamera()">Restablecer</button>
+        <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Corte de sección" (click)="toggleSection()">Sección</button>
+        <button type="button" class="icon-btn" title="Cambiar proyección" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
       </div>
       <div #container class="bim-container" (click)="selectElement($event)"></div>
       <aside class="property-panel" *ngIf="selectedElement">
-        <div class="panel-title">Element properties</div>
+        <div class="panel-title">Propiedades del elemento</div>
         <dl>
           <div><dt>ID</dt><dd>{{ selectedElement.id }}</dd></div>
-          <div><dt>Type</dt><dd>{{ selectedElement.type }}</dd></div>
-          <div><dt>Floor</dt><dd>{{ selectedElement.floor === 'roof' ? 'Roof' : selectedElement.floor + 1 }}</dd></div>
-          <div><dt>Area</dt><dd>{{ selectedElement.areaM2 }} m2</dd></div>
+          <div><dt>Tipo</dt><dd>{{ selectedElement.type }}</dd></div>
+          <div><dt>Planta</dt><dd>{{ selectedElement.floor === 'roof' ? 'Cubierta' : selectedElement.floor + 1 }}</dd></div>
+          <div><dt>Área</dt><dd>{{ selectedElement.areaM2 }} m²</dd></div>
           <div><dt>Material</dt><dd>{{ selectedElement.material }}</dd></div>
         </dl>
       </aside>
-      <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
+      <div class="viewer-hint">Arrastrar: rotar · rueda: zoom · botón derecho: pan</div>
     </div>
   `,
   styles: [`
     .bim-viewer { position: relative; width: 100%; height: 100%; min-height: 520px; }
-    .bim-container { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #0e171e; }
-    .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; background: rgba(2, 6, 23, .78); border: 1px solid rgba(148, 163, 184, .18); }
-    .bim-toolbar label { display: inline-flex; gap: 8px; align-items: center; color: #cbd5e1; font-size: .78rem; }
-    .bim-toolbar select { border: 1px solid rgba(148, 163, 184, .24); border-radius: 6px; background: #071428; color: #e2e8f0; padding: 7px 8px; }
-    .icon-btn { border: 1px solid rgba(148, 163, 184, .22); border-radius: 6px; background: rgba(15, 23, 42, .9); color: #e2e8f0; padding: 8px 10px; cursor: pointer; }
-    .icon-btn.active { border-color: #38bdf8; background: rgba(14, 165, 233, .18); }
-    .property-panel { position: absolute; z-index: 3; top: 76px; right: 14px; width: min(280px, calc(100% - 28px)); padding: 14px; border-radius: 8px; background: rgba(2, 6, 23, .82); border: 1px solid rgba(148, 163, 184, .18); color: #e2e8f0; }
+    .bim-container { width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #eef2f0; }
+    .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--color-border); box-shadow: var(--shadow); }
+    .bim-toolbar label { display: inline-flex; gap: 8px; align-items: center; color: var(--color-muted); font-size: .78rem; }
+    .bim-toolbar select { border: 1px solid var(--color-border); border-radius: 6px; background: #fff; color: var(--color-text); padding: 7px 8px; }
+    .icon-btn { border: 1px solid var(--color-border); border-radius: 6px; background: #fff; color: var(--color-text); padding: 8px 10px; cursor: pointer; }
+    .icon-btn.active { border-color: var(--color-brand-500); background: var(--color-brand-100); color: var(--color-brand-800); }
+    .property-panel { position: absolute; z-index: 3; top: 76px; right: 14px; width: min(280px, calc(100% - 28px)); padding: 14px; border-radius: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--color-border); color: var(--color-text); box-shadow: var(--shadow); }
     .property-panel dl { margin: 10px 0 0; display: grid; gap: 8px; }
     .property-panel div { display: grid; grid-template-columns: 76px 1fr; gap: 10px; }
-    .property-panel dt { color: #94a3b8; }
+    .property-panel dt { color: var(--color-muted); }
     .property-panel dd { margin: 0; }
-    .viewer-hint { position: absolute; left: 16px; bottom: 16px; padding: 8px 10px; border-radius: 8px; color: #cbd5e1; background: rgba(2, 6, 23, .75); font-size: .8rem; pointer-events: none; }
+    .viewer-hint { position: absolute; left: 16px; bottom: 16px; padding: 8px 10px; border-radius: 8px; color: var(--color-muted); background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; border: 1px solid var(--color-border); }
     @media (max-width: 760px) { .bim-viewer { min-height: 620px; } .property-panel { top: auto; bottom: 54px; } }
   `]
 })
@@ -98,7 +98,7 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
     const height = container.clientHeight || 600;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x0e171e);
+    this.scene.background = new THREE.Color(0xeef2f0);
     this.perspectiveCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.orthographicCamera = this.createOrthographicCamera(width, height);
     this.camera = this.perspectiveCamera;
@@ -121,7 +121,7 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
     dirLight.position.set(30, 50, 20);
     this.scene.add(dirLight);
 
-    const gridHelper = new THREE.GridHelper(100, 50, 0x10b981, 0x1f2937);
+    const gridHelper = new THREE.GridHelper(100, 50, 0x2e9e5a, 0xd5ddd8);
     gridHelper.position.y = -0.05;
     this.scene.add(gridHelper);
     this.scene.add(this.buildingGroup);

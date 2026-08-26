@@ -29,12 +29,12 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   get metrics(): { id: string; label: string; value: string; detail: string }[] {
     const v = this.state.selectedVariant;
     return [
-      { id: 'cost', label: 'Cost per dwelling', value: `${v.costPerUnit.toLocaleString()} EUR`, detail: `${v.costPerM2.toLocaleString()} EUR/m2 including prefabrication assumptions.` },
-      { id: 'energy', label: 'Primary energy', value: `${v.primaryEnergyDemandKwh} kWh/m2a`, detail: `${v.zebCompliancePct}% nZEB/ZEB compliance score.` },
-      { id: 'water', label: 'Water demand', value: `${this.waterDemand(v).toLocaleString()} m3/yr`, detail: 'Mock KPI based on dwellings and compactness until backend KPI service is connected.' },
-      { id: 'waste', label: 'Construction waste', value: `${this.waste(v)} t`, detail: 'Reduced by industrialization and repeatability factors.' },
-      { id: 'carbon', label: 'Carbon footprint', value: `${v.carbonFootprintKgCo2} kgCO2e/m2`, detail: `Structure ${v.structureId}, facade ${v.facadeId}.` },
-      { id: 'timeline', label: 'Estimated schedule', value: `${this.timeline(v)} weeks`, detail: 'Timeline estimate improves as industrialization increases.' }
+      { id: 'cost', label: 'Coste por vivienda', value: `${v.costPerUnit.toLocaleString()} €`, detail: `${v.costPerM2.toLocaleString()} €/m² incluyendo hipótesis de prefabricación.` },
+      { id: 'energy', label: 'Energía primaria', value: `${v.primaryEnergyDemandKwh} kWh/m²a`, detail: `${v.zebCompliancePct}% de cumplimiento nZEB/ZEB.` },
+      { id: 'water', label: 'Demanda de agua', value: `${this.waterDemand(v).toLocaleString()} m³/año`, detail: 'KPI estimado a partir de viviendas y compactidad hasta conectar el servicio backend.' },
+      { id: 'waste', label: 'Residuos de obra', value: `${this.waste(v)} t`, detail: 'Reducido por industrialización y repetibilidad.' },
+      { id: 'carbon', label: 'Huella de carbono', value: `${v.carbonFootprintKgCo2} kgCO₂e/m²`, detail: `Estructura ${v.structureId}, fachada ${v.facadeId}.` },
+      { id: 'timeline', label: 'Plazo estimado', value: `${this.timeline(v)} semanas`, detail: 'El plazo mejora al aumentar la industrialización.' }
     ];
   }
 
@@ -53,14 +53,14 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.chart = new Chart(canvas, {
       type: 'bar',
       data: {
-        labels: ['Cost/m2', 'Energy', 'Water', 'Waste', 'Carbon', 'Timeline'],
+        labels: ['Coste/m²', 'Energía', 'Agua', 'Residuos', 'Carbono', 'Plazo'],
         datasets: [{
           label: v.name,
           data: [v.costPerM2 / 25, v.primaryEnergyDemandKwh, this.waterDemand(v) / 100, this.waste(v), v.carbonFootprintKgCo2 / 10, this.timeline(v)],
-          backgroundColor: ['#38bdf8', '#10b981', '#06b6d4', '#f59e0b', '#ef4444', '#a78bfa']
+          backgroundColor: ['#2f6fed', '#2e9e5a', '#7b4db8', '#e39b00', '#c62828', '#e05aa8']
         }]
       },
-      options: { responsive: false, animation: false, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      options: { responsive: false, animation: false, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#5c6b66' } }, y: { ticks: { color: '#5c6b66' } } } }
     });
   }
 }
