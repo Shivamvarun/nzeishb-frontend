@@ -1,0 +1,27 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="panel-header"><div><div class="brand-logo">ARVA</div><div class="badge-tag">AVRA · Junta de Andalucía</div></div></div>
+    <app-vpo-form></app-vpo-form>
+  </aside>
+  <main class="workspace">
+    <header class="app-header">
+      <div class="nav-tabs">
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'gis'" (click)="setView('gis')">Visor GIS Parcela</button>
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'bim'" (click)="setView('bim')">Visor 3D BIM</button>
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'dashboard'" (click)="setView('dashboard')">Cuadro Multicriterio</button>
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'pareto'" (click)="setView('pareto')">Frente de Pareto</button>
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'comparator'" (click)="setView('comparator')">Comparador</button>
+        <button type="button" class="tab-btn" [class.active]="(state$ | async)?.activeView === 'reports'" (click)="setView('reports')">Entregables</button>
+      </div>
+      <button class="btn-primary" [disabled]="(state$ | async)?.isSaving" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Guardando…' : 'Guardar escenario' }}</button>
+    </header>
+    <p class="app-error" role="status" aria-live="polite" *ngIf="(state$ | async)?.error as error">{{ error }}</p>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'gis'"><app-gis-viewer></app-gis-viewer></section>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'bim'"><app-bim-viewer></app-bim-viewer></section>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'dashboard'"><app-dashboard></app-dashboard></section>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'pareto'"><app-pareto-explorer></app-pareto-explorer></section>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'comparator'"><app-comparator></app-comparator></section>
+    <section class="workspace-view" *ngIf="(state$ | async)?.activeView === 'reports'"><app-reports-export></app-reports-export></section>
+  </main>
+  <aside class="right-sidebar"><app-rag-chatbot></app-rag-chatbot></aside>
+</div>

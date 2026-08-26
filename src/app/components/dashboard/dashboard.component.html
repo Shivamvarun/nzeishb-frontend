@@ -1,0 +1,33 @@
+<div class="glass-panel dashboard-shell">
+  <div class="panel-header">
+    <div>
+      <h2>Multicriteria dashboard</h2>
+      <p>Live KPI view for <strong>{{ state.selectedVariant.name }}</strong></p>
+    </div>
+    <span class="badge-tag">nZEB/ZEB {{ state.selectedVariant.zebCompliancePct }}%</span>
+  </div>
+
+  <div class="metrics-grid">
+    <button type="button" class="metric-card" *ngFor="let metric of metrics" [class.active]="activeDrilldown === metric.id" (click)="setDrilldown(metric.id)">
+      <span class="metric-label">{{ metric.label }}</span>
+      <span class="metric-value">{{ metric.value }}</span>
+      <small>{{ metric.detail }}</small>
+    </button>
+  </div>
+
+  <div class="dashboard-lower">
+    <section class="chart-panel">
+      <canvas #dashboardChart></canvas>
+    </section>
+    <section class="drilldown-panel">
+      <h3>KPI drill-down</h3>
+      <p *ngFor="let metric of metrics" [hidden]="activeDrilldown !== metric.id">{{ metric.detail }}</p>
+      <dl>
+        <div><dt>Built / usable area</dt><dd>{{ state.selectedVariant.builtAreaM2 | number }} / {{ state.selectedVariant.usableAreaM2 | number }} m2</dd></div>
+        <div><dt>Spatial efficiency</dt><dd>{{ (state.selectedVariant.efficiencyRatio * 100) | number:'1.0-1' }}%</dd></div>
+        <div><dt>BREEAM / VERDE</dt><dd>{{ state.selectedVariant.breeamScore }} / {{ state.selectedVariant.verdeScore }}</dd></div>
+        <div><dt>Wet core / HVAC</dt><dd>{{ state.selectedVariant.wetCoreId }} / {{ state.selectedVariant.hvacCentralized ? 'Centralized' : 'Distributed' }}</dd></div>
+      </dl>
+    </section>
+  </div>
+</div>

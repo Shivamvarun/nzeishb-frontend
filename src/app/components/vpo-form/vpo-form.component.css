@@ -1,0 +1,14 @@
+.form-group { margin-bottom: 16px; }
+.form-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.form-value { color: #cbd5e1; }
+input[type='range'] { width: 100%; }
+small { display: block; color: #94a3b8; margin-top: 4px; }
+.full-width { width: 100%; margin-top: 12px; }
+.scenario-panel { margin-top: 14px; }
+.compact { padding: 7px 10px; border-radius: 6px; }
+.scenario-list { display: grid; gap: 8px; }
+.scenario-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 8px; border: 1px solid rgba(148, 163, 184, .12); border-radius: 8px; }
+.scenario-row.active { border-color: #38bdf8; background: rgba(14, 165, 233, .12); }
+.scenario-open { min-width: 0; text-align: left; color: #e2e8f0; background: transparent; border: 0; cursor: pointer; }
+.scenario-open span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.danger-btn { border: 1px solid rgba(248, 113, 113, .35); border-radius: 6px; background: rgba(127, 29, 29, .22); color: #fecaca; padding: 7px 8px; cursor: pointer; }

@@ -1,0 +1,31 @@
+<div class="glass-panel reports-shell">
+  <div class="panel-header">
+    <div>
+      <h2>Technical deliverables</h2>
+      <p>Artifacts are generated through the ARVA API port.</p>
+    </div>
+  </div>
+
+  <div class="report-grid">
+    <article class="report-card" *ngFor="let artifact of artifacts">
+      <h3>{{ artifact.title }}</h3>
+      <p>{{ artifact.description }}</p>
+      <button class="btn-primary" [disabled]="isGenerating(artifact.kind)" (click)="export(artifact.kind)">
+        {{ isGenerating(artifact.kind) ? 'Generating...' : artifact.action }}
+      </button>
+    </article>
+  </div>
+
+  <section class="history-panel">
+    <h3>Generation history</h3>
+    <div class="empty-state" *ngIf="!state.artifactHistory.length">No generated artifacts yet.</div>
+    <article class="history-row" *ngFor="let item of state.artifactHistory">
+      <div>
+        <strong>{{ item.fileName }}</strong>
+        <span>{{ item.created }} | {{ item.status }}</span>
+        <p>{{ item.preview }}</p>
+      </div>
+      <button class="btn-secondary" *ngIf="item.downloadUrl" (click)="download(item.downloadUrl, item.fileName)">Download</button>
+    </article>
+  </section>
+</div>

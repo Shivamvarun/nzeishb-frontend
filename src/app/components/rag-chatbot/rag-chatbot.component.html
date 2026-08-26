@@ -1,0 +1,6 @@
+<div class="glass-panel chat-panel" style="height:100%; display:flex; flex-direction:column">
+  <div class="panel-header"><div><h2>Asistente normativo</h2><p>Consulta normativa y trazabilidad reglamentaria.</p></div></div>
+  <div class="chip-suggestions"><button class="chip-btn" (click)="suggest('¿Cumple la variante con el CTE DB-HE 0?')">¿Cumple CTE DB-HE 0?</button><button class="chip-btn" (click)="suggest('¿Qué exige el Decreto-Ley 1/2025?')">¿Decreto-Ley 1/2025?</button></div>
+  <div class="chat-messages"><div *ngFor="let msg of state.chatMessages" class="chat-bubble" [ngClass]="msg.sender"><div>{{ msg.text }}</div><small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }}</small></div></div>
+  <div class="chat-input-area"><input class="custom-input" [(ngModel)]="inputText" placeholder="Haz una pregunta…" (keyup.enter)="sendMessage()" [disabled]="isSending"><button class="btn-primary" (click)="sendMessage()" [disabled]="isSending">{{ isSending ? 'Consultando…' : 'Enviar' }}</button></div>
+</div>

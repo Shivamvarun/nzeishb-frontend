@@ -1,0 +1,47 @@
+<div class="glass-panel comparator-shell">
+  <div class="panel-header">
+    <div>
+      <h2>Side-by-side solution comparison</h2>
+      <p>Pick two variants and review the trade-offs.</p>
+    </div>
+  </div>
+
+  <div class="picker-grid">
+    <label>Variant A
+      <select [ngModel]="state.comparedVariants[0].id" (ngModelChange)="setCompared(0, $event)">
+        <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
+      </select>
+    </label>
+    <label>Variant B
+      <select [ngModel]="state.comparedVariants[1].id" (ngModelChange)="setCompared(1, $event)">
+        <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="comparison-grid">
+    <section class="comparison-column">
+      <h3>{{ state.comparedVariants[0].name }}</h3>
+      <p>{{ state.comparedVariants[0].tag }} | {{ state.comparedVariants[0].stories }} floors | {{ state.comparedVariants[0].housingUnits }} dwellings</p>
+    </section>
+    <section class="comparison-column">
+      <h3>{{ state.comparedVariants[1].name }}</h3>
+      <p>{{ state.comparedVariants[1].tag }} | {{ state.comparedVariants[1].stories }} floors | {{ state.comparedVariants[1].housingUnits }} dwellings</p>
+    </section>
+  </div>
+
+  <table class="comparison-table">
+    <thead><tr><th>KPI</th><th>{{ state.comparedVariants[0].name }}</th><th>{{ state.comparedVariants[1].name }}</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let row of rows">
+        <td>{{ row.label }}</td>
+        <td [class.winner-cell]="winner(row, 'a')">{{ format(row.a) }} {{ row.unit }}</td>
+        <td [class.winner-cell]="winner(row, 'b')">{{ format(row.b) }} {{ row.unit }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="radar-panel">
+    <canvas #comparisonRadar></canvas>
+  </div>
+</div>
