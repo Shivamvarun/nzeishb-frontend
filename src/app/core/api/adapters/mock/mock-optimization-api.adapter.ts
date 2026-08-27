@@ -9,11 +9,11 @@ export class MockOptimizationApiAdapter implements OptimizationApiPort {
     await delay(500);
     return mockParetoVariants.map((variant, index) => ({
       ...variant,
-      housingUnits: index === 0 ? params.targetUnits : Math.max(1, params.targetUnits - 2)
+      housingUnits: Math.max(1, params.targetUnits + ((index % 3) - 1)),
+      builtAreaM2: Math.min(params.buildableAreaM2, variant.builtAreaM2),
+      stories: Math.min(params.maxHeightStories, variant.stories)
     }));
   }
 }
 
-function delay(milliseconds: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
+function delay(milliseconds: number): Promise<void> { return new Promise(resolve => setTimeout(resolve, milliseconds)); }

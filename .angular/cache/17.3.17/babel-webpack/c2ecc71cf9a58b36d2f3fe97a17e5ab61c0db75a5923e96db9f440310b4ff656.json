@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const AI_API = new InjectionToken('AI_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

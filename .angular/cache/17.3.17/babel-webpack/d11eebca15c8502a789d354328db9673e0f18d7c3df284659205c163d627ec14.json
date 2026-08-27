@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const OPTIMIZATION_API = new InjectionToken('OPTIMIZATION_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

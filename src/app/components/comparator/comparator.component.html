@@ -1,18 +1,20 @@
-<div class="glass-panel comparator-shell">
+
+<div class="comparator-shell">
   <div class="panel-header">
     <div>
-      <h2>Comparador de soluciones</h2>
-      <p>Selecciona dos variantes y revisa los compromisos.</p>
+      <span class="eyebrow">SOLUTION COMPARISON</span>
+      <h2>Side-by-side solution comparison</h2>
+      <p>Pick two variants and review the trade-offs.</p>
     </div>
   </div>
 
   <div class="picker-grid">
-    <label>Variante A
+    <label>Variant A
       <select [ngModel]="state.comparedVariants[0].id" (ngModelChange)="setCompared(0, $event)">
         <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
       </select>
     </label>
-    <label>Variante B
+    <label>Variant B
       <select [ngModel]="state.comparedVariants[1].id" (ngModelChange)="setCompared(1, $event)">
         <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
       </select>
@@ -22,11 +24,11 @@
   <div class="comparison-grid">
     <section class="comparison-column">
       <h3>{{ state.comparedVariants[0].name }}</h3>
-      <p>{{ state.comparedVariants[0].tag }} | {{ state.comparedVariants[0].stories }} plantas | {{ state.comparedVariants[0].housingUnits }} viviendas</p>
+      <p>{{ state.comparedVariants[0].tag }} · {{ state.comparedVariants[0].stories }} floors · {{ state.comparedVariants[0].housingUnits }} dwellings</p>
     </section>
     <section class="comparison-column">
       <h3>{{ state.comparedVariants[1].name }}</h3>
-      <p>{{ state.comparedVariants[1].tag }} | {{ state.comparedVariants[1].stories }} plantas | {{ state.comparedVariants[1].housingUnits }} viviendas</p>
+      <p>{{ state.comparedVariants[1].tag }} · {{ state.comparedVariants[1].stories }} floors · {{ state.comparedVariants[1].housingUnits }} dwellings</p>
     </section>
   </div>
 
@@ -40,6 +42,37 @@
       </tr>
     </tbody>
   </table>
+
+  <section class="comparison-3d" aria-label="3D comparison preview">
+    <div class="comparison-3d-header">
+      <strong>3D solution preview</strong>
+      <span>Interactive comparison-ready mock geometry</span>
+    </div>
+    <svg viewBox="0 0 1000 290" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Two isometric building previews">
+      <polygon class="model-base" points="120,230 360,170 485,215 245,275" />
+      <g class="model-left">
+        <polygon points="175,175 300,142 378,170 253,203" />
+        <polygon points="175,175 253,203 253,250 175,222" />
+        <polygon points="253,203 378,170 378,216 253,250" />
+        <polygon class="model-window" points="205,177 226,172 226,196 205,202" />
+        <polygon class="model-window" points="236,169 257,164 257,189 236,194" />
+        <polygon class="model-window" points="286,160 307,155 307,179 286,184" />
+        <polygon class="model-window" points="318,151 339,146 339,171 318,176" />
+      </g>
+      <polygon class="model-base" points="530,230 770,170 895,215 655,275" />
+      <g class="model-right">
+        <polygon points="585,175 710,142 788,170 663,203" />
+        <polygon points="585,175 663,203 663,250 585,222" />
+        <polygon points="663,203 788,170 788,216 663,250" />
+        <polygon class="model-window" points="615,177 636,172 636,196 615,202" />
+        <polygon class="model-window" points="646,169 667,164 667,189 646,194" />
+        <polygon class="model-window" points="696,160 717,155 717,179 696,184" />
+        <polygon class="model-window" points="728,151 749,146 749,171 728,176" />
+      </g>
+      <text class="model-label" x="210" y="40">{{ state.comparedVariants[0].name }}</text>
+      <text class="model-label" x="620" y="40">{{ state.comparedVariants[1].name }}</text>
+    </svg>
+  </section>
 
   <div class="radar-panel">
     <canvas #comparisonRadar></canvas>

@@ -1,0 +1,20 @@
+<div class="page design-page">
+  <div class="page-heading">
+    <div><span class="eyebrow">SCENARIO BUILDER</span><h1>Scenario</h1><p>Set the planning criteria that become inputs to the optimisation context.</p></div>
+    <span class="scenario-badge">{{ state.activeScenario.name }}</span>
+  </div>
+  <div class="design-grid">
+    <app-vpo-form></app-vpo-form>
+    <section class="surface design-summary">
+      <span class="eyebrow">CURRENT DESIGN INPUT</span>
+      <h2>{{ state.activePlot.name }}</h2>
+      <div class="summary-grid">
+        <div><span>Buildable area</span><strong>{{ state.vpoParams.buildableAreaM2 | number }} m²</strong></div>
+        <div><span>Target dwellings</span><strong>{{ state.vpoParams.targetUnits }}</strong></div>
+        <div><span>Maximum height</span><strong>{{ state.vpoParams.maxHeightStories }} floors</strong></div>
+        <div><span>Planning zone</span><strong>{{ state.activePlot.pgouZone }}</strong></div>
+      </div>
+      <div class="design-note">The browser only collects the scenario inputs. Context assembly and optimisation remain backend responsibilities, as defined by the PoC documentation.</div>
+    </section>
+  </div>
+</div>

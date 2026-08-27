@@ -1,0 +1,20 @@
+
+<div class="solutions-page">
+  <div class="page-heading">
+    <div><span class="eyebrow">SOLUTION MANAGER</span><h1>Solutions</h1><p>Inspect optimisation results and compare alternatives. Persisted solution management remains a backend responsibility.</p></div>
+    <div class="solution-tabs" role="tablist"><button type="button" [class.active]="mode === 'tree'" (click)="mode='tree'">Solution tree</button><button type="button" [class.active]="mode === 'compare'" (click)="mode='compare'">Compare</button></div>
+  </div>
+
+  <section class="solution-manager-card" *ngIf="mode === 'tree'">
+    <div class="section-heading"><div><span class="eyebrow">CURRENT OPTIMISATION RESULT</span><h2>Candidate solutions</h2><p>The optimisation service supplies the candidates. The Solution Manager will own persisted solution versions when its gateway contract is connected.</p></div><span class="status-badge">{{ state.variants.length }} candidates</span></div>
+    <div class="solution-list">
+      <article class="solution-card" *ngFor="let variant of state.variants" [class.selected]="state.selectedVariant.id === variant.id">
+        <div class="solution-card-main"><div><span class="solution-status">{{ variant.tag }}</span><h3>{{ variant.name }}</h3><p>{{ variant.housingUnits }} dwellings · {{ variant.stories }} floors · {{ variant.costPerUnit | number }} € / dwelling</p></div><button type="button" class="btn-secondary" [class.selected-button]="state.selectedVariant.id === variant.id" (click)="selectVariant(variant.id)">{{ state.selectedVariant.id === variant.id ? 'Selected' : 'Select' }}</button></div>
+        <div class="solution-selected-note" *ngIf="state.selectedVariant.id === variant.id">Current selected solution · ready for comparison / IFC flow</div>
+      </article>
+    </div>
+    <div class="solution-footer"><span class="solution-note">Scenario history is intentionally kept in the Scenario workflow; persisted Solution Manager data will come from the backend.</span><button type="button" class="btn-primary" [disabled]="state.selectedVariant.id === 'loading-variant'" (click)="openComparison()">Compare selected</button></div>
+  </section>
+
+  <section class="comparison-wrapper" *ngIf="mode === 'compare'"><app-comparator></app-comparator></section>
+</div>

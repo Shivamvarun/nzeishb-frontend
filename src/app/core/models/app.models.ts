@@ -1,5 +1,5 @@
 /** Shared frontend domain contracts; kept framework-independent for BFF contract reuse. */
-export type ActiveView = 'gis' | 'bim' | 'dashboard' | 'pareto' | 'comparator' | 'reports';
+export type ActiveView = 'spatial' | 'catalog' | 'scenario' | 'optimization' | 'bim' | 'solutions' | 'reports';
 
 export interface GeoJsonPolygon {
   readonly type: 'Polygon';

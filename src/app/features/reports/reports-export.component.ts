@@ -12,9 +12,9 @@ export class ReportsExportComponent {
   generating = new Set<ArtifactKind>();
 
   readonly artifacts: { kind: ArtifactKind; title: string; description: string; action: string }[] = [
-    { kind: 'ifc', title: 'IFC', description: 'Modelo BIM LOD 400, jerarquía IFC y metadatos técnicos.', action: 'Exportar IFC' },
-    { kind: 'budget', title: 'Excel', description: 'Presupuesto de fabricación, transporte, montaje e indicadores.', action: 'Exportar Excel' },
-    { kind: 'report', title: 'Informe', description: 'Informe de cumplimiento normativo con KPIs trazables.', action: 'Exportar informe' }
+    { kind: 'ifc', title: 'BIM IFC model (LOD 400)', description: 'IFC hierarchy, technical PSETs and model metadata.', action: 'Generate IFC' },
+    { kind: 'budget', title: 'Detailed budget', description: 'Manufacturing, transport, assembly and KPI cost summary.', action: 'Generate budget' },
+    { kind: 'report', title: 'Regulatory report', description: 'Traceable compliance report with deterministic KPI references.', action: 'Generate report' }
   ];
 
   constructor(private readonly store: StoreService) {

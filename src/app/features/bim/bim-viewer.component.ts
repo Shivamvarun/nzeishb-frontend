@@ -17,46 +17,48 @@ interface BimElementInfo {
   selector: 'app-bim-viewer',
   template: `
     <div class="bim-viewer">
-      <div class="bim-toolbar" role="toolbar" aria-label="Controles del visor BIM">
+      <div class="bim-toolbar" role="toolbar" aria-label="BIM viewer controls">
         <label>
-          Planta
+          Floor
           <select [ngModel]="isolatedFloorLabel" (ngModelChange)="setFloor($event)">
-            <option value="all">Todas</option>
-            <option *ngFor="let floor of floors" [value]="floor">Planta {{ floor + 1 }}</option>
+            <option value="all">All</option>
+            <option *ngFor="let floor of floors" [value]="floor">Floor {{ floor + 1 }}</option>
           </select>
         </label>
-        <button type="button" class="icon-btn" title="Restablecer cámara" (click)="resetCamera()">Restablecer</button>
-        <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Corte de sección" (click)="toggleSection()">Sección</button>
-        <button type="button" class="icon-btn" title="Cambiar proyección" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
+        <button type="button" class="icon-btn" title="Reset camera" (click)="resetCamera()">Reset</button>
+        <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Section cut" (click)="toggleSection()">Section</button>
+        <button type="button" class="icon-btn" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
+        <button type="button" class="primary-btn" [disabled]="isGenerating" (click)="generateIfc()">{{ isGenerating ? 'Generating IFC…' : 'Generate IFC' }}</button>
       </div>
+      <div class="generation-error" *ngIf="generationError">{{ generationError }}</div>
       <div #container class="bim-container" (click)="selectElement($event)"></div>
       <aside class="property-panel" *ngIf="selectedElement">
-        <div class="panel-title">Propiedades del elemento</div>
+        <div class="panel-title">Element properties</div>
         <dl>
           <div><dt>ID</dt><dd>{{ selectedElement.id }}</dd></div>
-          <div><dt>Tipo</dt><dd>{{ selectedElement.type }}</dd></div>
-          <div><dt>Planta</dt><dd>{{ selectedElement.floor === 'roof' ? 'Cubierta' : selectedElement.floor + 1 }}</dd></div>
-          <div><dt>Área</dt><dd>{{ selectedElement.areaM2 }} m²</dd></div>
+          <div><dt>Type</dt><dd>{{ selectedElement.type }}</dd></div>
+          <div><dt>Floor</dt><dd>{{ selectedElement.floor === 'roof' ? 'Roof' : selectedElement.floor + 1 }}</dd></div>
+          <div><dt>Area</dt><dd>{{ selectedElement.areaM2 }} m2</dd></div>
           <div><dt>Material</dt><dd>{{ selectedElement.material }}</dd></div>
         </dl>
       </aside>
-      <div class="viewer-hint">Arrastrar: rotar · rueda: zoom · botón derecho: pan</div>
+      <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
     </div>
   `,
   styles: [`
     .bim-viewer { position: relative; width: 100%; height: 100%; min-height: 520px; }
-    .bim-container { width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #eef2f0; }
-    .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--color-border); box-shadow: var(--shadow); }
-    .bim-toolbar label { display: inline-flex; gap: 8px; align-items: center; color: var(--color-muted); font-size: .78rem; }
-    .bim-toolbar select { border: 1px solid var(--color-border); border-radius: 6px; background: #fff; color: var(--color-text); padding: 7px 8px; }
-    .icon-btn { border: 1px solid var(--color-border); border-radius: 6px; background: #fff; color: var(--color-text); padding: 8px 10px; cursor: pointer; }
-    .icon-btn.active { border-color: var(--color-brand-500); background: var(--color-brand-100); color: var(--color-brand-800); }
-    .property-panel { position: absolute; z-index: 3; top: 76px; right: 14px; width: min(280px, calc(100% - 28px)); padding: 14px; border-radius: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--color-border); color: var(--color-text); box-shadow: var(--shadow); }
+    .bim-container { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #f7fbf8; }
+    .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; background: rgba(255,255,255,.96); border: 1px solid #d9e2dc; }
+    .bim-toolbar label { display: inline-flex; gap: 8px; align-items: center; color: #1f2937; font-size: .78rem; }
+    .bim-toolbar select { border: 1px solid rgba(148, 163, 184, .24); border-radius: 6px; background: #fff; color: #1f2937; padding: 7px 8px; }
+    .icon-btn { border: 1px solid rgba(148, 163, 184, .22); border-radius: 6px; background: #fff; color: #1f2937; padding: 8px 10px; cursor: pointer; }
+    .icon-btn.active { border-color: #087021; background: #f1f8f2; }.primary-btn{border:1px solid #087021;border-radius:5px;background:#087021;color:#fff;padding:8px 10px;cursor:pointer;font-weight:800}.generation-error{position:absolute;z-index:4;top:70px;left:14px;padding:8px 10px;background:#fff4f2;color:#b42318;border:1px solid #e0a4a0;border-radius:4px;font-size:11px}
+    .property-panel { position: absolute; z-index: 3; top: 76px; right: 14px; width: min(280px, calc(100% - 28px)); padding: 14px; border-radius: 8px; background: rgba(255,255,255,.97); border: 1px solid #d9e2dc; color: #1f2937; }
     .property-panel dl { margin: 10px 0 0; display: grid; gap: 8px; }
     .property-panel div { display: grid; grid-template-columns: 76px 1fr; gap: 10px; }
-    .property-panel dt { color: var(--color-muted); }
+    .property-panel dt { color: #64748b; }
     .property-panel dd { margin: 0; }
-    .viewer-hint { position: absolute; left: 16px; bottom: 16px; padding: 8px 10px; border-radius: 8px; color: var(--color-muted); background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; border: 1px solid var(--color-border); }
+    .viewer-hint { position: absolute; left: 16px; bottom: 16px; padding: 8px 10px; border-radius: 8px; color: #1f2937; background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; }
     @media (max-width: 760px) { .bim-viewer { min-height: 620px; } .property-panel { top: auto; bottom: 54px; } }
   `]
 })
@@ -68,6 +70,8 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
   selectedElement: BimElementInfo | null = null;
   sectionEnabled = false;
   useOrthographic = false;
+  isGenerating = false;
+  generationError = '';
 
   private scene!: THREE.Scene;
   private perspectiveCamera!: THREE.PerspectiveCamera;
@@ -98,7 +102,7 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
     const height = container.clientHeight || 600;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xeef2f0);
+    this.scene.background = new THREE.Color(0xf7fbf8);
     this.perspectiveCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.orthographicCamera = this.createOrthographicCamera(width, height);
     this.camera = this.perspectiveCamera;
@@ -121,7 +125,7 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
     dirLight.position.set(30, 50, 20);
     this.scene.add(dirLight);
 
-    const gridHelper = new THREE.GridHelper(100, 50, 0x2e9e5a, 0xd5ddd8);
+    const gridHelper = new THREE.GridHelper(100, 50, 0x087021, 0xd9e2dc);
     gridHelper.position.y = -0.05;
     this.scene.add(gridHelper);
     this.scene.add(this.buildingGroup);
@@ -154,6 +158,26 @@ export class BimViewerComponent implements AfterViewInit, OnDestroy {
 
   resetCamera(): void {
     if (this.currentVariant) this.frameBuilding(this.currentVariant);
+  }
+
+  async generateIfc(): Promise<void> {
+    const variant = this.store.getState().selectedVariant;
+    if (!variant || variant.id === 'loading-variant' || this.isGenerating) return;
+    this.isGenerating = true;
+    this.generationError = '';
+    try {
+      const url = await this.store.generateArtifact('ifc');
+      const item = this.store.getState().artifactHistory.find(artifact => artifact.kind === 'ifc' && artifact.variantId === variant.id && artifact.downloadUrl === url);
+      const fileName = item?.fileName ?? `ifc-${variant.id}`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      link.click();
+    } catch {
+      this.generationError = 'No se pudo generar el IFC.';
+    } finally {
+      this.isGenerating = false;
+    }
   }
 
   toggleSection(): void {

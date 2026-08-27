@@ -1,14 +1,26 @@
-.comparator-shell { height: 100%; overflow-y: auto; }
+
+.comparator-shell { min-height: 100%; padding: 16px; background: #fff; border: 1px solid #d9e2dc; border-radius: 7px; overflow: visible; }
 .picker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
-.picker-grid label { display: grid; gap: 8px; color: var(--color-muted); }
-.picker-grid select { min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--color-border); background: #fff; color: var(--color-text); }
-.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; }
-.comparison-column { background: var(--color-brand-50); padding: 16px; border-radius: 10px; border: 1px solid var(--color-border); }
-.comparison-column h3 { margin-top: 0; }
-.comparison-column p { color: var(--color-muted); margin-bottom: 0; }
+.picker-grid label { display: grid; gap: 7px; color: #1f2937; font-size: 12px; font-weight: 700; }
+.picker-grid select { min-width: 0; padding: 10px 12px; border-radius: 5px; border: 1px solid #cbd8cf; background: #fff; color: #1f2937; }
+.comparison-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-bottom: 16px; }
+.comparison-column { background: #f7fbf8; padding: 14px; border-radius: 6px; border: 1px solid #d9e2dc; }
+.comparison-column h3 { margin: 0 0 5px; color: #111827; }
+.comparison-column p { color: #64748b; margin: 0; font-size: 12px; }
 .comparison-table { margin: 10px 0 18px; }
-.comparison-table th { text-align: left; color: var(--color-muted); }
-.winner-cell { color: var(--color-success); font-weight: 800; }
-.radar-panel { height: 340px; padding: 12px; border-radius: 10px; background: #fff; border: 1px solid var(--color-border); overflow: hidden; }
+.comparison-table th { text-align: left; color: #64748b; font-size: 12px; }
+.comparison-table td,.comparison-table th { padding: 10px 8px; border-bottom: 1px solid #dfe7e1; }
+.winner-cell { color: #10b981; font-weight: 800; }
+.radar-panel { height: 360px; padding: 12px; border-radius: 6px; background: #f8fbf9; border: 1px solid #d9e2dc; overflow: hidden; }
 .radar-panel canvas { display: block; width: 100% !important; height: 100% !important; }
-@media (max-width: 760px) { .picker-grid, .comparison-grid { grid-template-columns: 1fr; } }
+.comparison-3d { margin-top: 16px; border: 1px solid #d9e2dc; border-radius: 6px; background: #f8fbf9; overflow: hidden; }
+.comparison-3d-header { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid #dfe7e1; }
+.comparison-3d-header strong { color:#1f2937; font-size:13px; }
+.comparison-3d-header span { color:#64748b; font-size:10px; }
+.comparison-3d svg { display:block; width:100%; height:290px; }
+.model-base { fill:#eef5f0; stroke:#b7cbbd; stroke-width:1.5; }
+.model-left { fill:#c4ddca; stroke:#087021; stroke-width:1.5; }
+.model-right { fill:#d9c4e8; stroke:#6b1fa5; stroke-width:1.5; }
+.model-window { fill:#fff; stroke:#aabcb0; stroke-width:1; }
+.model-label { font-size:12px; font-weight:800; fill:#1f2937; }
+@media (max-width: 760px) { .picker-grid, .comparison-grid { grid-template-columns: 1fr; } .comparison-3d svg { height:230px; } }

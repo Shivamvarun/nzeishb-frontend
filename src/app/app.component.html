@@ -1,69 +1,42 @@
-<div class="app-shell" *ngIf="state$ | async as state">
-  <header class="app-topbar">
+<div class="app-shell">
+  <header class="app-header">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true">A</div>
-      <div class="brand-copy">
-        <small>Junta de Andalucía</small>
-        <span class="brand-name">nZEISHB · ARVA</span>
-      </div>
+      <div class="brand-mark">A</div>
+      <div class="brand-copy"><strong>Junta de Andalucía</strong><small>ARVA · nZEISHB</small></div>
     </div>
 
-    <nav class="workflow-stepper" aria-label="Flujo de trabajo">
-      <button type="button" class="step" [class.active]="workflowStep(state.activeView) === 1" (click)="setView('gis')">
-        <span class="step-index">1</span>
-        <span>Seleccionar área</span>
-      </button>
-      <span class="step-line" aria-hidden="true"></span>
-      <button type="button" class="step" [class.active]="workflowStep(state.activeView) === 2" (click)="setView('bim')">
-        <span class="step-index">2</span>
-        <span>Datos de parcela</span>
-      </button>
-      <span class="step-line" aria-hidden="true"></span>
-      <button type="button" class="step" [class.active]="workflowStep(state.activeView) === 3" (click)="setView('dashboard')">
-        <span class="step-index">3</span>
-        <span>Cálculo de informe</span>
-      </button>
+    <nav class="capability-nav" aria-label="ARVA capabilities">
+      <button type="button" [class.active]="isView('spatial')" (click)="setView('spatial')">Spatial</button>
+      <button type="button" [class.active]="isView('catalog')" (click)="setView('catalog')">Catalog</button>
+      <button type="button" [class.active]="isView('scenario')" (click)="setView('scenario')">Scenario</button>
+      <button type="button" [class.active]="isView('optimization')" (click)="setView('optimization')">Optimisation</button>
+      <button type="button" [class.active]="isView('bim')" (click)="setView('bim')">IFC / BIM</button>
+      <button type="button" [class.active]="isView('solutions')" (click)="setView('solutions')">Solutions</button>
+      <button type="button" [class.active]="isView('reports')" (click)="setView('reports')">Reports</button>
     </nav>
 
-    <div class="topbar-actions">
-      <button type="button" class="topbar-link">Ayuda</button>
-      <button type="button" class="topbar-link">Ajustes</button>
-      <button class="btn-primary" [disabled]="state.isSaving" (click)="saveScenario()">
-        {{ state.isSaving ? 'Guardando…' : 'Guardar escenario' }}
-      </button>
+    <div class="header-actions">
+      <button class="btn-primary header-save" [disabled]="(state$ | async)?.isSaving" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Saving…' : 'Save scenario' }}</button>
     </div>
   </header>
 
-  <div class="app-body">
-    <nav class="icon-rail" aria-label="Vistas">
-      <button
-        type="button"
-        class="rail-btn"
-        *ngFor="let view of views"
-        [class.active]="state.activeView === view.id"
-        [title]="view.label"
-        [attr.aria-label]="view.label"
-        (click)="setView(view.id)">
-        <i class="fa-solid" [ngClass]="view.icon"></i>
-      </button>
-    </nav>
+  <p class="app-error" role="status" aria-live="polite" *ngIf="(state$ | async)?.error as error">{{ error }}</p>
 
-    <aside class="sidebar">
+  <main class="app-main" [class.spatial-layout]="isView('spatial')">
+    <aside class="spatial-sidebar" *ngIf="isView('spatial')">
       <app-vpo-form></app-vpo-form>
     </aside>
 
-    <main class="workspace">
-      <p class="app-error" role="status" aria-live="polite" *ngIf="state.error as error">{{ error }}</p>
-      <section class="workspace-view" *ngIf="state.activeView === 'gis'"><app-gis-viewer></app-gis-viewer></section>
-      <section class="workspace-view" *ngIf="state.activeView === 'bim'"><app-bim-viewer></app-bim-viewer></section>
-      <section class="workspace-view" *ngIf="state.activeView === 'dashboard'"><app-dashboard></app-dashboard></section>
-      <section class="workspace-view" *ngIf="state.activeView === 'pareto'"><app-pareto-explorer></app-pareto-explorer></section>
-      <section class="workspace-view" *ngIf="state.activeView === 'comparator'"><app-comparator></app-comparator></section>
-      <section class="workspace-view" *ngIf="state.activeView === 'reports'"><app-reports-export></app-reports-export></section>
-    </main>
+    <section class="workspace-view">
+      <app-gis-viewer *ngIf="isView('spatial')"></app-gis-viewer>
+      <app-catalog *ngIf="isView('catalog')"></app-catalog>
+      <app-design-workspace *ngIf="isView('scenario')"></app-design-workspace>
+      <app-pareto-explorer *ngIf="isView('optimization')"></app-pareto-explorer>
+      <app-bim-viewer *ngIf="isView('bim')"></app-bim-viewer>
+      <app-solutions-workspace *ngIf="isView('solutions')"></app-solutions-workspace>
+      <app-reports-export *ngIf="isView('reports')"></app-reports-export>
+    </section>
+  </main>
 
-    <aside class="right-sidebar">
-      <app-rag-chatbot></app-rag-chatbot>
-    </aside>
-  </div>
+  <app-rag-chatbot></app-rag-chatbot>
 </div>

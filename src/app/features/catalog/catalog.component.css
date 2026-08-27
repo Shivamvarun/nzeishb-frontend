@@ -1,0 +1,35 @@
+.catalog-page { max-width: 1440px; margin: 0 auto; }
+.page-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:20px; }
+.page-heading h1 { margin:4px 0 4px; font-size:28px; }
+.page-heading p { margin:0; color:#64748b; }
+.eyebrow { font-size:11px; font-weight:800; letter-spacing:.08em; color:#087021; }
+.status-pill { border:1px solid #c4ddca; color:#087021; background:#f5faf6; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:700; }
+.catalog-layout { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(300px,.8fr); gap:18px; }
+.surface { background:#fff; border:1px solid #d9e2dc; border-radius:8px; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+.catalog-list { padding:14px; }
+.filter-row { display:flex; gap:8px; padding-bottom:12px; border-bottom:1px solid #e5ebe7; }
+.filter-row button { border:1px solid transparent; background:#fff; color:#087021; padding:8px 11px; border-radius:5px; cursor:pointer; font-weight:700; }
+.filter-row button.active { border-color:#087021; background:#f1f8f2; }
+.catalog-row { width:100%; display:grid; grid-template-columns:44px minmax(0,1fr) 130px; gap:12px; align-items:center; text-align:left; padding:14px 8px; border:0; border-bottom:1px solid #e5ebe7; background:#fff; cursor:pointer; }
+.catalog-row:last-child { border-bottom:0; }
+.catalog-row.selected { background:#f1f8f2; box-shadow:inset 3px 0 #087021; }
+.catalog-icon { width:36px; height:36px; border-radius:6px; display:grid; place-items:center; background:#e9f3eb; color:#087021; font-weight:800; }
+.catalog-copy { min-width:0; display:grid; gap:3px; }
+.catalog-copy strong { color:#1f2937; }
+.catalog-copy small { color:#64748b; }
+.catalog-copy span { color:#475569; font-size:13px; }
+.catalog-kpis { display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; text-align:right; }
+.catalog-kpis b { color:#087021; }
+.catalog-kpis small { color:#64748b; font-size:10px; }
+.catalog-detail { padding:22px; min-height:300px; }
+.catalog-detail h2 { margin:5px 0 8px; }
+.catalog-detail p { color:#475569; line-height:1.55; }
+.category-tag { display:inline-block; padding:5px 8px; background:#f1f8f2; color:#087021; font-size:11px; font-weight:800; border-radius:4px; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:22px 0; }
+.detail-grid div { padding:14px; background:#f7faf8; border:1px solid #e0e9e2; }
+.detail-grid span { display:block; color:#64748b; font-size:12px; }
+.detail-grid strong { display:block; margin-top:5px; font-size:22px; color:#1f2937; }
+.info-callout { padding:12px; background:#f1f8f2; color:#35553d; font-size:12px; line-height:1.45; }
+.empty-state { padding:40px; color:#64748b; }
+.error { color:#b42318; }
+@media (max-width:900px){ .catalog-layout{grid-template-columns:1fr}.catalog-detail{min-height:0} }
