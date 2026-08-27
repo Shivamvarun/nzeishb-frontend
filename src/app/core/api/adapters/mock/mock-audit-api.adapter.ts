@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuditApiPort } from '../../audit/audit-api.port';
-import { GeneratedArtifact } from '../../audit/audit-api.models';
-import { mockArtifact } from './mock-bim-api.adapter';
+import { AuditEvent } from '../../audit/audit-api.models';
 
 @Injectable()
 export class MockAuditApiAdapter implements AuditApiPort {
-  async generateBudget(solutionId: string): Promise<GeneratedArtifact> {
-    await delay(350);
-    return mockArtifact('budget', solutionId, 'pdf');
+  private readonly events: AuditEvent[] = [];
+  async listEvents(entityType?: string, entityId?: string): Promise<readonly AuditEvent[]> {
+    return this.events.filter(event => (!entityType || event.entityType === entityType) && (!entityId || event.entityId === entityId));
   }
-}
-
-function delay(milliseconds: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }

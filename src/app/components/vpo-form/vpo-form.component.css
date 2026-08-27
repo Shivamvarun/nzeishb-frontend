@@ -1,14 +1,1 @@
-.form-group { margin-bottom: 16px; }
-.form-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.form-value { color: var(--color-brand-800); font-weight: 700; }
-input[type='range'] { width: 100%; accent-color: var(--color-brand-700); }
-small { display: block; color: var(--color-muted); margin-top: 4px; }
-.full-width { width: 100%; margin-top: 12px; }
-.scenario-panel { margin-top: 14px; }
-.compact { padding: 7px 10px; border-radius: 6px; }
-.scenario-list { display: grid; gap: 8px; }
-.scenario-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--color-border); border-radius: 8px; }
-.scenario-row.active { border-color: var(--color-brand-500); background: var(--color-brand-50); }
-.scenario-open { min-width: 0; text-align: left; color: var(--color-text); background: transparent; border: 0; cursor: pointer; }
-.scenario-open span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.danger-btn { border: 1px solid #f5c2c0; border-radius: 6px; background: #fdecea; color: var(--color-error); padding: 7px 8px; cursor: pointer; }
+.form-group{margin-bottom:17px}.form-label{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:12px;font-weight:700}.form-value{color:#087021;font-weight:800}input[type='range']{width:100%;accent-color:#087021}small{display:block;color:#64748b;margin-top:5px;font-size:10px}.full-width{margin-top:8px}.scenario-panel{margin-top:14px}.compact{padding:7px 10px;border-radius:5px}.scenario-list{display:grid;gap:8px}.scenario-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;padding:8px;border:1px solid #d9e2dc;border-radius:6px;background:#fff}.scenario-row.active{border-color:#37a85a;background:#f1f8f2}.scenario-open{min-width:0;text-align:left;color:#1f2937;background:transparent;border:0;cursor:pointer;padding:3px}.scenario-open span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:700}.scenario-open small{color:#64748b}.danger-btn{border:1px solid #e0a4a0;border-radius:5px;background:#fff;color:#b42318;padding:6px 8px;cursor:pointer;font-size:11px;font-weight:700}.danger-btn:hover{background:#fff4f2}.glass-panel .panel-header small{color:#64748b}

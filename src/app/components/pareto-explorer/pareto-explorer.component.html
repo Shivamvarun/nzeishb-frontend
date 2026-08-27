@@ -1,40 +1,50 @@
+
 <div class="pareto-shell">
-  <section class="glass-panel pareto-main">
-    <div class="panel-header">
-      <div>
-        <h3>Optimización · frente de Pareto</h3>
-        <p>Proyección de coste, energía, industrialización y repetibilidad</p>
+  <section class="surface pareto-main">
+    <div class="pareto-heading">
+      <div><span class="eyebrow">OPTIMISATION SERVICE</span><h1>Pareto front</h1><p>Explore non-dominated building solutions across cost, energy efficiency and industrialisation.</p></div>
+      <span class="result-count">{{ paretoVariants.length }} Pareto candidates</span>
+    </div>
+
+    <div class="pareto-controls">
+      <label>Max cost <input type="range" min="65000" max="100000" step="2500" [(ngModel)]="maxCost"><b>{{ maxCost | number }} €/unit</b></label>
+      <label>Max energy <input type="range" min="10" max="50" step="1" [(ngModel)]="maxEnergy"><b>{{ maxEnergy }} kWh/m²·a</b></label>
+      <label>Min industrialisation <input type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization"><b>{{ minIndustrialization }}%</b></label>
+      <label>Projection <input type="range" min="-40" max="40" step="5" [(ngModel)]="rotation"><b>{{ rotation }}°</b></label>
+      <button type="button" class="view-toggle" [class.active]="viewMode === '3d'" (click)="setViewMode(viewMode === '3d' ? '2d' : '3d')">{{ viewMode === '3d' ? '3D view' : '2D view' }}</button>
+      <button type="button" class="run-button" (click)="runNsga3()" [disabled]="state.isOptimizing">{{ state.isOptimizing ? 'Running…' : 'Run NSGA-III' }}</button>
+    </div>
+
+    <div class="pareto-plot" aria-label="Three objective Pareto front">
+      <div #pareto3d class="pareto-3d" [class.hidden]="viewMode !== '3d' || !threeAvailable"></div>
+      <div class="pareto-2d" [class.visible]="viewMode === '2d' || !threeAvailable">
+        <svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">
+          <line x1="70" y1="410" x2="730" y2="410" class="axis"/><line x1="70" y1="410" x2="70" y2="55" class="axis"/>
+          <line x1="70" y1="410" x2="150" y2="350" class="axis depth"/>
+          <text x="730" y="438" class="axis-label">Cost ↓</text><text x="25" y="58" class="axis-label">Energy ↓</text><text x="120" y="350" class="axis-label">Industrialisation ↑</text>
+          <g *ngFor="let point of points">
+            <line [attr.x1]="point.x" [attr.y1]="point.y" [attr.x2]="point.x - point.variant.degreeIndustrialization * 55" [attr.y2]="point.y + point.variant.degreeIndustrialization * 38" class="depth-line" />
+            <circle [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.r" class="pareto-point" [class.selected-point]="state.selectedVariant.id === point.variant.id" (click)="selectVariant(point.variant.id)">
+              <title>{{ point.variant.name }} · {{ point.variant.costPerUnit | number }} €/unit · {{ point.variant.primaryEnergyDemandKwh }} kWh/m²·a · {{ point.variant.degreeIndustrialization * 100 | number:'1.0-0' }}% industrialisation</title>
+            </circle>
+          </g>
+        </svg>
       </div>
-      <button type="button" class="btn-secondary" (click)="loadMore()" [disabled]="visibleLimit >= state.variants.length">Más variantes</button>
     </div>
 
-    <div class="filters">
-      <label>Coste máx. <input type="range" min="120000" max="220000" step="5000" [(ngModel)]="maxCost" (input)="renderChart()"><span>{{ maxCost | number }} €</span></label>
-      <label>Energía máx. <input type="range" min="15" max="70" step="1" [(ngModel)]="maxEnergy" (input)="renderChart()"><span>{{ maxEnergy }} kWh/m²a</span></label>
-      <label>Indus. mín. <input type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization" (input)="renderChart()"><span>{{ minIndustrialization }}%</span></label>
-      <label>Rotación 3D <input type="range" min="-60" max="60" step="5" [(ngModel)]="rotation" (input)="renderChart()"><span>{{ rotation }} °</span></label>
-    </div>
-
-    <div class="chart-wrapper">
-      <canvas #paretoChart></canvas>
-    </div>
+    <div class="objective-legend"><span><i class="cost"></i>Cost: minimise</span><span><i class="energy"></i>Energy: minimise</span><span><i class="indus"></i>Industrialisation: maximise</span></div>
+    <div class="demo-note">Demo mode: NSGA-III is represented by the optimisation API adapter. The browser does not implement the optimisation algorithm; replace the mock adapter with the gateway without changing this view.</div>
   </section>
 
-  <aside class="glass-panel variant-panel">
-    <div class="panel-header"><h3>Variantes no dominadas</h3></div>
-    <div class="variant-cards-list">
-      <button type="button" *ngFor="let v of filteredVariants" class="variant-card" [class.selected]="state.selectedVariant.id === v.id" (click)="selectVariant(v.id)">
-        <div class="variant-header">
-          <span>{{ v.name }}</span>
-          <span class="tag-badge {{ v.tagClass }}">{{ v.tag }}</span>
-        </div>
-        <div class="variant-stats">
-          <div>Coste: {{ v.costPerUnit | number }} €/ud</div>
-          <div>Energía: {{ v.primaryEnergyDemandKwh }} kWh/m²a</div>
-          <div>Industrialización: {{ (v.degreeIndustrialization * 100) | number:'1.0-0' }}%</div>
-        </div>
-        <span class="compare-chip" [class.active]="isCompared(v.id)" (click)="compareVariant(v.id, $event)">{{ isCompared(v.id) ? 'En comparación' : 'Comparar' }}</span>
+  <aside class="surface variant-panel">
+    <div class="panel-header"><div><span class="eyebrow">SOLUTION CANDIDATES</span><h2>Solutions</h2></div></div>
+    <article *ngFor="let v of visibleVariants" class="variant-card" [class.selected]="state.selectedVariant.id === v.id">
+      <button type="button" class="variant-select" (click)="selectVariant(v.id)">
+        <div class="variant-header"><strong>{{ v.name }}</strong><span class="tag-badge" [class.tag-cost]="v.tagClass === 'tag-cost'" [class.tag-energy]="v.tagClass === 'tag-energy'" [class.tag-indus]="v.tagClass === 'tag-indus'">{{ v.tag }}</span></div>
+        <div class="solution-kpis"><span><small>Cost</small><b>{{ v.costPerUnit | number }} €</b></span><span><small>Energy</small><b>{{ v.primaryEnergyDemandKwh }}</b></span><span><small>Industrialisation</small><b>{{ v.degreeIndustrialization * 100 | number:'1.0-0' }}%</b></span></div>
       </button>
-    </div>
+      <div class="solution-actions"><span>{{ isCompared(v.id) ? 'Selected for comparison' : 'Add to comparison' }}</span><button type="button" (click)="compareVariant(v.id,$event)">{{ isCompared(v.id) ? '✓' : '+' }}</button></div>
+    </article>
+    <div class="selected-solution" *ngIf="state.selectedVariant.id !== 'loading-variant'"><span class="eyebrow">SELECTED SOLUTION</span><strong>{{ state.selectedVariant.name }}</strong><span>{{ state.selectedVariant.housingUnits }} dwellings · {{ state.selectedVariant.stories }} floors</span></div>
   </aside>
 </div>

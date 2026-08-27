@@ -1,8 +1,8 @@
 import { InjectionToken } from '@angular/core';
-import { GeneratedArtifact } from './audit-api.models';
+import { AuditEvent } from './audit-api.models';
 
 export interface AuditApiPort {
-  generateBudget(solutionId: string): Promise<GeneratedArtifact>;
+  listEvents(entityType?: string, entityId?: string): Promise<readonly AuditEvent[]>;
 }
 
 export const AUDIT_API = new InjectionToken<AuditApiPort>('AUDIT_API');

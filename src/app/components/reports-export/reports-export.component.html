@@ -1,31 +1,27 @@
-<div class="glass-panel reports-shell">
-  <div class="panel-header">
-    <div>
-      <h2>Exportar</h2>
-      <p>Bloquea la solución seleccionada y genera los entregables.</p>
+<div class="reports-shell">
+  <section class="surface report-intro">
+    <span class="eyebrow">REPORT GENERATION</span>
+    <h1>Reports</h1>
+    <p>Report generation is kept as a thin gateway surface in the PoC. The backend route will provide the generated artifact and its reference when connected.</p>
+    <div class="empty-slot" role="status">Gateway integration slot — no report-generation orchestration is performed in the browser.</div>
+    <div class="demo-artifacts">
+      <div><strong>Demo artifact flow</strong><span>Mock adapters let the UI demonstrate the same artifact contract until the gateway route is connected.</span></div>
+      <div class="demo-artifact-actions">
+        <button class="btn-secondary" [disabled]="isGenerating('report')" (click)="export('report')">{{ isGenerating('report') ? 'Generating…' : 'Generate demo report' }}</button>
+        <button class="btn-secondary" [disabled]="isGenerating('budget')" (click)="export('budget')">{{ isGenerating('budget') ? 'Generating…' : 'Generate demo budget' }}</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="report-grid">
-    <article class="report-card" *ngFor="let artifact of artifacts">
-      <h3>{{ artifact.title }}</h3>
-      <p>{{ artifact.description }}</p>
-      <button class="btn-primary" [disabled]="isGenerating(artifact.kind)" (click)="export(artifact.kind)">
-        {{ isGenerating(artifact.kind) ? 'Generando…' : artifact.action }}
-      </button>
-    </article>
-  </div>
-
-  <section class="history-panel">
-    <h3>Historial de generación</h3>
-    <div class="empty-state" *ngIf="!state.artifactHistory.length">Aún no hay entregables generados.</div>
+  <section class="surface history-panel" *ngIf="state.artifactHistory.length">
+    <h3>Generated artifacts</h3>
     <article class="history-row" *ngFor="let item of state.artifactHistory">
       <div>
         <strong>{{ item.fileName }}</strong>
-        <span>{{ item.created }} | {{ item.status }}</span>
+        <span>{{ item.created }} · {{ item.status }}</span>
         <p>{{ item.preview }}</p>
       </div>
-      <button class="btn-secondary" *ngIf="item.downloadUrl" (click)="download(item.downloadUrl, item.fileName)">Descargar</button>
+      <button class="btn-secondary" *ngIf="item.downloadUrl" (click)="download(item.downloadUrl, item.fileName)">Download</button>
     </article>
   </section>
 </div>

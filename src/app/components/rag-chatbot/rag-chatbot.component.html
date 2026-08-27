@@ -1,22 +1,43 @@
-<div class="glass-panel chat-panel">
-  <div class="panel-header">
-    <div>
-      <h2>Pregunta a la IA</h2>
-      <p>Consulta normativa y trazabilidad reglamentaria.</p>
+<button *ngIf="!isOpen" type="button" class="arva-ai-launcher" (click)="isOpen=true" aria-label="Pregunta a ARVA AI">
+  <span class="ai-person-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"></path></svg>
+  </span>
+  <span class="ai-launcher-label">Pregunta a ARVA AI</span>
+</button>
+
+<section *ngIf="isOpen" class="arva-chat" [class.expanded]="isExpanded" role="dialog" aria-modal="false" aria-label="ARVA AI">
+  <header class="arva-chat-header">
+    <span class="ai-title-pill">✦ ARVA AI</span>
+    <div class="chat-head-actions">
+      <button type="button" title="Nueva conversación" aria-label="Nueva conversación" (click)="clearChat()">✎</button>
+      <button type="button" title="Expandir / contraer" aria-label="Expandir / contraer" [class.active]="isExpanded" (click)="toggleExpanded()">{{ isExpanded ? "⌄" : "⌃" }}</button>
+      <button type="button" title="Cerrar" aria-label="Cerrar" (click)="isOpen=false">×</button>
     </div>
+  </header>
+
+  <div class="chat-help" *ngIf="isHelpOpen">
+    <strong>ARVA AI</strong>
+    <p>Ask about the current design, normative context, solutions or IFC information. ARVA AI explains, searches, summarises and cites; deterministic services remain the source of truth for calculations and optimisation.</p>
   </div>
-  <div class="chip-suggestions">
-    <button class="chip-btn" (click)="suggest('¿Cumple la variante con el CTE DB-HE 0?')">¿Cumple CTE DB-HE 0?</button>
-    <button class="chip-btn" (click)="suggest('¿Qué exige el Decreto-Ley 1/2025?')">¿Decreto-Ley 1/2025?</button>
-  </div>
-  <div class="chat-messages">
-    <div *ngFor="let msg of state.chatMessages" class="chat-bubble" [ngClass]="msg.sender">
+
+  <div class="arva-chat-body">
+    <button class="suggestion" type="button" (click)="suggest('¿Cuál es el máximo edificable en este terreno?')">
+      <span class="suggestion-icon">▱</span>
+      <span>¿Cuál es el máximo edificable en este terreno?</span>
+    </button>
+    <button class="suggestion" type="button" (click)="suggest('¿Qué tipología de vivienda es la más eficiente?')">
+      <span class="suggestion-icon">▱</span>
+      <span>¿Qué tipología de vivienda es la más eficiente?</span>
+    </button>
+
+    <div class="chat-message" *ngFor="let msg of state.chatMessages" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
       <div>{{ msg.text }}</div>
       <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }}</small>
     </div>
   </div>
-  <div class="chat-input-area">
-    <input class="custom-input" [(ngModel)]="inputText" placeholder="Haz una pregunta…" (keyup.enter)="sendMessage()" [disabled]="isSending">
-    <button class="btn-primary" (click)="sendMessage()" [disabled]="isSending">{{ isSending ? 'Consultando…' : 'Enviar' }}</button>
+
+  <div class="arva-chat-input">
+    <input [(ngModel)]="inputText" placeholder="Escribe un mensaje" (keyup.enter)="sendMessage()" [disabled]="isSending">
+    <button type="button" (click)="sendMessage()" [disabled]="isSending" aria-label="Enviar">➤</button>
   </div>
-</div>
+</section>

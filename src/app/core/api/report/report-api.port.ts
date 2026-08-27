@@ -1,7 +1,8 @@
 import { InjectionToken } from '@angular/core';
-import { GeneratedArtifact } from './report-api.models';
+import { GeneratedArtifact } from '../../models/app.models';
 
 export interface ReportApiPort {
+  generateBudget(solutionId: string): Promise<GeneratedArtifact>;
   generateReport(solutionId: string): Promise<GeneratedArtifact>;
 }
 

@@ -6,7 +6,7 @@ import { OPTIMIZATION_API, OptimizationApiPort } from '../api/optimization/optim
 import { BIM_API, BimApiPort } from '../api/bim/bim-api.port';
 import { AUDIT_API, AuditApiPort } from '../api/audit/audit-api.port';
 import { REPORT_API, ReportApiPort } from '../api/report/report-api.port';
-import { NORMATIVE_API, NormativeApiPort } from '../api/normative/normative-api.port';
+import { AI_API, AiApiPort } from '../api/ai/ai-api.port';
 import { WORKSPACE_API, WorkspaceApiPort } from '../api/workspace/workspace-api.port';
 import { ActiveView, AppState, ArtifactKind, Plot, Scenario, Variant, VpoParams } from '../models/app.models';
 
@@ -20,7 +20,7 @@ export class StoreService {
     @Inject(SPATIAL_API) private readonly spatialApi: SpatialApiPort,
     @Inject(SCENARIO_API) private readonly scenarioApi: ScenarioApiPort,
     @Inject(OPTIMIZATION_API) private readonly optimizationApi: OptimizationApiPort,
-    @Inject(NORMATIVE_API) private readonly normativeApi: NormativeApiPort,
+    @Inject(AI_API) private readonly aiApi: AiApiPort,
     @Inject(BIM_API) private readonly bimApi: BimApiPort,
     @Inject(AUDIT_API) private readonly auditApi: AuditApiPort,
     @Inject(REPORT_API) private readonly reportApi: ReportApiPort
@@ -33,6 +33,19 @@ export class StoreService {
   getPlotById(id: string): Plot | undefined { return this.getState().plots.find(plot => plot.id === id); }
   setActiveView(view: ActiveView): void { this.patch({ activeView: view }); }
 
+  selectScenario(scenarioId: string): void {
+    const scenario = this.getState()
+      .scenarioHistory
+      .find(item => item.id === scenarioId);
+  
+    if (!scenario) {
+      return;
+    }
+  
+    this.patch({
+      activeScenario: scenario
+    });
+  }
   setSelectedVariant(id: string): void {
     const variant = this.getState().variants.find(item => item.id === id);
     if (variant) this.patch({ selectedVariant: variant });
@@ -130,7 +143,7 @@ export class StoreService {
   async askNormative(question: string): Promise<void> {
     this.addChatMessage('user', question);
     try {
-      const reply = await this.normativeApi.askNormative(question, this.getState().activeScenario.id);
+      const reply = await this.aiApi.ask(question, this.getState().activeScenario.id);
       this.addChatMessage('bot', reply.text, reply.citations);
     } catch {
       this.patch({ error: 'No se pudo consultar la normativa.' });
@@ -159,6 +172,8 @@ export class StoreService {
       throw error;
     }
   }
+
+  resetChat(): void { this.patch({ chatMessages: [{ sender: 'bot', text: 'I am ARVA AI. Ask me about the current design, solutions, IFC or available normative context.', citations: [], timestamp: new Date().toLocaleTimeString() }] }); }
 
   addChatMessage(sender: 'bot' | 'user', text: string, citations = [] as AppState['chatMessages'][number]['citations']): void {
     this.patch({ chatMessages: [...this.getState().chatMessages, { sender, text, citations, timestamp: new Date().toLocaleTimeString() }] });
@@ -192,7 +207,7 @@ export class StoreService {
 
   private generateArtifactFromApi(kind: ArtifactKind, solutionId: string) {
     if (kind === 'ifc') return this.bimApi.generateIfc(solutionId);
-    if (kind === 'budget') return this.auditApi.generateBudget(solutionId);
+    if (kind === 'budget') return this.reportApi.generateBudget(solutionId);
     return this.reportApi.generateReport(solutionId);
   }
 
@@ -233,7 +248,7 @@ export class StoreService {
       selectedVariant: placeholderVariant,
       comparedVariants: [placeholderVariant, placeholderVariant],
       artifactHistory: [],
-      activeView: 'gis',
+      activeView: 'spatial',
       isOptimizing: false,
       isSaving: false,
       error: null,

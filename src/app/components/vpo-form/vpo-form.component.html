@@ -1,36 +1,36 @@
 <div class="glass-panel">
   <div class="panel-header">
     <div>
-      <div class="panel-title">Datos del proyecto</div>
+      <div class="panel-title">Urban planning parameters</div>
       <small>{{ state.activeScenario.name }}</small>
     </div>
     <span class="badge-tag">CU02</span>
   </div>
 
   <div class="form-group">
-    <div class="form-label"><span>Altura máxima</span><span class="form-value">{{ state.vpoParams.maxHeightStories }}</span></div>
+    <div class="form-label"><span>Maximum height</span><span class="form-value">{{ state.vpoParams.maxHeightStories }}</span></div>
     <input type="range" min="2" [max]="state.activePlot.maxHeightStories" [value]="state.vpoParams.maxHeightStories" (input)="update('maxHeightStories', $any($event.target).valueAsNumber)">
-    <small>Límite PGOU: {{ state.activePlot.maxHeightStories }} plantas</small>
+    <small>PGOU limit: {{ state.activePlot.maxHeightStories }} floors</small>
   </div>
 
   <div class="form-group">
-    <div class="form-label"><span>Edificabilidad máxima</span><span class="form-value">{{ state.vpoParams.buildableAreaM2 | number }} m²</span></div>
+    <div class="form-label"><span>Maximum buildable area</span><span class="form-value">{{ state.vpoParams.buildableAreaM2 | number }} m2</span></div>
     <input type="range" min="1000" [max]="state.activePlot.buildableAreaMaxM2" step="50" [value]="state.vpoParams.buildableAreaM2" (input)="update('buildableAreaM2', $any($event.target).valueAsNumber)">
-    <small>Límite: {{ state.activePlot.buildableAreaMaxM2 }} m²t</small>
+    <small>Limit: {{ state.activePlot.buildableAreaMaxM2 }} m2t</small>
   </div>
 
   <div class="form-group">
-    <div class="form-label"><span>Objetivo de viviendas</span><span class="form-value">{{ state.vpoParams.targetUnits }}</span></div>
+    <div class="form-label"><span>Housing objective</span><span class="form-value">{{ state.vpoParams.targetUnits }}</span></div>
     <input type="range" min="10" [max]="state.activePlot.maxUnits" [value]="state.vpoParams.targetUnits" (input)="update('targetUnits', $any($event.target).valueAsNumber)">
   </div>
 
-  <button class="btn-primary full-width" [disabled]="state.isOptimizing" (click)="optimize()">{{ state.isOptimizing ? 'Optimizando…' : 'Generar volumetría óptima' }}</button>
+  <button class="btn-primary full-width" [disabled]="state.isOptimizing" (click)="optimize()">{{ state.isOptimizing ? 'Optimizing...' : 'Run NSGA-III generator' }}</button>
 </div>
 
 <div class="glass-panel scenario-panel">
   <div class="panel-header">
-    <div class="panel-title">Historial de escenarios</div>
-    <button type="button" class="btn-secondary compact" (click)="createScenario()">Nuevo</button>
+    <div class="panel-title">Scenario history</div>
+    <button type="button" class="btn-secondary compact" (click)="createScenario()">New</button>
   </div>
 
   <div class="scenario-list">
@@ -39,7 +39,7 @@
         <span>{{ scenario.name }}</span>
         <small>{{ scenario.updated || scenario.created }}</small>
       </button>
-      <button type="button" class="danger-btn" title="Eliminar escenario" [attr.aria-label]="'Eliminar escenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Eliminar</button>
+      <button type="button" class="danger-btn" title="Delete scenario" [attr.aria-label]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</button>
     </div>
   </div>
 </div>

@@ -1,0 +1,50 @@
+<div class="page catalog-page">
+  <div class="page-heading">
+    <div>
+      <span class="eyebrow">INDUSTRIALISED CATALOGUE</span>
+      <h1>Catalog</h1>
+      <p>Browse the modules, systems and elements that can feed the optimisation context.</p>
+    </div>
+    <span class="status-pill" *ngIf="!loading">{{ modules.length }} modules</span>
+  </div>
+
+  <div class="catalog-layout" *ngIf="!loading && !error">
+    <section class="surface catalog-list">
+      <div class="filter-row">
+        <button type="button" [class.active]="category === 'All'" (click)="category = 'All'">All</button>
+        <button type="button" [class.active]="category === 'Structure'" (click)="category = 'Structure'">Structure</button>
+        <button type="button" [class.active]="category === 'Facade'" (click)="category = 'Facade'">Facade</button>
+        <button type="button" [class.active]="category === 'Wet core'" (click)="category = 'Wet core'">Wet core</button>
+        <button type="button" [class.active]="category === 'Energy'" (click)="category = 'Energy'">Energy</button>
+      </div>
+
+      <button class="catalog-row" type="button" *ngFor="let module of filteredModules" [class.selected]="selected?.id === module.id" (click)="select(module)">
+        <span class="catalog-icon">{{ module.category.slice(0, 1) }}</span>
+        <span class="catalog-copy">
+          <strong>{{ module.name }}</strong>
+          <small>{{ module.category }} · {{ module.id }}</small>
+          <span>{{ module.description }}</span>
+        </span>
+        <span class="catalog-kpis">
+          <b>{{ module.industrializationPct }}%</b><small>industrialised</small>
+          <b>{{ module.repeatabilityPct }}%</b><small>repeatable</small>
+        </span>
+      </button>
+    </section>
+
+    <aside class="surface catalog-detail" *ngIf="selected as item">
+      <span class="eyebrow">MODULE DETAIL</span>
+      <h2>{{ item.name }}</h2>
+      <span class="category-tag">{{ item.category }}</span>
+      <p>{{ item.description }}</p>
+      <div class="detail-grid">
+        <div><span>Industrialisation</span><strong>{{ item.industrializationPct }}%</strong></div>
+        <div><span>Repeatability</span><strong>{{ item.repeatabilityPct }}%</strong></div>
+      </div>
+      <div class="info-callout">This is a PoC catalogue view. The HTTP adapter is ready to bind to the gateway catalog route when the backend contract lands.</div>
+    </aside>
+  </div>
+
+  <div class="surface empty-state" *ngIf="loading">Loading catalogue…</div>
+  <div class="surface empty-state error" *ngIf="error">{{ error }}</div>
+</div>
