@@ -1,0 +1,1 @@
+{"ast":null,"code":"\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.MIGRATION_API = void 0;\nvar core_1 = require(\"@angular/core\");\nexports.MIGRATION_API = new core_1.InjectionToken('MIGRATION_API');","map":null,"metadata":{},"sourceType":"script","externalDependencies":[]}

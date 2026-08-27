@@ -32,16 +32,54 @@
     </section>
   </div>
 
-  <table class="comparison-table">
-    <thead><tr><th>KPI</th><th>{{ state.comparedVariants[0].name }}</th><th>{{ state.comparedVariants[1].name }}</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let row of rows">
-        <td>{{ row.label }}</td>
-        <td [class.winner-cell]="winner(row, 'a')">{{ format(row.a) }} {{ row.unit }}</td>
-        <td [class.winner-cell]="winner(row, 'b')">{{ format(row.b) }} {{ row.unit }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="comparison-analysis-grid">
+    <section class="kpi-table-panel" aria-label="KPI comparison">
+      <div class="analysis-heading">
+        <strong>KPI comparison</strong>
+        <span>Best value per KPI is highlighted</span>
+      </div>
+      <div class="comparison-table-scroll">
+        <table class="comparison-table">
+          <thead><tr><th>KPI</th><th>{{ state.comparedVariants[0].name }}</th><th>{{ state.comparedVariants[1].name }}</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td>{{ row.label }}</td>
+              <td [class.winner-cell]="winner(row, 'a')">{{ format(row.a) }} {{ row.unit }}</td>
+              <td [class.winner-cell]="winner(row, 'b')">{{ format(row.b) }} {{ row.unit }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="radar-panel" aria-label="KPI profile chart">
+      <div class="analysis-heading">
+        <strong>KPI profile</strong>
+        <span>Normalised comparison</span>
+      </div>
+      <div class="radar-canvas-wrap">
+        <svg class="kpi-radar" viewBox="0 0 420 315" role="img" aria-label="Normalized KPI profile comparison">
+          <g class="radar-grid">
+            <polygon *ngFor="let grid of profileGrid" [attr.points]="grid"></polygon>
+            <line *ngFor="let axis of profileAxisLines" [attr.x1]="axis.x1" [attr.y1]="axis.y1" [attr.x2]="axis.x2" [attr.y2]="axis.y2"></line>
+          </g>
+          <polygon class="radar-fill radar-fill-a" [attr.points]="profilePolygonA"></polygon>
+          <polygon class="radar-fill radar-fill-b" [attr.points]="profilePolygonB"></polygon>
+          <polygon class="radar-line radar-line-a" [attr.points]="profilePolygonA"></polygon>
+          <polygon class="radar-line radar-line-b" [attr.points]="profilePolygonB"></polygon>
+          <g class="radar-labels">
+            <text *ngFor="let label of profileLabels" [attr.x]="label.x" [attr.y]="label.y" [attr.text-anchor]="label.anchor">{{ label.label }}</text>
+          </g>
+          <g class="radar-legend">
+            <circle cx="150" cy="300" r="5" class="legend-a"></circle>
+            <text x="162" y="304">{{ state.comparedVariants[0].name }}</text>
+            <circle cx="282" cy="300" r="5" class="legend-b"></circle>
+            <text x="294" y="304">{{ state.comparedVariants[1].name }}</text>
+          </g>
+        </svg>
+      </div>
+    </aside>
+  </div>
 
   <section class="comparison-3d" aria-label="3D comparison preview">
     <div class="comparison-3d-header">
@@ -74,7 +112,4 @@
     </svg>
   </section>
 
-  <div class="radar-panel">
-    <canvas #comparisonRadar></canvas>
-  </div>
 </div>

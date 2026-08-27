@@ -11,6 +11,10 @@
 .chat-head-actions { display:flex; gap:2px; }
 .chat-head-actions button { width:30px; height:30px; border:0; border-radius:3px; background:transparent; color:#111; font-size:19px; cursor:pointer; }
 .chat-head-actions button:hover,.chat-head-actions button.active { background:#f7fbf8; color:#087021; }
+.chat-head-actions .chat-action-image { width:30px; height:30px; padding:3px; display:inline-flex; align-items:center; justify-content:center; }
+.chat-head-actions .chat-action-image img { width:24px; height:24px; display:block; object-fit:contain; }
+.chat-head-actions .chat-action-image:hover { background:#f7fbf8; }
+
 .chat-help { margin:0 12px; padding:10px 12px; border:1px solid #c4ddca; border-radius:4px; background:#f7fbf8; color:#334155; font-size:11px; line-height:1.45; }
 .chat-help strong { color:#087021; }
 .chat-help p { margin:4px 0 0; }
