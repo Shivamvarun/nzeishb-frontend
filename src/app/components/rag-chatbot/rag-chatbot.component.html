@@ -10,7 +10,17 @@
     <span class="ai-title-pill">✦ ARVA AI</span>
     <div class="chat-head-actions">
       <button type="button" title="Nueva conversación" aria-label="Nueva conversación" (click)="clearChat()">✎</button>
-      <button type="button" title="Expandir / contraer" aria-label="Expandir / contraer" [class.active]="isExpanded" (click)="toggleExpanded()">{{ isExpanded ? "⌄" : "⌃" }}</button>
+      <button
+        type="button"
+        class="chat-action-image"
+        [title]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'"
+        [attr.aria-label]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'"
+        [class.active]="isExpanded"
+        (click)="toggleExpanded()">
+        <img
+          [src]="isExpanded ? 'assets/icons/arva-ai-contract.png' : 'assets/icons/arva-ai-expand.png'"
+          [alt]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'" />
+      </button>
       <button type="button" title="Cerrar" aria-label="Cerrar" (click)="isOpen=false">×</button>
     </div>
   </header>
