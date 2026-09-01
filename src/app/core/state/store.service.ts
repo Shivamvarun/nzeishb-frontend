@@ -145,8 +145,14 @@ export class StoreService {
     try {
       const reply = await this.aiApi.ask(question, this.getState().activeScenario.id);
       this.addChatMessage('bot', reply.text, reply.citations);
-    } catch {
+    } catch (error) {
+      // `state.error` has no renderer wired up anywhere in the current
+      // templates, so a failed AgentCore call used to fail completely
+      // silently from the user's point of view. Surface it inside the
+      // chat itself instead, where the failure actually happened.
+      this.addChatMessage('bot', 'No se pudo consultar a ARVA AI. Inténtalo de nuevo en unos segundos.');
       this.patch({ error: 'No se pudo consultar la normativa.' });
+      console.error('askNormative failed', error);
     }
   }
 
