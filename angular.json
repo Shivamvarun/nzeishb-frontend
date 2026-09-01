@@ -40,7 +40,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -52,12 +51,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "nzeishb-frontend:build",
+            "buildTarget": "nzeishb-frontend:build",
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "nzeishb-frontend:build:production"
+              "buildTarget": "nzeishb-frontend:build:production"
             }
           }
         },
@@ -80,7 +79,6 @@
       }
     }
   },
-  "defaultProject": "nzeishb-frontend",
   "cli": {
     "analytics": "7d2a3df6-6a23-46e2-9d5f-e0170040a03a"
   }

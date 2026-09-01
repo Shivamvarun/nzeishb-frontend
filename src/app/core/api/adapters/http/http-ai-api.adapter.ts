@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { AiApiPort } from '../../ai/ai-api.port';
 import {
   ApiEnvelopeDto,
+  AskAgentResultDto,
   AgentCoreResponseDto,
   AgentCoreSourceDto,
   CreateConversationResultDto,
@@ -47,7 +48,7 @@ export class HttpAiApiAdapter implements AiApiPort {
     const sessionId = await this.ensureSession();
 
     const envelope = await firstValueFrom(
-      this.http.post<ApiEnvelopeDto<AgentCoreResponseDto>>(
+      this.http.post<ApiEnvelopeDto<AskAgentResultDto | AgentCoreResponseDto>>(
         `${this.baseUrl()}${environment.aiMessagesPath}`,
         {
           session_id: sessionId,
@@ -58,7 +59,7 @@ export class HttpAiApiAdapter implements AiApiPort {
       )
     );
 
-    return toChatReply(envelope.data);
+    return toChatReply(agentCoreResponse(envelope.data));
   }
 
   /** Returns the cached AgentCore session id, creating one if needed. */
@@ -93,6 +94,11 @@ export class HttpAiApiAdapter implements AiApiPort {
   private baseUrl(): string {
     return environment.aiApiBaseUrl || environment.apiBaseUrl;
   }
+}
+
+/** Supports both the current ai-service result wrapper and the earlier API. */
+function agentCoreResponse(data: AskAgentResultDto | AgentCoreResponseDto): AgentCoreResponseDto {
+  return 'response' in data ? data.response : data;
 }
 
 /** Maps the AgentCore response contract onto the application's ChatReply. */

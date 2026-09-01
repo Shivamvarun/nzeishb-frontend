@@ -38,6 +38,16 @@ export interface AgentCoreResponseDto {
   readonly results: readonly AgentCoreResultDto[];
 }
 
+/**
+ * Current ai-service message responses wrap the AgentCore payload with the
+ * server-generated session id. Older service builds returned the payload
+ * directly, so the HTTP adapter accepts both shapes during rollout.
+ */
+export interface AskAgentResultDto {
+  readonly sessionId: string;
+  readonly response: AgentCoreResponseDto;
+}
+
 /** ai-service wraps every response in ARVA's standard API envelope. */
 export interface ApiEnvelopeDto<TData> {
   readonly success: boolean;

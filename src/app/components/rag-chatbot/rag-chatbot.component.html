@@ -41,8 +41,14 @@
     </button>
 
     <div class="chat-message" *ngFor="let msg of state.chatMessages" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
-      <div>{{ msg.text }}</div>
+      <markdown [data]="msg.text"></markdown>
       <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }}</small>
+    </div>
+
+    <div *ngIf="isSending" class="chat-message bot thinking-message" role="status" aria-live="polite">
+      <span>ARVA AI is thinking</span>
+      <span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="sr-only">Please wait while ARVA AI prepares a response.</span>
     </div>
   </div>
 
