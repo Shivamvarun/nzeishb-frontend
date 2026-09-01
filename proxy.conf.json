@@ -1,0 +1,8 @@
+{
+  "/api/v1/ai": {
+    "target": "http://localhost:4007",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -1,1 +1,24 @@
+# Dependencies
 node_modules/
+
+# Angular
+.angular/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files containing secrets
+.env
+.env.*
+!.env.example

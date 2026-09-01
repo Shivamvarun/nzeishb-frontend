@@ -52,6 +52,14 @@ import { MockWorkspaceApiAdapter } from './core/api/adapters/mock/mock-workspace
 import { MockCatalogApiAdapter } from './core/api/adapters/mock/mock-catalog-api.adapter';
 import { HttpCatalogApiAdapter } from './core/api/adapters/http/http-catalog-api.adapter';
 
+/**
+ * AI_API is deliberately switched by its own `useMockAi` flag instead of
+ * the blanket `useMockApi` flag: ai-service is the only backend service
+ * with a real, working implementation right now (see environment.ts).
+ * Flipping `useMockApi` for every port at once would move
+ * workspace/spatial/scenario/etc. onto Http adapters whose backends
+ * aren't wired up yet.
+ */
 const apiProviders = environment.useMockApi
   ? [
       { provide: SPATIAL_API, useClass: MockSpatialApiAdapter },
@@ -62,7 +70,6 @@ const apiProviders = environment.useMockApi
       { provide: MIGRATION_API, useClass: MockMigrationApiAdapter },
       { provide: REPORT_API, useClass: MockReportApiAdapter },
       { provide: NORMATIVE_API, useClass: MockNormativeApiAdapter },
-      { provide: AI_API, useClass: MockAiApiAdapter },
       { provide: WORKSPACE_API, useClass: MockWorkspaceApiAdapter },
       { provide: CATALOG_API, useClass: MockCatalogApiAdapter },
       { provide: SPATIAL_CONTEXT_API, useClass: MockSpatialContextApiAdapter }
@@ -76,11 +83,14 @@ const apiProviders = environment.useMockApi
       { provide: MIGRATION_API, useClass: HttpMigrationApiAdapter },
       { provide: REPORT_API, useClass: HttpReportApiAdapter },
       { provide: NORMATIVE_API, useClass: HttpNormativeApiAdapter },
-      { provide: AI_API, useClass: HttpAiApiAdapter },
       { provide: WORKSPACE_API, useClass: HttpWorkspaceApiAdapter },
       { provide: CATALOG_API, useClass: HttpCatalogApiAdapter },
       { provide: SPATIAL_CONTEXT_API, useClass: HttpSpatialContextApiAdapter }
     ];
+
+const aiApiProvider = environment.useMockAi
+  ? { provide: AI_API, useClass: MockAiApiAdapter }
+  : { provide: AI_API, useClass: HttpAiApiAdapter };
 
 @NgModule({
   declarations: [
@@ -98,7 +108,7 @@ const apiProviders = environment.useMockApi
     SolutionsWorkspaceComponent
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule],
-  providers: [...apiProviders],
+  providers: [...apiProviders, aiApiProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
