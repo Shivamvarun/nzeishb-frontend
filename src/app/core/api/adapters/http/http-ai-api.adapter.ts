@@ -54,7 +54,7 @@ export class HttpAiApiAdapter implements AiApiPort {
           session_id: sessionId,
           user_id: environment.aiUserId,
           project_id: environment.aiProjectId,
-          prompt: question
+          prompt: promptWithLanguageRequirement(question)
         }
       )
     );
@@ -99,6 +99,19 @@ export class HttpAiApiAdapter implements AiApiPort {
 /** Supports both the current ai-service result wrapper and the earlier API. */
 function agentCoreResponse(data: AskAgentResultDto | AgentCoreResponseDto): AgentCoreResponseDto {
   return 'response' in data ? data.response : data;
+}
+
+/**
+ * AgentCore does not receive the browser locale. Give it an explicit answer
+ * language instruction so an English question is not answered in Spanish (or
+ * the reverse). This is intentionally a small, conservative detector: when
+ * unclear, English is used rather than guessing a language from a name.
+ */
+function promptWithLanguageRequirement(question: string): string {
+  const isSpanish = /[¿¡ñáéíóúü]|\b(?:qué|que|cómo|como|cuál|cual|dónde|donde|por qué|porque|hola|gracias|puedo|necesito|vivienda|terreno|normativa|edificable)\b/i.test(question);
+  const language = isSpanish ? 'Spanish' : 'English';
+
+  return `${question}\n\nResponse language requirement: Reply entirely in ${language}. Keep any necessary official names, legal citations, and quoted source text unchanged.`;
 }
 
 /** Maps the AgentCore response contract onto the application's ChatReply. */
