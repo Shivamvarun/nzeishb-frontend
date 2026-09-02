@@ -1,6 +1,6 @@
-# nZEISHB / ARVA Frontend PoC
+# nZEISHB / AVRA Frontend PoC
 
-Independent Angular 17 frontend for the ARVA/nZEISHB PoC.
+Independent Angular 17 frontend for the AVRA/nZEISHB PoC.
 
 ## Capability shell
 
@@ -62,15 +62,15 @@ pnpm exec ng serve --open
 
 For the PoC, `environment.ts` uses mock adapters. Production configuration switches to HTTP adapters.
 
-If pnpm reports ignored build scripts, approve the required build scripts and then reinstall as described in the ARVA frontend setup/troubleshooting document.
+If pnpm reports ignored build scripts, approve the required build scripts and then reinstall as described in the AVRA frontend setup/troubleshooting document.
 
 
 ## Source-of-truth rule
 
-Functional behaviour follows the ARVA documentation and published backend contracts. Figma is used for visual design and interaction styling, not as a source for inventing backend capabilities. The frontend keeps service boundaries behind API ports and adapters so the feature components do not need to change when a real gateway implementation replaces a mock.
+Functional behaviour follows the AVRA documentation and published backend contracts. Figma is used for visual design and interaction styling, not as a source for inventing backend capabilities. The frontend keeps service boundaries behind API ports and adapters so the feature components do not need to change when a real gateway implementation replaces a mock.
 
 The optimisation view treats the result returned by the optimisation API as authoritative; Pareto dominance is not recalculated in the browser. The AI chat is isolated behind `AiApiPort`; it is not implemented as a direct Normative-service call.
 
 ## Alignment note
 
-This PoC follows the documented ARVA capability responsibilities and uses Figma as the visual reference. It intentionally does not reproduce every Figma screen or invent backend behaviour. See `FRONTEND_ALIGNMENT.md` for the current integration boundaries and contract-dependent areas.
+This PoC follows the documented AVRA capability responsibilities and uses Figma as the visual reference. It intentionally does not reproduce every Figma screen or invent backend behaviour. See `FRONTEND_ALIGNMENT.md` for the current integration boundaries and contract-dependent areas.

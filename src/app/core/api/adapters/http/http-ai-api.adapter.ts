@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { AiApiPort } from '../../ai/ai-api.port';
 import {
   ApiEnvelopeDto,
+  AskAgentResultDto,
   AgentCoreResponseDto,
   AgentCoreSourceDto,
   CreateConversationResultDto,
@@ -38,28 +39,36 @@ export class HttpAiApiAdapter implements AiApiPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  async ask(question: string, scenarioId: string): Promise<ChatReply> {
+  async ask(question: string, scenarioId: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<ChatReply> {
     void scenarioId; // Scenario id is not the same concept as AgentCore's
-    // solution_id (Scenario vs. Solution are separate ARVA aggregates) —
+    // solution_id (Scenario vs. Solution are separate AVRA aggregates) —
     // not forwarded until a real solution context is available for the
-    // active chat. See ARVA_AI_Project_Handoff.md, "Solution" section.
+    // active chat. See AVRA_AI_Project_Handoff.md, "Solution" section.
 
     const sessionId = await this.ensureSession();
 
     const envelope = await firstValueFrom(
-      this.http.post<ApiEnvelopeDto<AgentCoreResponseDto>>(
+      this.http.post<ApiEnvelopeDto<AskAgentResultDto | AgentCoreResponseDto>>(
         `${this.baseUrl()}${environment.aiMessagesPath}`,
         {
           session_id: sessionId,
           user_id: environment.aiUserId,
           project_id: environment.aiProjectId,
-          prompt: question
+          prompt: promptWithLanguageRequirement(question),
+          ...(inputs?.length ? { inputs } : {})
         }
       )
     );
 
-    return toChatReply(envelope.data);
+    return toChatReply(agentCoreResponse(envelope.data));
   }
+
+  async createConversation(): Promise<string> { return this.ensureSession(); }
+  async uploadFile(file: File, sessionId: string): Promise<any> {
+    return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/upload-url`, { session_id: sessionId, filename: file.name, content_type: file.type } )).then(r => r.data);
+  }
+  async uploadToPresignedUrl(url: string, file: File): Promise<void> { await firstValueFrom(this.http.put(url, file, { headers: { 'Content-Type': file.type }, responseType: 'text' })); }
+  async getDownloadUrl(s3Uri: string): Promise<any> { return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/download-url`, { s3_uri: s3Uri })).then(r => r.data); }
 
   /** Returns the cached AgentCore session id, creating one if needed. */
   private async ensureSession(): Promise<string> {
@@ -95,6 +104,24 @@ export class HttpAiApiAdapter implements AiApiPort {
   }
 }
 
+/** Supports both the current ai-service result wrapper and the earlier API. */
+function agentCoreResponse(data: AskAgentResultDto | AgentCoreResponseDto): AgentCoreResponseDto {
+  return 'response' in data ? data.response : data;
+}
+
+/**
+ * AgentCore does not receive the browser locale. Give it an explicit answer
+ * language instruction so an English question is not answered in Spanish (or
+ * the reverse). This is intentionally a small, conservative detector: when
+ * unclear, English is used rather than guessing a language from a name.
+ */
+function promptWithLanguageRequirement(question: string): string {
+  const isSpanish = /[¿¡ñáéíóúü]|\b(?:qué|que|cómo|como|cuál|cual|dónde|donde|por qué|porque|hola|gracias|puedo|necesito|vivienda|terreno|normativa|edificable)\b/i.test(question);
+  const language = isSpanish ? 'Spanish' : 'English';
+
+  return `${question}\n\nResponse language requirement: Reply entirely in ${language}. Keep any necessary official names, legal citations, and quoted source text unchanged.`;
+}
+
 /** Maps the AgentCore response contract onto the application's ChatReply. */
 function toChatReply(response: AgentCoreResponseDto): ChatReply {
   if (response.status === 'error') {
@@ -125,6 +152,7 @@ function toLegalCitation(source: AgentCoreSourceDto): LegalCitation {
   return {
     document: source.document,
     provision: `#${source.id}`,
-    text: source.text
+    text: source.text,
+    ...(source.uri?.startsWith('s3://') ? { s3Uri: source.uri } : {})
   };
 }

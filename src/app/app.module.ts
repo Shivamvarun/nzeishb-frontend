@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 import { AppComponent } from './app.component';
 import { GisViewerComponent } from './features/spatial/gis-viewer.component';
 import { VpoFormComponent } from './features/scenario/vpo-form.component';
@@ -107,7 +108,7 @@ const aiApiProvider = environment.useMockAi
     DesignWorkspaceComponent,
     SolutionsWorkspaceComponent
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule, MarkdownModule.forRoot()],
   providers: [...apiProviders, aiApiProvider],
   bootstrap: [AppComponent]
 })

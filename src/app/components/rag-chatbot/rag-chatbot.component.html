@@ -1,33 +1,33 @@
-<button *ngIf="!isOpen" type="button" class="arva-ai-launcher" (click)="isOpen=true" aria-label="Pregunta a ARVA AI">
+<button *ngIf="!isOpen" type="button" class="arva-ai-launcher" (click)="isOpen=true" aria-label="Pregunta a AVRA AI">
   <span class="ai-person-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"></path></svg>
   </span>
-  <span class="ai-launcher-label">Pregunta a ARVA AI</span>
+  <span class="ai-launcher-label">Pregunta a AVRA AI</span>
 </button>
 
-<section *ngIf="isOpen" class="arva-chat" [class.expanded]="isExpanded" role="dialog" aria-modal="false" aria-label="ARVA AI">
+<section *ngIf="isOpen" class="arva-chat" [class.expanded]="isExpanded" role="dialog" aria-modal="false" aria-label="AVRA AI">
   <header class="arva-chat-header">
-    <span class="ai-title-pill">✦ ARVA AI</span>
+    <span class="ai-title-pill">✦ AVRA AI</span>
     <div class="chat-head-actions">
       <button type="button" title="Nueva conversación" aria-label="Nueva conversación" (click)="clearChat()">✎</button>
       <button
         type="button"
         class="chat-action-image"
-        [title]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'"
-        [attr.aria-label]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'"
+        [title]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'"
+        [attr.aria-label]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'"
         [class.active]="isExpanded"
         (click)="toggleExpanded()">
         <img
           [src]="isExpanded ? 'assets/icons/arva-ai-contract.png' : 'assets/icons/arva-ai-expand.png'"
-          [alt]="isExpanded ? 'Contraer ARVA AI' : 'Expandir ARVA AI'" />
+          [alt]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'" />
       </button>
       <button type="button" title="Cerrar" aria-label="Cerrar" (click)="isOpen=false">×</button>
     </div>
   </header>
 
   <div class="chat-help" *ngIf="isHelpOpen">
-    <strong>ARVA AI</strong>
-    <p>Ask about the current design, normative context, solutions or IFC information. ARVA AI explains, searches, summarises and cites; deterministic services remain the source of truth for calculations and optimisation.</p>
+    <strong>AVRA AI</strong>
+    <p>Ask about the current design, normative context, solutions or IFC information. AVRA AI explains, searches, summarises and cites; deterministic services remain the source of truth for calculations and optimisation.</p>
   </div>
 
   <div class="arva-chat-body">
@@ -41,13 +41,24 @@
     </button>
 
     <div class="chat-message" *ngFor="let msg of state.chatMessages" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
-      <div>{{ msg.text }}</div>
-      <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }}</small>
+      <markdown [data]="msg.text"></markdown>
+      <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }} <button *ngIf="citation.s3Uri" type="button" class="citation-download" (click)="downloadCitation(citation.s3Uri)">Download source</button></small>
+    </div>
+
+    <div *ngIf="isSending" class="chat-message bot thinking-message" role="status" aria-live="polite">
+      <span>AVRA AI is thinking</span>
+      <span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="sr-only">Please wait while AVRA AI prepares a response.</span>
     </div>
   </div>
 
   <div class="arva-chat-input">
+    <input #fileInput type="file" hidden accept=".ifc,.pdf,model/ifc,application/pdf" (change)="onFileSelected($event)">
+    <button type="button" class="attach-button" (click)="fileInput.click()" [disabled]="isSending || uploadState === 'uploading'" aria-label="Attach file" title="Attach IFC or PDF">📎</button>
     <input [(ngModel)]="inputText" placeholder="Escribe un mensaje" (keyup.enter)="sendMessage()" [disabled]="isSending">
     <button type="button" (click)="sendMessage()" [disabled]="isSending" aria-label="Enviar">➤</button>
+  </div>
+  <div *ngIf="attachedFile" class="chat-file" [class.failed]="uploadState === 'failed'">
+    <span>📎 {{ attachedFile.name }}</span><span *ngIf="uploadState === 'uploading'">Uploading…</span><span *ngIf="uploadState === 'uploaded'">Uploaded ✓ <button type="button" (click)="downloadFile()">Download</button></span><span *ngIf="uploadState === 'failed'">{{ uploadError }}</span><button type="button" (click)="removeFile()" aria-label="Remove file">×</button>
   </div>
 </section>
