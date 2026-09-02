@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const WORKSPACE_API = new InjectionToken('WORKSPACE_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

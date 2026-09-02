@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const SCENARIO_API = new InjectionToken('SCENARIO_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

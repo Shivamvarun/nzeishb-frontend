@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const SPATIAL_API = new InjectionToken('SPATIAL_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

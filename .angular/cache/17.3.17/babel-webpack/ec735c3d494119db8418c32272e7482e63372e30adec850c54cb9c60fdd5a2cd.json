@@ -1,1 +1,0 @@
-{"ast":null,"code":"\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.NORMATIVE_API = void 0;\nvar core_1 = require(\"@angular/core\");\nexports.NORMATIVE_API = new core_1.InjectionToken('NORMATIVE_API');","map":null,"metadata":{},"sourceType":"script","externalDependencies":[]}

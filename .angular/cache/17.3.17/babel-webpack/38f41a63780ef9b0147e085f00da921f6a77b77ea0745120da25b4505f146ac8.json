@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const ARVA_API = new InjectionToken('ARVA_API');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
