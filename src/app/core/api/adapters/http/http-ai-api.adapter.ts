@@ -39,7 +39,7 @@ export class HttpAiApiAdapter implements AiApiPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  async ask(question: string, scenarioId: string): Promise<ChatReply> {
+  async ask(question: string, scenarioId: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<ChatReply> {
     void scenarioId; // Scenario id is not the same concept as AgentCore's
     // solution_id (Scenario vs. Solution are separate AVRA aggregates) —
     // not forwarded until a real solution context is available for the
@@ -54,13 +54,21 @@ export class HttpAiApiAdapter implements AiApiPort {
           session_id: sessionId,
           user_id: environment.aiUserId,
           project_id: environment.aiProjectId,
-          prompt: promptWithLanguageRequirement(question)
+          prompt: promptWithLanguageRequirement(question),
+          ...(inputs?.length ? { inputs } : {})
         }
       )
     );
 
     return toChatReply(agentCoreResponse(envelope.data));
   }
+
+  async createConversation(): Promise<string> { return this.ensureSession(); }
+  async uploadFile(file: File, sessionId: string): Promise<any> {
+    return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/upload-url`, { session_id: sessionId, filename: file.name, content_type: file.type } )).then(r => r.data);
+  }
+  async uploadToPresignedUrl(url: string, file: File): Promise<void> { await firstValueFrom(this.http.put(url, file, { headers: { 'Content-Type': file.type }, responseType: 'text' })); }
+  async getDownloadUrl(s3Uri: string): Promise<any> { return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/download-url`, { s3_uri: s3Uri })).then(r => r.data); }
 
   /** Returns the cached AgentCore session id, creating one if needed. */
   private async ensureSession(): Promise<string> {
@@ -144,6 +152,7 @@ function toLegalCitation(source: AgentCoreSourceDto): LegalCitation {
   return {
     document: source.document,
     provision: `#${source.id}`,
-    text: source.text
+    text: source.text,
+    ...(source.uri?.startsWith('s3://') ? { s3Uri: source.uri } : {})
   };
 }

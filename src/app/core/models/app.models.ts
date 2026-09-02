@@ -73,7 +73,7 @@ export interface WorkspaceSnapshot {
   readonly variants: readonly Variant[];
 }
 
-export interface LegalCitation { readonly document: string; readonly provision: string; readonly text: string; }
+export interface LegalCitation { readonly document: string; readonly provision: string; readonly text: string; readonly s3Uri?: string; }
 export interface ChatReply { readonly text: string; readonly citations: readonly LegalCitation[]; }
 export interface GeneratedArtifact { readonly fileName: string; readonly downloadUrl: string; }
 export type ArtifactKind = 'ifc' | 'budget' | 'report';

@@ -140,10 +140,10 @@ export class StoreService {
     }
   }
 
-  async askNormative(question: string): Promise<void> {
+  async askNormative(question: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<void> {
     this.addChatMessage('user', question);
     try {
-      const reply = await this.aiApi.ask(question, this.getState().activeScenario.id);
+      const reply = await this.aiApi.ask(question, this.getState().activeScenario.id, inputs);
       this.addChatMessage('bot', reply.text, reply.citations);
     } catch (error) {
       // `state.error` has no renderer wired up anywhere in the current

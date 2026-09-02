@@ -62,3 +62,7 @@ export interface ApiEnvelopeDto<TData> {
 export interface CreateConversationResultDto {
   readonly sessionId: string;
 }
+
+export interface UploadedAiFile { readonly file: File; readonly s3Uri: string; readonly name: string; readonly mimeType: string; }
+export interface UploadUrlResultDto { readonly url: string; readonly key: string; readonly s3Uri: string; readonly expiresInSeconds: number; }
+export interface DownloadUrlResultDto { readonly url: string; readonly expiresInSeconds: number; }

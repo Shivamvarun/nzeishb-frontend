@@ -42,7 +42,7 @@
 
     <div class="chat-message" *ngFor="let msg of state.chatMessages" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
       <markdown [data]="msg.text"></markdown>
-      <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }}</small>
+      <small *ngFor="let citation of msg.citations">{{ citation.document }} · {{ citation.provision }} <button *ngIf="citation.s3Uri" type="button" class="citation-download" (click)="downloadCitation(citation.s3Uri)">Download source</button></small>
     </div>
 
     <div *ngIf="isSending" class="chat-message bot thinking-message" role="status" aria-live="polite">
@@ -53,7 +53,12 @@
   </div>
 
   <div class="arva-chat-input">
+    <input #fileInput type="file" hidden accept=".ifc,.pdf,model/ifc,application/pdf" (change)="onFileSelected($event)">
+    <button type="button" class="attach-button" (click)="fileInput.click()" [disabled]="isSending || uploadState === 'uploading'" aria-label="Attach file" title="Attach IFC or PDF">📎</button>
     <input [(ngModel)]="inputText" placeholder="Escribe un mensaje" (keyup.enter)="sendMessage()" [disabled]="isSending">
     <button type="button" (click)="sendMessage()" [disabled]="isSending" aria-label="Enviar">➤</button>
+  </div>
+  <div *ngIf="attachedFile" class="chat-file" [class.failed]="uploadState === 'failed'">
+    <span>📎 {{ attachedFile.name }}</span><span *ngIf="uploadState === 'uploading'">Uploading…</span><span *ngIf="uploadState === 'uploaded'">Uploaded ✓ <button type="button" (click)="downloadFile()">Download</button></span><span *ngIf="uploadState === 'failed'">{{ uploadError }}</span><button type="button" (click)="removeFile()" aria-label="Remove file">×</button>
   </div>
 </section>
