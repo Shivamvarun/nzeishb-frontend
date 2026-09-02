@@ -150,7 +150,7 @@ export class StoreService {
       // templates, so a failed AgentCore call used to fail completely
       // silently from the user's point of view. Surface it inside the
       // chat itself instead, where the failure actually happened.
-      this.addChatMessage('bot', 'No se pudo consultar a ARVA AI. Inténtalo de nuevo en unos segundos.');
+      this.addChatMessage('bot', 'No se pudo consultar a AVRA AI. Inténtalo de nuevo en unos segundos.');
       this.patch({ error: 'No se pudo consultar la normativa.' });
       console.error('askNormative failed', error);
     }
@@ -179,7 +179,7 @@ export class StoreService {
     }
   }
 
-  resetChat(): void { this.patch({ chatMessages: [{ sender: 'bot', text: 'I am ARVA AI. Ask me about the current design, solutions, IFC or available normative context.', citations: [], timestamp: new Date().toLocaleTimeString() }] }); }
+  resetChat(): void { this.patch({ chatMessages: [{ sender: 'bot', text: 'I am AVRA AI. Ask me about the current design, solutions, IFC or available normative context.', citations: [], timestamp: new Date().toLocaleTimeString() }] }); }
 
   addChatMessage(sender: 'bot' | 'user', text: string, citations = [] as AppState['chatMessages'][number]['citations']): void {
     this.patch({ chatMessages: [...this.getState().chatMessages, { sender, text, citations, timestamp: new Date().toLocaleTimeString() }] });
@@ -258,7 +258,7 @@ export class StoreService {
       isOptimizing: false,
       isSaving: false,
       error: null,
-      chatMessages: [{ sender: 'bot', text: 'Hola. Soy el Asistente Regulador de ARVA. En que puedo ayudarte?', citations: [], timestamp: new Date().toLocaleTimeString() }]
+      chatMessages: [{ sender: 'bot', text: 'Hola. Soy el Asistente Regulador de AVRA. En que puedo ayudarte?', citations: [], timestamp: new Date().toLocaleTimeString() }]
     };
   }
 }

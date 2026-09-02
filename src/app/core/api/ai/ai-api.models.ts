@@ -48,7 +48,7 @@ export interface AskAgentResultDto {
   readonly response: AgentCoreResponseDto;
 }
 
-/** ai-service wraps every response in ARVA's standard API envelope. */
+/** ai-service wraps every response in AVRA's standard API envelope. */
 export interface ApiEnvelopeDto<TData> {
   readonly success: boolean;
   readonly data: TData;

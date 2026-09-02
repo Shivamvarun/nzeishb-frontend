@@ -41,9 +41,9 @@ export class HttpAiApiAdapter implements AiApiPort {
 
   async ask(question: string, scenarioId: string): Promise<ChatReply> {
     void scenarioId; // Scenario id is not the same concept as AgentCore's
-    // solution_id (Scenario vs. Solution are separate ARVA aggregates) —
+    // solution_id (Scenario vs. Solution are separate AVRA aggregates) —
     // not forwarded until a real solution context is available for the
-    // active chat. See ARVA_AI_Project_Handoff.md, "Solution" section.
+    // active chat. See AVRA_AI_Project_Handoff.md, "Solution" section.
 
     const sessionId = await this.ensureSession();
 

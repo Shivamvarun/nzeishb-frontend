@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import { ChatReply } from './ai-api.models';
 
-/** Application boundary for the ARVA conversational agent. */
+/** Application boundary for the AVRA conversational agent. */
 export interface AiApiPort {
   ask(question: string, scenarioId: string): Promise<ChatReply>;
 }
