@@ -9,7 +9,7 @@ import { REPORT_API, ReportApiPort } from '../api/report/report-api.port';
 import { AI_API, AiApiPort, AiAskContext } from '../api/ai/ai-api.port';
 import { WORKSPACE_API, WorkspaceApiPort } from '../api/workspace/workspace-api.port';
 import { welcomeForView } from '../ai/chat-copy';
-import { staticIfcRef } from '../ai/static-ifc';
+import { STATIC_IFC, staticIfcRef } from '../ai/static-ifc';
 import { ActiveView, AppState, ArtifactKind, Plot, Scenario, Variant, VpoParams } from '../models/app.models';
 
 @Injectable({ providedIn: 'root' })
@@ -156,7 +156,9 @@ export class StoreService {
       const context: AiAskContext = {
         scenarioId: state.activeScenario.id,
         view: state.activeView,
-        ...(state.activeView === 'bim' ? { ifc: staticIfcRef() } : {}),
+        ...(state.activeView === 'bim'
+          ? { solutionId: STATIC_IFC.solutionId, ifc: staticIfcRef() }
+          : {}),
         ...(inputs?.length ? { inputs } : {})
       };
       const reply = await this.aiApi.ask(question, context);

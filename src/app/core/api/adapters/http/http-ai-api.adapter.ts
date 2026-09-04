@@ -41,15 +41,6 @@ export class HttpAiApiAdapter implements AiApiPort {
 
   async ask(question: string, context: AiAskContext): Promise<ChatReply> {
     const sessionId = await this.ensureSession();
-    const inputs = [...(context.inputs ?? [])];
-    if (context.ifc && !inputs.some(item => item.s3_uri === context.ifc!.uri)) {
-      inputs.unshift({
-        input_id: 'ifc-modelo',
-        name: context.ifc.fileName,
-        mime_type: 'model/ifc',
-        s3_uri: context.ifc.uri
-      });
-    }
 
     const envelope = await firstValueFrom(
       this.http.post<ApiEnvelopeDto<AskAgentResultDto | AgentCoreResponseDto>>(
@@ -59,7 +50,7 @@ export class HttpAiApiAdapter implements AiApiPort {
           user_id: environment.aiUserId,
           project_id: environment.aiProjectId,
           prompt: promptWithLanguageRequirement(question),
-          ...(inputs.length ? { inputs } : {})
+          ...(context.solutionId ? { solution_id: context.solutionId } : {})
         }
       )
     );

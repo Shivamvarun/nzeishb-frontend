@@ -1,6 +1,7 @@
 /** Single static IFC used by the BIM viewer and as the only IFC context for AVRA AI on that tab. */
 export const STATIC_IFC = {
   fileName: 'modelo.ifc',
+  solutionId: 'demo',
   assetUrl: 'assets/ifc/modelo.ifc',
   wasmPath: 'assets/wasm/',
   uri: 's3://avra-nzeishb-data-dev/IFC/demo/modelo.ifc',
