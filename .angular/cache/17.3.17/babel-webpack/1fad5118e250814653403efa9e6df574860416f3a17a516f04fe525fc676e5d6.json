@@ -1,1 +1,0 @@
-{"ast":null,"code":"\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.SPATIAL_CONTEXT_API = void 0;\nvar core_1 = require(\"@angular/core\");\nexports.SPATIAL_CONTEXT_API = new core_1.InjectionToken('SPATIAL_CONTEXT_API');","map":null,"metadata":{},"sourceType":"script","externalDependencies":[]}
