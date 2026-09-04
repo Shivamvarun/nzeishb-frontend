@@ -1,21 +1,13 @@
-/** Single static IFC used by the BIM viewer and as the only IFC context for AVRA AI on that tab. */
+/** Static IFC for the BIM viewer. Chat uses solutionId; ai-service owns the IFC URI. */
 export const STATIC_IFC = {
   fileName: 'modelo.ifc',
   solutionId: 'demo',
   assetUrl: 'assets/ifc/modelo.ifc',
-  wasmPath: 'assets/wasm/',
-  uri: 's3://avra-nzeishb-data-dev/IFC/demo/modelo.ifc',
-  viewerHttpsUrls: [
-    'https://avra-nzeishb-data-dev.s3.amazonaws.com/IFC/demo/modelo.ifc',
-    'https://s3.amazonaws.com/avra-nzeishb-data-dev/IFC/demo/modelo.ifc'
-  ]
+  wasmPath: 'assets/wasm/'
 } as const;
 
-export type StaticIfcRef = {
-  readonly fileName: typeof STATIC_IFC.fileName;
-  readonly uri: typeof STATIC_IFC.uri;
-};
-
-export function staticIfcRef(): StaticIfcRef {
-  return { fileName: STATIC_IFC.fileName, uri: STATIC_IFC.uri };
+/** Origin-absolute URL for files under `src/assets`. */
+export function staticAssetUrl(relativePath: string): string {
+  const origin = typeof window === 'undefined' ? '' : window.location.origin;
+  return `${origin}/${relativePath}`.replace(/([^:]\/)\/+/g, '$1');
 }

@@ -6,57 +6,83 @@ export interface ChatSuggestion {
   readonly query: string;
 }
 
-export function welcomeForView(view: ActiveView): string {
-  if (view === 'bim') {
-    return `I am AVRA AI. This tab uses ${STATIC_IFC.fileName} as the only IFC/BIM context. Ask me about ${STATIC_IFC.fileName}.`;
+interface ViewCopy {
+  readonly welcome: string;
+  readonly placeholder: string;
+  readonly suggestions: readonly ChatSuggestion[];
+}
+
+function suggestion(text: string): ChatSuggestion {
+  return { label: text, query: text };
+}
+
+const COPY: Record<ActiveView, ViewCopy> = {
+  bim: {
+    welcome: `I am AVRA AI. This tab uses ${STATIC_IFC.fileName} as the only IFC/BIM context. Ask me about ${STATIC_IFC.fileName}.`,
+    placeholder: `Ask about ${STATIC_IFC.fileName}`,
+    suggestions: [
+      suggestion(`What building storeys are defined in ${STATIC_IFC.fileName}?`),
+      { label: `Summarise the building in ${STATIC_IFC.fileName}`, query: `Summarise the building, structure and spaces in ${STATIC_IFC.fileName}.` }
+    ]
+  },
+  spatial: {
+    welcome: 'I am AVRA AI. Ask me about the current plot, spatial constraints or available normative context.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('¿Cuál es el máximo edificable en este terreno?'),
+      suggestion('¿Qué tipología de vivienda es la más eficiente?')
+    ]
+  },
+  catalog: {
+    welcome: 'I am AVRA AI. Ask me about catalog assemblies, industrialised systems or typical solutions.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('Which facade systems in the catalog fit this scenario?'),
+      suggestion('Compare the industrialised wet cores available in the catalog.')
+    ]
+  },
+  scenario: {
+    welcome: 'I am AVRA AI. Ask me about the current design scenario, VPO criteria or normative context.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('Explain the current VPO criteria for this scenario.'),
+      suggestion('What normative limits apply to this design scenario?')
+    ]
+  },
+  optimization: {
+    welcome: 'I am AVRA AI. Ask me about the optimisation run, candidate variants or trade-offs.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('Why is the selected variant preferred in this optimisation?'),
+      suggestion('What are the main cost, energy and industrialisation trade-offs?')
+    ]
+  },
+  solutions: {
+    welcome: 'I am AVRA AI. Ask me about the current solutions, comparison or documented performance.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('Compare the two selected solutions.'),
+      suggestion('Which selected solution is closer to nZEB compliance?')
+    ]
+  },
+  reports: {
+    welcome: 'I am AVRA AI. Ask me about reports, budgets or the normative basis of the current design.',
+    placeholder: 'Escribe un mensaje',
+    suggestions: [
+      suggestion('What should the regulatory report include for this design?'),
+      suggestion('How is the budget structured for the selected solution?')
+    ]
   }
-  const byView: Record<Exclude<ActiveView, 'bim'>, string> = {
-    spatial: 'I am AVRA AI. Ask me about the current plot, spatial constraints or available normative context.',
-    catalog: 'I am AVRA AI. Ask me about catalog assemblies, industrialised systems or typical solutions.',
-    scenario: 'I am AVRA AI. Ask me about the current design scenario, VPO criteria or normative context.',
-    optimization: 'I am AVRA AI. Ask me about the optimisation run, candidate variants or trade-offs.',
-    solutions: 'I am AVRA AI. Ask me about the current solutions, comparison or documented performance.',
-    reports: 'I am AVRA AI. Ask me about reports, budgets or the normative basis of the current design.'
-  };
-  return byView[view];
+};
+
+export function welcomeForView(view: ActiveView): string {
+  return COPY[view].welcome;
 }
 
 export function suggestionsForView(view: ActiveView): readonly ChatSuggestion[] {
-  if (view === 'bim') {
-    return [
-      { label: `What storeys are defined in ${STATIC_IFC.fileName}?`, query: `What building storeys are defined in ${STATIC_IFC.fileName}?` },
-      { label: `Summarise the building in ${STATIC_IFC.fileName}`, query: `Summarise the building, structure and spaces in ${STATIC_IFC.fileName}.` }
-    ];
-  }
-  const byView: Record<Exclude<ActiveView, 'bim'>, readonly ChatSuggestion[]> = {
-    spatial: [
-      { label: '¿Cuál es el máximo edificable en este terreno?', query: '¿Cuál es el máximo edificable en este terreno?' },
-      { label: '¿Qué tipología de vivienda es la más eficiente?', query: '¿Qué tipología de vivienda es la más eficiente?' }
-    ],
-    catalog: [
-      { label: 'Which facade systems fit this scenario?', query: 'Which facade systems in the catalog fit this scenario?' },
-      { label: 'Compare industrialised wet cores', query: 'Compare the industrialised wet cores available in the catalog.' }
-    ],
-    scenario: [
-      { label: 'Explain the current VPO criteria', query: 'Explain the current VPO criteria for this scenario.' },
-      { label: 'What normative limits apply here?', query: 'What normative limits apply to this design scenario?' }
-    ],
-    optimization: [
-      { label: 'Why is this variant preferred?', query: 'Why is the selected variant preferred in this optimisation?' },
-      { label: 'What are the main trade-offs?', query: 'What are the main cost, energy and industrialisation trade-offs?' }
-    ],
-    solutions: [
-      { label: 'Compare the two selected solutions', query: 'Compare the two selected solutions.' },
-      { label: 'Which solution is closer to nZEB?', query: 'Which selected solution is closer to nZEB compliance?' }
-    ],
-    reports: [
-      { label: 'What should the regulatory report include?', query: 'What should the regulatory report include for this design?' },
-      { label: 'How is the budget structured?', query: 'How is the budget structured for the selected solution?' }
-    ]
-  };
-  return byView[view];
+  return COPY[view].suggestions;
 }
 
 export function placeholderForView(view: ActiveView): string {
-  return view === 'bim' ? `Ask about ${STATIC_IFC.fileName}` : 'Escribe un mensaje';
+  return COPY[view].placeholder;
 }

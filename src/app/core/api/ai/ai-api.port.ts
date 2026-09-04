@@ -2,17 +2,10 @@ import { InjectionToken } from '@angular/core';
 import { ActiveView } from '../../models/app.models';
 import { ChatReply, DownloadUrlResultDto, UploadUrlResultDto } from './ai-api.models';
 
-export interface AiIfcContext {
-  readonly fileName: string;
-  readonly uri: string;
-}
-
 export interface AiAskContext {
   readonly scenarioId: string;
   readonly view: ActiveView;
   readonly solutionId?: string;
-  readonly ifc?: AiIfcContext;
-  readonly inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[];
 }
 
 /** Application boundary for the AVRA conversational agent. */

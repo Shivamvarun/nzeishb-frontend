@@ -4,12 +4,11 @@ import { SPATIAL_API, SpatialApiPort } from '../api/spatial/spatial-api.port';
 import { SCENARIO_API, ScenarioApiPort } from '../api/scenario/scenario-api.port';
 import { OPTIMIZATION_API, OptimizationApiPort } from '../api/optimization/optimization-api.port';
 import { BIM_API, BimApiPort } from '../api/bim/bim-api.port';
-import { AUDIT_API, AuditApiPort } from '../api/audit/audit-api.port';
 import { REPORT_API, ReportApiPort } from '../api/report/report-api.port';
 import { AI_API, AiApiPort, AiAskContext } from '../api/ai/ai-api.port';
 import { WORKSPACE_API, WorkspaceApiPort } from '../api/workspace/workspace-api.port';
 import { welcomeForView } from '../ai/chat-copy';
-import { STATIC_IFC, staticIfcRef } from '../ai/static-ifc';
+import { STATIC_IFC } from '../ai/static-ifc';
 import { ActiveView, AppState, ArtifactKind, Plot, Scenario, Variant, VpoParams } from '../models/app.models';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +23,6 @@ export class StoreService {
     @Inject(OPTIMIZATION_API) private readonly optimizationApi: OptimizationApiPort,
     @Inject(AI_API) private readonly aiApi: AiApiPort,
     @Inject(BIM_API) private readonly bimApi: BimApiPort,
-    @Inject(AUDIT_API) private readonly auditApi: AuditApiPort,
     @Inject(REPORT_API) private readonly reportApi: ReportApiPort
   ) {
     void this.loadWorkspace();
@@ -93,11 +91,9 @@ export class StoreService {
     return true;
   }
 
-  addImportedPlot(plot: Plot): void {
+  addPlot(plot: Plot): void {
     this.patch({ plots: [...this.getState().plots, plot], activePlot: plot, error: null });
   }
-
-  addPlot(plot: Plot): void { this.addImportedPlot(plot); }
 
   async saveScenario(): Promise<void> {
     this.patch({ isSaving: true, error: null });
@@ -122,8 +118,7 @@ export class StoreService {
   }
 
   reopenScenario(id: string): void {
-    const scenario = this.getState().scenarioHistory.find(item => item.id === id);
-    if (scenario) this.patch({ activeScenario: scenario });
+    this.selectScenario(id);
   }
 
   async deleteScenario(id: string): Promise<void> {
@@ -149,25 +144,18 @@ export class StoreService {
     }
   }
 
-  async askNormative(question: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<void> {
+  async askNormative(question: string): Promise<void> {
     this.addChatMessage('user', question);
     try {
       const state = this.getState();
       const context: AiAskContext = {
         scenarioId: state.activeScenario.id,
         view: state.activeView,
-        ...(state.activeView === 'bim'
-          ? { solutionId: STATIC_IFC.solutionId, ifc: staticIfcRef() }
-          : {}),
-        ...(inputs?.length ? { inputs } : {})
+        ...(state.activeView === 'bim' ? { solutionId: STATIC_IFC.solutionId } : {})
       };
       const reply = await this.aiApi.ask(question, context);
       this.addChatMessage('bot', reply.text, reply.citations);
     } catch (error) {
-      // `state.error` has no renderer wired up anywhere in the current
-      // templates, so a failed AgentCore call used to fail completely
-      // silently from the user's point of view. Surface it inside the
-      // chat itself instead, where the failure actually happened.
       this.addChatMessage('bot', 'No se pudo consultar a AVRA AI. Inténtalo de nuevo en unos segundos.');
       this.patch({ error: 'No se pudo consultar la normativa.' });
       console.error('askNormative failed', error);

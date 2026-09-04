@@ -1,11 +1,10 @@
-import { STATIC_IFC } from '../../core/ai/static-ifc';
+import { STATIC_IFC, staticAssetUrl } from '../../core/ai/static-ifc';
 
 const DB_NAME = 'nzeishb-ifc-cache';
 const STORE_NAME = 'ifc-files';
 const DB_VERSION = 1;
-const HEADER_TIMEOUT_MS = 4000;
 
-export type IfcBytesSource = 'indexeddb' | 'https' | 'asset';
+export type IfcBytesSource = 'indexeddb' | 'asset';
 
 export interface LoadedIfcBytes {
   readonly buffer: ArrayBuffer;
@@ -22,15 +21,8 @@ export async function loadStaticIfcBytes(
     return { buffer: cached, source: 'indexeddb' };
   }
 
-  const fromHttps = await downloadFromHttps(onStatus);
-  if (fromHttps) {
-    onStatus(`Saving ${STATIC_IFC.fileName} locally…`);
-    await persistIfc(fromHttps).catch(() => undefined);
-    return { buffer: fromHttps, source: 'https' };
-  }
-
   onStatus(`Loading ${STATIC_IFC.fileName} from app assets…`);
-  const assetUrl = `${window.location.origin}/${STATIC_IFC.assetUrl}`.replace(/([^:]\/)\/+/g, '$1');
+  const assetUrl = staticAssetUrl(STATIC_IFC.assetUrl);
   const response = await fetch(assetUrl);
   if (!response.ok) {
     throw new Error(`Could not load ${STATIC_IFC.fileName} from ${assetUrl}`);
@@ -42,30 +34,6 @@ export async function loadStaticIfcBytes(
   onStatus(`Saving ${STATIC_IFC.fileName} locally…`);
   await persistIfc(fromAsset).catch(() => undefined);
   return { buffer: fromAsset, source: 'asset' };
-}
-
-async function downloadFromHttps(onStatus: (status: string) => void): Promise<ArrayBuffer | null> {
-  for (const url of STATIC_IFC.viewerHttpsUrls) {
-    onStatus(`Downloading ${STATIC_IFC.fileName}…`);
-    const buffer = await fetchIfcIfReachable(url);
-    if (buffer && isIfcBuffer(buffer)) return buffer;
-  }
-  return null;
-}
-
-/** Browser fetch cannot use s3://. Abort if response headers do not arrive quickly (CORS / dead host). */
-async function fetchIfcIfReachable(url: string): Promise<ArrayBuffer | null> {
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), HEADER_TIMEOUT_MS);
-  try {
-    const response = await fetch(url, { mode: 'cors', signal: controller.signal });
-    window.clearTimeout(timer);
-    if (!response.ok) return null;
-    return await response.arrayBuffer();
-  } catch {
-    window.clearTimeout(timer);
-    return null;
-  }
 }
 
 function isIfcBuffer(buffer: ArrayBuffer): boolean {

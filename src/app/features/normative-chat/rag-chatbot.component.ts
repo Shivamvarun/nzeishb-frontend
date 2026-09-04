@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { placeholderForView, suggestionsForView } from '../../core/ai/chat-copy';
+import { UploadedAiFile } from '../../core/api/ai/ai-api.models';
 import { AI_API, AiApiPort } from '../../core/api/ai/ai-api.port';
 import { ActiveView, AppState } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
@@ -13,12 +14,10 @@ import { StoreService } from '../../core/state/store.service';
 export class RagChatbotComponent implements OnDestroy {
   state: AppState = this.store.getState();
   inputText = '';
-  s3UriInput = '';
   isSending = false;
   isOpen = false;
-  isHelpOpen = false;
   isExpanded = false;
-  attachedFile: { file: File; s3Uri: string; name: string; mimeType: string } | null = null;
+  attachedFile: UploadedAiFile | null = null;
   uploadState: 'idle' | 'uploading' | 'uploaded' | 'failed' = 'idle';
   uploadError = '';
 
@@ -57,12 +56,7 @@ export class RagChatbotComponent implements OnDestroy {
     this.inputText = '';
     this.isSending = true;
     try {
-      await this.store.askNormative(
-        query,
-        this.attachedFile
-          ? [{ input_id: 'file-1', name: this.attachedFile.name, mime_type: this.attachedFile.mimeType, s3_uri: this.attachedFile.s3Uri }]
-          : undefined
-      );
+      await this.store.askNormative(query);
     } finally {
       this.isSending = false;
     }
@@ -101,49 +95,29 @@ export class RagChatbotComponent implements OnDestroy {
 
   async downloadFile(): Promise<void> {
     if (!this.attachedFile?.s3Uri) return;
-    try {
-      const result = await this.aiApi.getDownloadUrl(this.attachedFile.s3Uri);
-      window.open(result.url, '_blank', 'noopener');
-    } catch (error) {
-      this.uploadError = 'File download is currently unavailable.';
-      console.error('AI file download failed', error);
-    }
-  }
-
-  async downloadExistingFile(): Promise<void> {
-    const s3Uri = this.s3UriInput.trim();
-    if (!s3Uri) return;
-    this.uploadError = '';
-    try {
-      const result = await this.aiApi.getDownloadUrl(s3Uri);
-      window.open(result.url, '_blank', 'noopener');
-    } catch (error) {
-      this.uploadError = 'File download is currently unavailable.';
-      console.error('AI S3 download failed', error);
-    }
+    await this.openDownload(this.attachedFile.s3Uri);
   }
 
   async downloadCitation(s3Uri: string): Promise<void> {
-    try {
-      const result = await this.aiApi.getDownloadUrl(s3Uri);
-      window.open(result.url, '_blank', 'noopener');
-    } catch (error) {
-      this.uploadError = 'File download is currently unavailable.';
-      console.error('AI citation download failed', error);
-    }
+    await this.openDownload(s3Uri);
   }
 
   clearChat(): void {
     this.store.resetChat();
     this.inputText = '';
-    this.isHelpOpen = false;
   }
 
   toggleExpanded(): void {
     this.isExpanded = !this.isExpanded;
   }
 
-  toggleHelp(): void {
-    this.isHelpOpen = !this.isHelpOpen;
+  private async openDownload(s3Uri: string): Promise<void> {
+    try {
+      const result = await this.aiApi.getDownloadUrl(s3Uri);
+      window.open(result.url, '_blank', 'noopener');
+    } catch (error) {
+      this.uploadError = 'File download is currently unavailable.';
+      console.error('AI file download failed', error);
+    }
   }
 }
