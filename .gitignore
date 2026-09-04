@@ -25,4 +25,4 @@ pnpm-debug.log*
 
 # 80MB static IFC demo — keep a local copy at src/assets/ifc/modelo.ifc
 # and/or load from S3 / IndexedDB. Do not commit the binary.
-src/assets/ifc/*.ifc
+# src/assets/ifc/*.ifc
