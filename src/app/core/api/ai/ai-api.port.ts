@@ -10,6 +10,7 @@ export interface AiIfcContext {
 export interface AiAskContext {
   readonly scenarioId: string;
   readonly view: ActiveView;
+  readonly solutionId?: string;
   readonly ifc?: AiIfcContext;
   readonly inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[];
 }
