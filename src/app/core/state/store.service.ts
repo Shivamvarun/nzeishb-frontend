@@ -6,8 +6,10 @@ import { OPTIMIZATION_API, OptimizationApiPort } from '../api/optimization/optim
 import { BIM_API, BimApiPort } from '../api/bim/bim-api.port';
 import { AUDIT_API, AuditApiPort } from '../api/audit/audit-api.port';
 import { REPORT_API, ReportApiPort } from '../api/report/report-api.port';
-import { AI_API, AiApiPort } from '../api/ai/ai-api.port';
+import { AI_API, AiApiPort, AiAskContext } from '../api/ai/ai-api.port';
 import { WORKSPACE_API, WorkspaceApiPort } from '../api/workspace/workspace-api.port';
+import { welcomeForView } from '../ai/chat-copy';
+import { staticIfcRef } from '../ai/static-ifc';
 import { ActiveView, AppState, ArtifactKind, Plot, Scenario, Variant, VpoParams } from '../models/app.models';
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +33,14 @@ export class StoreService {
   getState(): AppState { return this.subject.value; }
   getPlots(): readonly Plot[] { return this.getState().plots; }
   getPlotById(id: string): Plot | undefined { return this.getState().plots.find(plot => plot.id === id); }
-  setActiveView(view: ActiveView): void { this.patch({ activeView: view }); }
+  setActiveView(view: ActiveView): void {
+    if (view === this.getState().activeView) return;
+    this.aiApi.resetConversation();
+    this.patch({
+      activeView: view,
+      chatMessages: [this.welcomeMessage(view)]
+    });
+  }
 
   selectScenario(scenarioId: string): void {
     const scenario = this.getState()
@@ -143,7 +152,14 @@ export class StoreService {
   async askNormative(question: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<void> {
     this.addChatMessage('user', question);
     try {
-      const reply = await this.aiApi.ask(question, this.getState().activeScenario.id, inputs);
+      const state = this.getState();
+      const context: AiAskContext = {
+        scenarioId: state.activeScenario.id,
+        view: state.activeView,
+        ...(state.activeView === 'bim' ? { ifc: staticIfcRef() } : {}),
+        ...(inputs?.length ? { inputs } : {})
+      };
+      const reply = await this.aiApi.ask(question, context);
       this.addChatMessage('bot', reply.text, reply.citations);
     } catch (error) {
       // `state.error` has no renderer wired up anywhere in the current
@@ -179,7 +195,14 @@ export class StoreService {
     }
   }
 
-  resetChat(): void { this.patch({ chatMessages: [{ sender: 'bot', text: 'I am AVRA AI. Ask me about the current design, solutions, IFC or available normative context.', citations: [], timestamp: new Date().toLocaleTimeString() }] }); }
+  resetChat(): void {
+    this.aiApi.resetConversation();
+    this.patch({ chatMessages: [this.welcomeMessage(this.getState().activeView)] });
+  }
+
+  private welcomeMessage(view: ActiveView): AppState['chatMessages'][number] {
+    return { sender: 'bot', text: welcomeForView(view), citations: [], timestamp: new Date().toLocaleTimeString() };
+  }
 
   addChatMessage(sender: 'bot' | 'user', text: string, citations = [] as AppState['chatMessages'][number]['citations']): void {
     this.patch({ chatMessages: [...this.getState().chatMessages, { sender, text, citations, timestamp: new Date().toLocaleTimeString() }] });
@@ -258,7 +281,7 @@ export class StoreService {
       isOptimizing: false,
       isSaving: false,
       error: null,
-      chatMessages: [{ sender: 'bot', text: 'Hola. Soy el Asistente Regulador de AVRA. En que puedo ayudarte?', citations: [], timestamp: new Date().toLocaleTimeString() }]
+      chatMessages: [this.welcomeMessage('spatial')]
     };
   }
 }

@@ -31,13 +31,9 @@
   </div>
 
   <div class="arva-chat-body">
-    <button class="suggestion" type="button" (click)="suggest('¿Cuál es el máximo edificable en este terreno?')">
+    <button class="suggestion" type="button" *ngFor="let item of suggestions" (click)="suggest(item.query)">
       <span class="suggestion-icon">▱</span>
-      <span>¿Cuál es el máximo edificable en este terreno?</span>
-    </button>
-    <button class="suggestion" type="button" (click)="suggest('¿Qué tipología de vivienda es la más eficiente?')">
-      <span class="suggestion-icon">▱</span>
-      <span>¿Qué tipología de vivienda es la más eficiente?</span>
+      <span>{{ item.label }}</span>
     </button>
 
     <div class="chat-message" *ngFor="let msg of state.chatMessages" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
@@ -55,7 +51,7 @@
   <div class="arva-chat-input">
     <input #fileInput type="file" hidden accept=".ifc,.pdf,model/ifc,application/pdf" (change)="onFileSelected($event)">
     <button type="button" class="attach-button" (click)="fileInput.click()" [disabled]="isSending || uploadState === 'uploading'" aria-label="Attach file" title="Attach IFC or PDF">📎</button>
-    <input [(ngModel)]="inputText" placeholder="Escribe un mensaje" (keyup.enter)="sendMessage()" [disabled]="isSending">
+    <input [(ngModel)]="inputText" [placeholder]="inputPlaceholder" (keyup.enter)="sendMessage()" [disabled]="isSending">
     <button type="button" (click)="sendMessage()" [disabled]="isSending" aria-label="Enviar">➤</button>
   </div>
   <div *ngIf="attachedFile" class="chat-file" [class.failed]="uploadState === 'failed'">

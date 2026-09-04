@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { AiApiPort } from '../../ai/ai-api.port';
+import { AiApiPort, AiAskContext } from '../../ai/ai-api.port';
 import {
   ApiEnvelopeDto,
   AskAgentResultDto,
@@ -39,13 +39,17 @@ export class HttpAiApiAdapter implements AiApiPort {
 
   constructor(private readonly http: HttpClient) {}
 
-  async ask(question: string, scenarioId: string, inputs?: readonly { input_id: string; name: string; mime_type: string; s3_uri: string }[]): Promise<ChatReply> {
-    void scenarioId; // Scenario id is not the same concept as AgentCore's
-    // solution_id (Scenario vs. Solution are separate AVRA aggregates) —
-    // not forwarded until a real solution context is available for the
-    // active chat. See AVRA_AI_Project_Handoff.md, "Solution" section.
-
+  async ask(question: string, context: AiAskContext): Promise<ChatReply> {
     const sessionId = await this.ensureSession();
+    const inputs = [...(context.inputs ?? [])];
+    if (context.ifc && !inputs.some(item => item.s3_uri === context.ifc!.uri)) {
+      inputs.unshift({
+        input_id: 'ifc-modelo',
+        name: context.ifc.fileName,
+        mime_type: 'model/ifc',
+        s3_uri: context.ifc.uri
+      });
+    }
 
     const envelope = await firstValueFrom(
       this.http.post<ApiEnvelopeDto<AskAgentResultDto | AgentCoreResponseDto>>(
@@ -55,7 +59,7 @@ export class HttpAiApiAdapter implements AiApiPort {
           user_id: environment.aiUserId,
           project_id: environment.aiProjectId,
           prompt: promptWithLanguageRequirement(question),
-          ...(inputs?.length ? { inputs } : {})
+          ...(inputs.length ? { inputs } : {})
         }
       )
     );
@@ -64,6 +68,10 @@ export class HttpAiApiAdapter implements AiApiPort {
   }
 
   async createConversation(): Promise<string> { return this.ensureSession(); }
+  resetConversation(): void {
+    this.sessionId = null;
+    this.sessionRequest = null;
+  }
   async uploadFile(file: File, sessionId: string): Promise<any> {
     return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/upload-url`, { session_id: sessionId, filename: file.name, content_type: file.type } )).then(r => r.data);
   }
