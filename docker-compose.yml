@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - api-gateway
+
+  # Replace this placeholder with the real backend service/image, or remove
+  # it and connect frontend to an existing Docker network containing a service
+  # named api-gateway.
+  api-gateway:
+    image: nzeishb-api-gateway:latest
+    expose:
+      - "4000"
