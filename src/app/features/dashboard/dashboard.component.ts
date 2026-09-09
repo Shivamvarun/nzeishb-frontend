@@ -7,9 +7,10 @@ import { StoreService } from '../../core/state/store.service';
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: '../../components/dashboard/dashboard.component.html',
-  styleUrls: ['../../components/dashboard/dashboard.component.css']
+    selector: 'app-dashboard',
+    templateUrl: '../../components/dashboard/dashboard.component.html',
+    styleUrls: ['../../components/dashboard/dashboard.component.css'],
+    standalone: false
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dashboardChart') private chartRef!: ElementRef<HTMLCanvasElement>;

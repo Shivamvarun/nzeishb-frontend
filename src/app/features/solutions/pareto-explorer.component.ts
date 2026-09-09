@@ -8,9 +8,10 @@ import { AppState, Variant } from '../../core/models/app.models';
 interface Point { readonly variant: Variant; readonly x: number; readonly y: number; readonly r: number; }
 
 @Component({
-  selector: 'app-pareto-explorer',
-  templateUrl: '../../components/pareto-explorer/pareto-explorer.component.html',
-  styleUrls: ['../../components/pareto-explorer/pareto-explorer.component.css']
+    selector: 'app-pareto-explorer',
+    templateUrl: '../../components/pareto-explorer/pareto-explorer.component.html',
+    styleUrls: ['../../components/pareto-explorer/pareto-explorer.component.css'],
+    standalone: false
 })
 export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('pareto3d', { static: true }) private pareto3dRef!: ElementRef<HTMLDivElement>;

@@ -7,9 +7,10 @@ import { ActiveView, AppState } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 
 @Component({
-  selector: 'app-rag-chatbot',
-  templateUrl: '../../components/rag-chatbot/rag-chatbot.component.html',
-  styleUrls: ['../../components/rag-chatbot/rag-chatbot.component.css']
+    selector: 'app-rag-chatbot',
+    templateUrl: '../../components/rag-chatbot/rag-chatbot.component.html',
+    styleUrls: ['../../components/rag-chatbot/rag-chatbot.component.css'],
+    standalone: false
 })
 export class RagChatbotComponent implements OnDestroy {
   state: AppState = this.store.getState();

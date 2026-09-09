@@ -18,9 +18,10 @@ interface ProfileAxis {
 }
 
 @Component({
-  selector: 'app-comparator',
-  templateUrl: '../../components/comparator/comparator.component.html',
-  styleUrls: ['../../components/comparator/comparator.component.css']
+    selector: 'app-comparator',
+    templateUrl: '../../components/comparator/comparator.component.html',
+    styleUrls: ['../../components/comparator/comparator.component.css'],
+    standalone: false
 })
 export class ComparatorComponent implements OnDestroy {
   state: AppState = this.store.getState();

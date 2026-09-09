@@ -3,7 +3,10 @@ import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/state/store.service';
 import { AppState } from '../../core/models/app.models';
 
-@Component({ selector: 'app-solutions-workspace', templateUrl: './solutions-workspace.component.html', styleUrls: ['./solutions-workspace.component.css'] })
+@Component({
+    selector: 'app-solutions-workspace', templateUrl: './solutions-workspace.component.html', styleUrls: ['./solutions-workspace.component.css'],
+    standalone: false
+})
 export class SolutionsWorkspaceComponent implements OnDestroy {
   state: AppState = this.store.getState();
   mode: 'tree' | 'compare' = 'tree';

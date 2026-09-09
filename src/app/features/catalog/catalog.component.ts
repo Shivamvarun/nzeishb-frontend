@@ -4,9 +4,10 @@ import { CatalogModule } from '../../core/api/catalog/catalog-api.models';
 import { Inject } from '@angular/core';
 
 @Component({
-  selector: 'app-catalog',
-  templateUrl: './catalog.component.html',
-  styleUrls: ['./catalog.component.css']
+    selector: 'app-catalog',
+    templateUrl: './catalog.component.html',
+    styleUrls: ['./catalog.component.css'],
+    standalone: false
 })
 export class CatalogComponent implements OnInit {
   modules: readonly CatalogModule[] = [];

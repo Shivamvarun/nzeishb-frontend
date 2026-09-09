@@ -3,9 +3,10 @@ import { AppState, ArtifactKind } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 
 @Component({
-  selector: 'app-reports-export',
-  templateUrl: '../../components/reports-export/reports-export.component.html',
-  styleUrls: ['../../components/reports-export/reports-export.component.css']
+    selector: 'app-reports-export',
+    templateUrl: '../../components/reports-export/reports-export.component.html',
+    styleUrls: ['../../components/reports-export/reports-export.component.css'],
+    standalone: false
 })
 export class ReportsExportComponent {
   state: AppState = this.store.getState();

@@ -14,8 +14,8 @@ interface BimElementInfo {
 }
 
 @Component({
-  selector: 'app-bim-viewer',
-  template: `
+    selector: 'app-bim-viewer',
+    template: `
     <div class="bim-viewer">
       <div class="bim-toolbar" role="toolbar" aria-label="BIM viewer controls">
         <label>
@@ -46,7 +46,7 @@ interface BimElementInfo {
       <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
     </div>
   `,
-  styles: [`
+    styles: [`
     .bim-viewer { position: relative; width: 100%; height: 100%; min-height: 520px; }
     .bim-container { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #f7fbf8; }
     .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; background: rgba(255,255,255,.96); border: 1px solid #d9e2dc; }
@@ -64,7 +64,8 @@ interface BimElementInfo {
     .property-panel dd { margin: 0; }
     .viewer-hint { position: absolute; right: 16px; bottom: 16px; left: auto; padding: 8px 10px; border-radius: 8px; color: #1f2937; background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; }
     @media (max-width: 760px) { .bim-viewer { min-height: 620px; } .property-panel { top: auto; bottom: 54px; } }
-  `]
+  `],
+    standalone: false
 })
 export class BimViewerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: true }) private containerRef!: ElementRef<HTMLDivElement>;

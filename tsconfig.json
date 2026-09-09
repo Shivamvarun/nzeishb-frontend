@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
     "experimentalDecorators": true,
     "module": "ES2022",

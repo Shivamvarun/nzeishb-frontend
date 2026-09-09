@@ -3,9 +3,10 @@ import { AppState } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 
 @Component({
-  selector: 'app-design-workspace',
-  templateUrl: './design-workspace.component.html',
-  styleUrls: ['./design-workspace.component.css']
+    selector: 'app-design-workspace',
+    templateUrl: './design-workspace.component.html',
+    styleUrls: ['./design-workspace.component.css'],
+    standalone: false
 })
 export class DesignWorkspaceComponent {
   state: AppState = this.store.getState();
