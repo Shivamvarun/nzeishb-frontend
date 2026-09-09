@@ -34,12 +34,14 @@
   </div>
 
   <div class="scenario-list">
-    <div class="scenario-row" *ngFor="let scenario of state.scenarioHistory" [class.active]="scenario.id === state.activeScenario.id">
-      <button type="button" class="scenario-open" (click)="reopenScenario(scenario.id)">
-        <span>{{ scenario.name }}</span>
-        <small>{{ scenario.updated || scenario.created }}</small>
-      </button>
-      <button type="button" class="danger-btn" title="Delete scenario" [attr.aria-label]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</button>
-    </div>
+    @for (scenario of state.scenarioHistory; track scenario) {
+      <div class="scenario-row" [class.active]="scenario.id === state.activeScenario.id">
+        <button type="button" class="scenario-open" (click)="reopenScenario(scenario.id)">
+          <span>{{ scenario.name }}</span>
+          <small>{{ scenario.updated || scenario.created }}</small>
+        </button>
+        <button type="button" class="danger-btn" title="Delete scenario" [attr.aria-label]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</button>
+      </div>
+    }
   </div>
 </div>

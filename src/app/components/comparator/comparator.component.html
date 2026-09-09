@@ -11,12 +11,16 @@
   <div class="picker-grid">
     <label>Variant A
       <select [ngModel]="state.comparedVariants[0].id" (ngModelChange)="setCompared(0, $event)">
-        <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
+        @for (variant of state.variants; track variant) {
+          <option [value]="variant.id">{{ variant.name }}</option>
+        }
       </select>
     </label>
     <label>Variant B
       <select [ngModel]="state.comparedVariants[1].id" (ngModelChange)="setCompared(1, $event)">
-        <option *ngFor="let variant of state.variants" [value]="variant.id">{{ variant.name }}</option>
+        @for (variant of state.variants; track variant) {
+          <option [value]="variant.id">{{ variant.name }}</option>
+        }
       </select>
     </label>
   </div>
@@ -42,11 +46,13 @@
         <table class="comparison-table">
           <thead><tr><th>KPI</th><th>{{ state.comparedVariants[0].name }}</th><th>{{ state.comparedVariants[1].name }}</th></tr></thead>
           <tbody>
-            <tr *ngFor="let row of rows">
-              <td>{{ row.label }}</td>
-              <td [class.winner-cell]="winner(row, 'a')">{{ format(row.a) }} {{ row.unit }}</td>
-              <td [class.winner-cell]="winner(row, 'b')">{{ format(row.b) }} {{ row.unit }}</td>
-            </tr>
+            @for (row of rows; track row) {
+              <tr>
+                <td>{{ row.label }}</td>
+                <td [class.winner-cell]="winner(row, 'a')">{{ format(row.a) }} {{ row.unit }}</td>
+                <td [class.winner-cell]="winner(row, 'b')">{{ format(row.b) }} {{ row.unit }}</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -60,15 +66,21 @@
       <div class="radar-canvas-wrap">
         <svg class="kpi-radar" viewBox="0 0 420 315" role="img" aria-label="Normalized KPI profile comparison">
           <g class="radar-grid">
-            <polygon *ngFor="let grid of profileGrid" [attr.points]="grid"></polygon>
-            <line *ngFor="let axis of profileAxisLines" [attr.x1]="axis.x1" [attr.y1]="axis.y1" [attr.x2]="axis.x2" [attr.y2]="axis.y2"></line>
+            @for (grid of profileGrid; track grid) {
+              <polygon [attr.points]="grid"></polygon>
+            }
+            @for (axis of profileAxisLines; track axis) {
+              <line [attr.x1]="axis.x1" [attr.y1]="axis.y1" [attr.x2]="axis.x2" [attr.y2]="axis.y2"></line>
+            }
           </g>
           <polygon class="radar-fill radar-fill-a" [attr.points]="profilePolygonA"></polygon>
           <polygon class="radar-fill radar-fill-b" [attr.points]="profilePolygonB"></polygon>
           <polygon class="radar-line radar-line-a" [attr.points]="profilePolygonA"></polygon>
           <polygon class="radar-line radar-line-b" [attr.points]="profilePolygonB"></polygon>
           <g class="radar-labels">
-            <text *ngFor="let label of profileLabels" [attr.x]="label.x" [attr.y]="label.y" [attr.text-anchor]="label.anchor">{{ label.label }}</text>
+            @for (label of profileLabels; track label) {
+              <text [attr.x]="label.x" [attr.y]="label.y" [attr.text-anchor]="label.anchor">{{ label.label }}</text>
+            }
           </g>
           <g class="radar-legend">
             <circle cx="150" cy="300" r="5" class="legend-a"></circle>

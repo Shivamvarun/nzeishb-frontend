@@ -22,7 +22,9 @@ interface BimElementInfo {
           Floor
           <select [ngModel]="isolatedFloorLabel" (ngModelChange)="setFloor($event)">
             <option value="all">All</option>
-            <option *ngFor="let storey of storeys" [value]="storey.index">{{ storey.name }}</option>
+            @for (storey of storeys; track storey) {
+              <option [value]="storey.index">{{ storey.name }}</option>
+            }
           </select>
         </label>
         <button type="button" class="icon-btn" title="Reset camera" (click)="resetCamera()">Reset</button>
@@ -30,22 +32,28 @@ interface BimElementInfo {
         <button type="button" class="icon-btn" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
         <button type="button" class="primary-btn" [disabled]="isGenerating" (click)="generateIfc()">{{ isGenerating ? 'Generating IFC…' : 'Generate IFC' }}</button>
       </div>
-      <div class="generation-error" *ngIf="generationError">{{ generationError }}</div>
-      <div class="bim-status" *ngIf="loadStatus" role="status" aria-live="polite">{{ loadStatus }}</div>
+      @if (generationError) {
+        <div class="generation-error">{{ generationError }}</div>
+      }
+      @if (loadStatus) {
+        <div class="bim-status" role="status" aria-live="polite">{{ loadStatus }}</div>
+      }
       <div #container class="bim-container" (click)="selectElement($event)"></div>
-      <aside class="property-panel" *ngIf="selectedElement">
-        <div class="panel-title">Element properties</div>
-        <dl>
-          <div><dt>ID</dt><dd>{{ selectedElement.id }}</dd></div>
-          <div><dt>Type</dt><dd>{{ selectedElement.type }}</dd></div>
-          <div><dt>Floor</dt><dd>{{ floorLabel(selectedElement.floor) }}</dd></div>
-          <div><dt>Area</dt><dd>{{ selectedElement.areaM2 }} m2</dd></div>
-          <div><dt>Material</dt><dd>{{ selectedElement.material }}</dd></div>
-        </dl>
-      </aside>
+      @if (selectedElement) {
+        <aside class="property-panel">
+          <div class="panel-title">Element properties</div>
+          <dl>
+            <div><dt>ID</dt><dd>{{ selectedElement.id }}</dd></div>
+            <div><dt>Type</dt><dd>{{ selectedElement.type }}</dd></div>
+            <div><dt>Floor</dt><dd>{{ floorLabel(selectedElement.floor) }}</dd></div>
+            <div><dt>Area</dt><dd>{{ selectedElement.areaM2 }} m2</dd></div>
+            <div><dt>Material</dt><dd>{{ selectedElement.material }}</dd></div>
+          </dl>
+        </aside>
+      }
       <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
     </div>
-  `,
+    `,
     styles: [`
     .bim-viewer { position: relative; width: 100%; height: 100%; min-height: 520px; }
     .bim-container { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #f7fbf8; }

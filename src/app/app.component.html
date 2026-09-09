@@ -20,21 +20,39 @@
     </div>
   </header>
 
-  <p class="app-error" role="status" aria-live="polite" *ngIf="(state$ | async)?.error as error">{{ error }}</p>
+  @if ((state$ | async)?.error; as error) {
+    <p class="app-error" role="status" aria-live="polite">{{ error }}</p>
+  }
 
   <main class="app-main" [class.spatial-layout]="isView('spatial')">
-    <aside class="spatial-sidebar" *ngIf="isView('spatial')">
-      <app-vpo-form></app-vpo-form>
-    </aside>
+    @if (isView('spatial')) {
+      <aside class="spatial-sidebar">
+        <app-vpo-form></app-vpo-form>
+      </aside>
+    }
 
     <section class="workspace-view">
-      <app-gis-viewer *ngIf="isView('spatial')"></app-gis-viewer>
-      <app-catalog *ngIf="isView('catalog')"></app-catalog>
-      <app-design-workspace *ngIf="isView('scenario')"></app-design-workspace>
-      <app-pareto-explorer *ngIf="isView('optimization')"></app-pareto-explorer>
-      <app-bim-viewer *ngIf="isView('bim')"></app-bim-viewer>
-      <app-solutions-workspace *ngIf="isView('solutions')"></app-solutions-workspace>
-      <app-reports-export *ngIf="isView('reports')"></app-reports-export>
+      @if (isView('spatial')) {
+        <app-gis-viewer></app-gis-viewer>
+      }
+      @if (isView('catalog')) {
+        <app-catalog></app-catalog>
+      }
+      @if (isView('scenario')) {
+        <app-design-workspace></app-design-workspace>
+      }
+      @if (isView('optimization')) {
+        <app-pareto-explorer></app-pareto-explorer>
+      }
+      @if (isView('bim')) {
+        <app-bim-viewer></app-bim-viewer>
+      }
+      @if (isView('solutions')) {
+        <app-solutions-workspace></app-solutions-workspace>
+      }
+      @if (isView('reports')) {
+        <app-reports-export></app-reports-export>
+      }
     </section>
   </main>
 

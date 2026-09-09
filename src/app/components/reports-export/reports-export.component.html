@@ -13,15 +13,21 @@
     </div>
   </section>
 
-  <section class="surface history-panel" *ngIf="state.artifactHistory.length">
-    <h3>Generated artifacts</h3>
-    <article class="history-row" *ngFor="let item of state.artifactHistory">
-      <div>
-        <strong>{{ item.fileName }}</strong>
-        <span>{{ item.created }} · {{ item.status }}</span>
-        <p>{{ item.preview }}</p>
-      </div>
-      <button class="btn-secondary" *ngIf="item.downloadUrl" (click)="download(item.downloadUrl, item.fileName)">Download</button>
-    </article>
-  </section>
+  @if (state.artifactHistory.length) {
+    <section class="surface history-panel">
+      <h3>Generated artifacts</h3>
+      @for (item of state.artifactHistory; track item) {
+        <article class="history-row">
+          <div>
+            <strong>{{ item.fileName }}</strong>
+            <span>{{ item.created }} · {{ item.status }}</span>
+            <p>{{ item.preview }}</p>
+          </div>
+          @if (item.downloadUrl) {
+            <button class="btn-secondary" (click)="download(item.downloadUrl, item.fileName)">Download</button>
+          }
+        </article>
+      }
+    </section>
+  }
 </div>

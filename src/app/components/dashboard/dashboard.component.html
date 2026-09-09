@@ -8,11 +8,13 @@
   </div>
 
   <div class="metrics-grid">
-    <button type="button" class="metric-card" *ngFor="let metric of metrics" [class.active]="activeDrilldown === metric.id" (click)="setDrilldown(metric.id)">
-      <span class="metric-label">{{ metric.label }}</span>
-      <span class="metric-value">{{ metric.value }}</span>
-      <small>{{ metric.detail }}</small>
-    </button>
+    @for (metric of metrics; track metric) {
+      <button type="button" class="metric-card" [class.active]="activeDrilldown === metric.id" (click)="setDrilldown(metric.id)">
+        <span class="metric-label">{{ metric.label }}</span>
+        <span class="metric-value">{{ metric.value }}</span>
+        <small>{{ metric.detail }}</small>
+      </button>
+    }
   </div>
 
   <div class="dashboard-lower">
@@ -21,7 +23,9 @@
     </section>
     <section class="drilldown-panel">
       <h3>KPI drill-down</h3>
-      <p *ngFor="let metric of metrics" [hidden]="activeDrilldown !== metric.id">{{ metric.detail }}</p>
+      @for (metric of metrics; track metric) {
+        <p [hidden]="activeDrilldown !== metric.id">{{ metric.detail }}</p>
+      }
       <dl>
         <div><dt>Built / usable area</dt><dd>{{ state.selectedVariant.builtAreaM2 | number }} / {{ state.selectedVariant.usableAreaM2 | number }} m2</dd></div>
         <div><dt>Spatial efficiency</dt><dd>{{ (state.selectedVariant.efficiencyRatio * 100) | number:'1.0-1' }}%</dd></div>

@@ -22,12 +22,14 @@
           <line x1="70" y1="410" x2="730" y2="410" class="axis"/><line x1="70" y1="410" x2="70" y2="55" class="axis"/>
           <line x1="70" y1="410" x2="150" y2="350" class="axis depth"/>
           <text x="730" y="438" class="axis-label">Cost ↓</text><text x="25" y="58" class="axis-label">Energy ↓</text><text x="120" y="350" class="axis-label">Industrialisation ↑</text>
-          <g *ngFor="let point of points">
-            <line [attr.x1]="point.x" [attr.y1]="point.y" [attr.x2]="point.x - point.variant.degreeIndustrialization * 55" [attr.y2]="point.y + point.variant.degreeIndustrialization * 38" class="depth-line" />
-            <circle [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.r" class="pareto-point" [class.selected-point]="state.selectedVariant.id === point.variant.id" (click)="selectVariant(point.variant.id)">
-              <title>{{ point.variant.name }} · {{ point.variant.costPerUnit | number }} €/unit · {{ point.variant.primaryEnergyDemandKwh }} kWh/m²·a · {{ point.variant.degreeIndustrialization * 100 | number:'1.0-0' }}% industrialisation</title>
-            </circle>
-          </g>
+          @for (point of points; track point) {
+            <g>
+              <line [attr.x1]="point.x" [attr.y1]="point.y" [attr.x2]="point.x - point.variant.degreeIndustrialization * 55" [attr.y2]="point.y + point.variant.degreeIndustrialization * 38" class="depth-line" />
+              <circle [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.r" class="pareto-point" [class.selected-point]="state.selectedVariant.id === point.variant.id" (click)="selectVariant(point.variant.id)">
+                <title>{{ point.variant.name }} · {{ point.variant.costPerUnit | number }} €/unit · {{ point.variant.primaryEnergyDemandKwh }} kWh/m²·a · {{ point.variant.degreeIndustrialization * 100 | number:'1.0-0' }}% industrialisation</title>
+              </circle>
+            </g>
+          }
         </svg>
       </div>
     </div>
@@ -38,13 +40,17 @@
 
   <aside class="surface variant-panel">
     <div class="panel-header"><div><span class="eyebrow">SOLUTION CANDIDATES</span><h2>Solutions</h2></div></div>
-    <article *ngFor="let v of visibleVariants" class="variant-card" [class.selected]="state.selectedVariant.id === v.id">
-      <button type="button" class="variant-select" (click)="selectVariant(v.id)">
-        <div class="variant-header"><strong>{{ v.name }}</strong><span class="tag-badge" [class.tag-cost]="v.tagClass === 'tag-cost'" [class.tag-energy]="v.tagClass === 'tag-energy'" [class.tag-indus]="v.tagClass === 'tag-indus'">{{ v.tag }}</span></div>
-        <div class="solution-kpis"><span><small>Cost</small><b>{{ v.costPerUnit | number }} €</b></span><span><small>Energy</small><b>{{ v.primaryEnergyDemandKwh }}</b></span><span><small>Industrialisation</small><b>{{ v.degreeIndustrialization * 100 | number:'1.0-0' }}%</b></span></div>
-      </button>
-      <div class="solution-actions"><span>{{ isCompared(v.id) ? 'Selected for comparison' : 'Add to comparison' }}</span><button type="button" (click)="compareVariant(v.id,$event)">{{ isCompared(v.id) ? '✓' : '+' }}</button></div>
-    </article>
-    <div class="selected-solution" *ngIf="state.selectedVariant.id !== 'loading-variant'"><span class="eyebrow">SELECTED SOLUTION</span><strong>{{ state.selectedVariant.name }}</strong><span>{{ state.selectedVariant.housingUnits }} dwellings · {{ state.selectedVariant.stories }} floors</span></div>
+    @for (v of visibleVariants; track v) {
+      <article class="variant-card" [class.selected]="state.selectedVariant.id === v.id">
+        <button type="button" class="variant-select" (click)="selectVariant(v.id)">
+          <div class="variant-header"><strong>{{ v.name }}</strong><span class="tag-badge" [class.tag-cost]="v.tagClass === 'tag-cost'" [class.tag-energy]="v.tagClass === 'tag-energy'" [class.tag-indus]="v.tagClass === 'tag-indus'">{{ v.tag }}</span></div>
+          <div class="solution-kpis"><span><small>Cost</small><b>{{ v.costPerUnit | number }} €</b></span><span><small>Energy</small><b>{{ v.primaryEnergyDemandKwh }}</b></span><span><small>Industrialisation</small><b>{{ v.degreeIndustrialization * 100 | number:'1.0-0' }}%</b></span></div>
+        </button>
+        <div class="solution-actions"><span>{{ isCompared(v.id) ? 'Selected for comparison' : 'Add to comparison' }}</span><button type="button" (click)="compareVariant(v.id,$event)">{{ isCompared(v.id) ? '✓' : '+' }}</button></div>
+      </article>
+    }
+    @if (state.selectedVariant.id !== 'loading-variant') {
+      <div class="selected-solution"><span class="eyebrow">SELECTED SOLUTION</span><strong>{{ state.selectedVariant.name }}</strong><span>{{ state.selectedVariant.housingUnits }} dwellings · {{ state.selectedVariant.stories }} floors</span></div>
+    }
   </aside>
 </div>
