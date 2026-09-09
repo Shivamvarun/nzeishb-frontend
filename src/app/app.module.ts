@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { AppComponent } from './app.component';
@@ -93,23 +93,19 @@ const aiApiProvider = environment.useMockAi
   ? { provide: AI_API, useClass: MockAiApiAdapter }
   : { provide: AI_API, useClass: HttpAiApiAdapter };
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    GisViewerComponent,
-    VpoFormComponent,
-    DashboardComponent,
-    ParetoExplorerComponent,
-    ComparatorComponent,
-    ReportsExportComponent,
-    RagChatbotComponent,
-    BimViewerComponent,
-    CatalogComponent,
-    DesignWorkspaceComponent,
-    SolutionsWorkspaceComponent
-  ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, MarkdownModule.forRoot()],
-  providers: [...apiProviders, aiApiProvider],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        GisViewerComponent,
+        VpoFormComponent,
+        DashboardComponent,
+        ParetoExplorerComponent,
+        ComparatorComponent,
+        ReportsExportComponent,
+        RagChatbotComponent,
+        BimViewerComponent,
+        CatalogComponent,
+        DesignWorkspaceComponent,
+        SolutionsWorkspaceComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, MarkdownModule.forRoot()], providers: [...apiProviders, aiApiProvider, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
