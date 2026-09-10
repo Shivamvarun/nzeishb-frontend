@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STATIC_IFC } from '../../core/ai/static-ifc';
@@ -15,66 +16,10 @@ interface BimElementInfo {
 
 @Component({
     selector: 'app-bim-viewer',
-    template: `
-    <div class="bim-viewer">
-      <div class="bim-toolbar" role="toolbar" aria-label="BIM viewer controls">
-        <label>
-          Floor
-          <select [ngModel]="isolatedFloorLabel" (ngModelChange)="setFloor($event)">
-            <option value="all">All</option>
-            @for (storey of storeys; track storey) {
-              <option [value]="storey.index">{{ storey.name }}</option>
-            }
-          </select>
-        </label>
-        <button type="button" class="icon-btn" title="Reset camera" (click)="resetCamera()">Reset</button>
-        <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Section cut" (click)="toggleSection()">Section</button>
-        <button type="button" class="icon-btn" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</button>
-        <button type="button" class="primary-btn" [disabled]="isGenerating" (click)="generateIfc()">{{ isGenerating ? 'Generating IFC…' : 'Generate IFC' }}</button>
-      </div>
-      @if (generationError) {
-        <div class="generation-error">{{ generationError }}</div>
-      }
-      @if (loadStatus) {
-        <div class="bim-status" role="status" aria-live="polite">{{ loadStatus }}</div>
-      }
-      <div #container class="bim-container" (click)="selectElement($event)"></div>
-      @if (selectedElement) {
-        <aside class="property-panel">
-          <div class="panel-title">Element properties</div>
-          <dl>
-            <div><dt>ID</dt><dd>{{ selectedElement.id }}</dd></div>
-            <div><dt>Type</dt><dd>{{ selectedElement.type }}</dd></div>
-            <div><dt>Floor</dt><dd>{{ floorLabel(selectedElement.floor) }}</dd></div>
-            <div><dt>Area</dt><dd>{{ selectedElement.areaM2 }} m2</dd></div>
-            <div><dt>Material</dt><dd>{{ selectedElement.material }}</dd></div>
-          </dl>
-        </aside>
-      }
-      <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
-    </div>
-    `,
-    styles: [`
-    .bim-viewer { position: relative; width: 100%; height: 100%; min-height: 520px; }
-    .bim-container { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #f7fbf8; }
-    .bim-toolbar { position: absolute; z-index: 3; top: 14px; left: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; background: rgba(255,255,255,.96); border: 1px solid #d9e2dc; }
-    .bim-toolbar label { display: inline-flex; gap: 8px; align-items: center; color: #1f2937; font-size: .78rem; }
-    .bim-toolbar select { border: 1px solid rgba(148, 163, 184, .24); border-radius: 6px; background: #fff; color: #1f2937; padding: 7px 8px; }
-    .icon-btn { border: 1px solid rgba(148, 163, 184, .22); border-radius: 6px; background: #fff; color: #1f2937; padding: 8px 10px; cursor: pointer; }
-    .icon-btn.active { border-color: #087021; background: #f1f8f2; }
-    .primary-btn { border: 1px solid #087021; border-radius: 5px; background: #087021; color: #fff; padding: 8px 10px; cursor: pointer; font-weight: 800; }
-    .generation-error { position: absolute; z-index: 4; top: 70px; left: 14px; padding: 8px 10px; background: #fff4f2; color: #b42318; border: 1px solid #e0a4a0; border-radius: 4px; font-size: 11px; }
-    .bim-status { position: absolute; z-index: 4; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 12px 16px; border-radius: 8px; background: rgba(255,255,255,.96); border: 1px solid #d9e2dc; color: #1f2937; font-size: .9rem; box-shadow: 0 8px 24px rgba(15, 23, 42, .08); }
-    .property-panel { position: absolute; z-index: 3; top: 76px; right: 14px; width: min(280px, calc(100% - 28px)); padding: 14px; border-radius: 8px; background: rgba(255,255,255,.97); border: 1px solid #d9e2dc; color: #1f2937; }
-    .property-panel dl { margin: 10px 0 0; display: grid; gap: 8px; }
-    .property-panel div { display: grid; grid-template-columns: 76px 1fr; gap: 10px; }
-    .property-panel dt { color: #64748b; }
-    .property-panel dd { margin: 0; }
-    .viewer-hint { position: absolute; right: 16px; bottom: 16px; left: auto; padding: 8px 10px; border-radius: 8px; color: #1f2937; background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; }
-    @media (max-width: 760px) { .bim-viewer { min-height: 620px; } .property-panel { top: auto; bottom: 54px; } }
-  `],
+    templateUrl: './bim-viewer.component.html',
+    styleUrls: ['./bim-viewer.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [FormsModule]
 })
 export class BimViewerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: true }) private containerRef!: ElementRef<HTMLDivElement>;

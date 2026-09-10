@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppState, Variant } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
@@ -22,7 +23,7 @@ interface ProfileAxis {
     templateUrl: '../../components/comparator/comparator.component.html',
     styleUrls: ['../../components/comparator/comparator.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [FormsModule]
 })
 export class ComparatorComponent implements OnDestroy {
   state: AppState = this.store.getState();

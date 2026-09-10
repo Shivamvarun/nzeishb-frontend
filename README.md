@@ -42,7 +42,7 @@ src/app/core/api/adapters/http/
 src/app/core/api/adapters/mock/
 ```
 
-The HTTP/mock implementation is selected by Angular DI in `app.module.ts`.
+The HTTP/mock implementation is selected by Angular DI in `app.config.ts`.
 
 ## Backend integration
 

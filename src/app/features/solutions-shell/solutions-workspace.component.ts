@@ -1,12 +1,14 @@
 import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/state/store.service';
 import { AppState } from '../../core/models/app.models';
+import { ComparatorComponent } from '../solutions/comparator.component';
 
 @Component({
     selector: 'app-solutions-workspace', templateUrl: './solutions-workspace.component.html', styleUrls: ['./solutions-workspace.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [DecimalPipe, ComparatorComponent]
 })
 export class SolutionsWorkspaceComponent implements OnDestroy {
   state: AppState = this.store.getState();

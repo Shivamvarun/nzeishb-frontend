@@ -1,20 +1,6 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { MarkdownModule } from 'ngx-markdown';
-import { AppComponent } from './app.component';
-import { GisViewerComponent } from './features/spatial/gis-viewer.component';
-import { VpoFormComponent } from './features/scenario/vpo-form.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { ParetoExplorerComponent } from './features/solutions/pareto-explorer.component';
-import { ComparatorComponent } from './features/solutions/comparator.component';
-import { ReportsExportComponent } from './features/reports/reports-export.component';
-import { RagChatbotComponent } from './features/normative-chat/rag-chatbot.component';
-import { BimViewerComponent } from './features/bim/bim-viewer.component';
-import { CatalogComponent } from './features/catalog/catalog.component';
-import { DesignWorkspaceComponent } from './features/design/design-workspace.component';
-import { SolutionsWorkspaceComponent } from './features/solutions-shell/solutions-workspace.component';
+import { provideMarkdown } from 'ngx-markdown';
 import { environment } from '../environments/environment';
 import { SPATIAL_API } from './core/api/spatial/spatial-api.port';
 import { SCENARIO_API } from './core/api/scenario/scenario-api.port';
@@ -61,51 +47,33 @@ import { HttpCatalogApiAdapter } from './core/api/adapters/http/http-catalog-api
  * workspace/spatial/scenario/etc. onto Http adapters whose backends
  * aren't wired up yet.
  */
-const apiProviders = environment.useMockApi
-  ? [
-      { provide: SPATIAL_API, useClass: MockSpatialApiAdapter },
-      { provide: SCENARIO_API, useClass: MockScenarioApiAdapter },
-      { provide: OPTIMIZATION_API, useClass: MockOptimizationApiAdapter },
-      { provide: BIM_API, useClass: MockBimApiAdapter },
-      { provide: AUDIT_API, useClass: MockAuditApiAdapter },
-      { provide: MIGRATION_API, useClass: MockMigrationApiAdapter },
-      { provide: REPORT_API, useClass: MockReportApiAdapter },
-      { provide: NORMATIVE_API, useClass: MockNormativeApiAdapter },
-      { provide: WORKSPACE_API, useClass: MockWorkspaceApiAdapter },
-      { provide: CATALOG_API, useClass: MockCatalogApiAdapter },
-      { provide: SPATIAL_CONTEXT_API, useClass: MockSpatialContextApiAdapter }
-    ]
-  : [
-      { provide: SPATIAL_API, useClass: HttpSpatialApiAdapter },
-      { provide: SCENARIO_API, useClass: HttpScenarioApiAdapter },
-      { provide: OPTIMIZATION_API, useClass: HttpOptimizationApiAdapter },
-      { provide: BIM_API, useClass: HttpBimApiAdapter },
-      { provide: AUDIT_API, useClass: HttpAuditApiAdapter },
-      { provide: MIGRATION_API, useClass: HttpMigrationApiAdapter },
-      { provide: REPORT_API, useClass: HttpReportApiAdapter },
-      { provide: NORMATIVE_API, useClass: HttpNormativeApiAdapter },
-      { provide: WORKSPACE_API, useClass: HttpWorkspaceApiAdapter },
-      { provide: CATALOG_API, useClass: HttpCatalogApiAdapter },
-      { provide: SPATIAL_CONTEXT_API, useClass: HttpSpatialContextApiAdapter }
-    ];
+const useMockApi = environment.useMockApi;
 
-const aiApiProvider = environment.useMockAi
-  ? { provide: AI_API, useClass: MockAiApiAdapter }
-  : { provide: AI_API, useClass: HttpAiApiAdapter };
+const apiProviders = [
+  { provide: SPATIAL_API, useClass: useMockApi ? MockSpatialApiAdapter : HttpSpatialApiAdapter },
+  { provide: SCENARIO_API, useClass: useMockApi ? MockScenarioApiAdapter : HttpScenarioApiAdapter },
+  { provide: OPTIMIZATION_API, useClass: useMockApi ? MockOptimizationApiAdapter : HttpOptimizationApiAdapter },
+  { provide: BIM_API, useClass: useMockApi ? MockBimApiAdapter : HttpBimApiAdapter },
+  { provide: AUDIT_API, useClass: useMockApi ? MockAuditApiAdapter : HttpAuditApiAdapter },
+  { provide: MIGRATION_API, useClass: useMockApi ? MockMigrationApiAdapter : HttpMigrationApiAdapter },
+  { provide: REPORT_API, useClass: useMockApi ? MockReportApiAdapter : HttpReportApiAdapter },
+  { provide: NORMATIVE_API, useClass: useMockApi ? MockNormativeApiAdapter : HttpNormativeApiAdapter },
+  { provide: WORKSPACE_API, useClass: useMockApi ? MockWorkspaceApiAdapter : HttpWorkspaceApiAdapter },
+  { provide: CATALOG_API, useClass: useMockApi ? MockCatalogApiAdapter : HttpCatalogApiAdapter },
+  { provide: SPATIAL_CONTEXT_API, useClass: useMockApi ? MockSpatialContextApiAdapter : HttpSpatialContextApiAdapter }
+];
 
-@NgModule({ declarations: [
-        AppComponent,
-        GisViewerComponent,
-        VpoFormComponent,
-        DashboardComponent,
-        ParetoExplorerComponent,
-        ComparatorComponent,
-        ReportsExportComponent,
-        RagChatbotComponent,
-        BimViewerComponent,
-        CatalogComponent,
-        DesignWorkspaceComponent,
-        SolutionsWorkspaceComponent
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, MarkdownModule.forRoot()], providers: [...apiProviders, aiApiProvider, provideHttpClient(withXhr(), withInterceptorsFromDi())] })
-export class AppModule {}
+const aiApiProvider = {
+  provide: AI_API,
+  useClass: environment.useMockAi ? MockAiApiAdapter : HttpAiApiAdapter
+};
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection(),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideMarkdown(),
+    ...apiProviders,
+    aiApiProvider
+  ]
+};

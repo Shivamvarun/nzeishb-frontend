@@ -6,8 +6,7 @@ import { StoreService } from '../../core/state/store.service';
     selector: 'app-reports-export',
     templateUrl: '../../components/reports-export/reports-export.component.html',
     styleUrls: ['../../components/reports-export/reports-export.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ReportsExportComponent {
   state: AppState = this.store.getState();

@@ -1,4 +1,6 @@
 import { Component, Inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MarkdownComponent } from 'ngx-markdown';
 import { Subscription } from 'rxjs';
 import { placeholderForView, suggestionsForView } from '../../core/ai/chat-copy';
 import { UploadedAiFile } from '../../core/api/ai/ai-api.models';
@@ -11,7 +13,7 @@ import { StoreService } from '../../core/state/store.service';
     templateUrl: '../../components/rag-chatbot/rag-chatbot.component.html',
     styleUrls: ['../../components/rag-chatbot/rag-chatbot.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [FormsModule, MarkdownComponent]
 })
 export class RagChatbotComponent implements OnDestroy {
   state: AppState = this.store.getState();

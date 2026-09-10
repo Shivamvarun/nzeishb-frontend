@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/state/store.service';
@@ -9,168 +11,10 @@ import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-gis-viewer',
-    template: `
-    <div class="gis-shell">
-      <div #mapContainer class="map-container" [class.map-hidden]="mapMode === '3d'"></div>
-      <div class="spatial-3d-preview" [class.visible]="mapMode === '3d'" aria-label="3D spatial mock preview">
-        <div class="spatial-3d-header"><strong>3D spatial preview</strong><span>PoC mock geometry · SpatialContext-ready</span><button type="button" class="context-button" (click)="loadSpatialContext()">{{ contextLoading ? 'Loading…' : 'SpatialContext' }}</button></div>
-        <svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet">
-          <polygon class="site-plane" points="130,405 450,300 770,405 450,515" />
-          <polygon class="envelope-plane" points="210,380 450,300 690,380 450,460" />
-          <g class="mock-building">
-            <polygon points="280,335 450,280 620,335 450,390" />
-            <polygon points="280,335 450,390 450,390 280,335" />
-            <polygon points="450,390 620,335 620,430 450,485" />
-            <polygon points="280,335 450,390 450,485 280,430" />
-            @for (floor of mockFloors; track floor; let i = $index) {
-              <g>
-                <line x1="285" [attr.y1]="350 + i * 28" x2="445" [attr.y2]="402 + i * 28" class="floor-line" />
-                <line x1="455" [attr.y1]="402 + i * 28" x2="615" [attr.y2]="350 + i * 28" class="floor-line" />
-              </g>
-            }
-          </g>
-          <text x="55" y="70" class="spatial-axis-label">Height ↑</text>
-          <text x="690" y="490" class="spatial-axis-label">Site / envelope</text>
-        </svg>
-        <div class="spatial-3d-hint">Drag-style preview · use 3D rotation control to indicate the interactive renderer boundary.</div>
-        @if (spatialContext) {
-          <aside class="context-panel">
-            <div class="context-panel-head"><strong>SpatialContext</strong><button type="button" (click)="spatialContext=null" aria-label="Close SpatialContext">×</button></div>
-            @if (spatialContext.isMock) {
-              <span class="context-mock">MOCK DATA</span>
-            }
-            <dl>
-              <div><dt>ID</dt><dd>{{ spatialContext.contextId }}</dd></div>
-              <div><dt>Version</dt><dd>{{ spatialContext.version }}</dd></div>
-              <div><dt>CRS</dt><dd>{{ spatialContext.crs }}</dd></div>
-              <div><dt>Buildable area</dt><dd>{{ spatialContext.planning.buildableAreaM2 | number }} m²</dd></div>
-              <div><dt>Hard constraints</dt><dd>{{ spatialContext.hardConstraints.length }}</dd></div>
-            </dl>
-            <small>Provenance is shown as returned by the context adapter.</small>
-          </aside>
-        }
-      </div>
-    
-      <div class="map-building-card" [class.collapsed]="buildingCardCollapsed">
-        <div class="building-card-head">
-          <strong>Building data</strong>
-          <button type="button" class="icon-button" title="{{ buildingCardCollapsed ? 'Expand' : 'Collapse' }}" [attr.aria-label]="buildingCardCollapsed ? 'Expand building data' : 'Collapse building data'" (click)="buildingCardCollapsed = !buildingCardCollapsed">
-            <img [src]="buildingCardCollapsed ? iconPaths.expand : iconPaths.collapse" alt="">
-          </button>
-        </div>
-        @if (!buildingCardCollapsed) {
-          <span>{{ activePlot.name }}</span>
-          <button type="button" class="map-link" (click)="showPlanningDialog = true">GIS & planning data</button>
-        }
-      </div>
-    
-      <div class="map-tools" aria-label="Map tools">
-        <button type="button" title="Zoom in" aria-label="Zoom in" (click)="zoomIn()">+</button>
-        <button type="button" title="Zoom out" aria-label="Zoom out" (click)="zoomOut()">−</button>
-        <button type="button" title="Fit parcel" aria-label="Fit parcel" (click)="renderPlot(activePlot)">□</button>
-        <button type="button" title="Edit parcel" aria-label="Edit parcel" [class.active]="drawingMode" (click)="toggleDrawing()">
-          <img [src]="iconPaths.edit" alt="">
-        </button>
-        <button type="button" title="Delete drawing" aria-label="Delete drawing" (click)="clearDrawing()">
-          <img [src]="iconPaths.delete" alt="">
-        </button>
-        <button type="button" title="2D map" aria-label="2D map" [class.active]="mapMode === '2d'" (click)="setMapMode('2d')">
-          <img [src]="iconPaths.twoD" alt="">
-        </button>
-        <button type="button" title="3D spatial view" aria-label="3D spatial view" [class.active]="mapMode === '3d'" (click)="setMapMode('3d')">
-          <img [src]="iconPaths.rotation" alt="">
-        </button>
-        <button type="button" title="Rotate 3D preview" aria-label="Rotate 3D preview" [class.active]="rotationMode" (click)="toggleRotationMode()">↻</button>
-        <button type="button" title="Fullscreen map" aria-label="Fullscreen map" (click)="toggleFullscreen()">
-          <img [src]="iconPaths.expand" alt="">
-        </button>
-      </div>
-    
-      @if (rotationMode) {
-        <div class="map-tool-note">3D rotation mode selected. This is a mock renderer boundary for the PoC; replace it with the Spatial viewer adapter when the backend/viewer contract is confirmed.</div>
-      }
-    
-      <div class="map-bottom-actions">
-        <label class="map-action">GeoJSON<input type="file" accept=".geojson,application/geo+json,.json" (change)="onGeoJsonSelected($event)" /></label>
-        <label class="map-action">CAD / DXF<input type="file" accept=".dxf,.dwg" (change)="onCadSelected($event)" /></label>
-        <button type="button" class="map-action" [class.active]="showLayerDrawer" (click)="showLayerDrawer=!showLayerDrawer">Layers</button>
-      </div>
-    
-      @if (showLayerDrawer) {
-        <aside class="layer-drawer" aria-label="Layer catalogue">
-          <div class="layer-drawer-header"><strong>Layers</strong><button type="button" (click)="showLayerDrawer=false" aria-label="Close layers">×</button></div>
-          @for (group of layerGroups; track group) {
-            <div class="layer-group">
-              <button type="button" class="layer-group-title" (click)="toggleLayerGroup(group.name)">
-                <span>{{ isLayerGroupCollapsed(group.name) ? '▸' : '▾' }} {{ group.name }}</span>
-                @if (activeLayerCount(group) > 0) {
-                  <span class="layer-count">{{ activeLayerCount(group) }}</span>
-                }
-              </button>
-              @if (!isLayerGroupCollapsed(group.name)) {
-                <small class="layer-group-hint">{{ group.hint }}</small>
-              }
-              @if (!isLayerGroupCollapsed(group.name)) {
-                @for (layer of group.layers; track layer) {
-                  <div class="layer-row">
-                    <span class="layer-swatch" [style.background]="layer.swatch"></span>
-                    <span class="layer-copy"><strong>{{ layer.name }}</strong><small>{{ layer.source }}</small></span>
-                    <input type="checkbox" [checked]="isLayerVisible(layer.id)" [disabled]="!layer.available" (change)="setLayerVisible(layer.id, $any($event.target).checked)" />
-                  </div>
-                }
-              }
-            </div>
-          }
-        </aside>
-      }
-    
-      @if (showPlanningDialog) {
-        <div class="planning-backdrop" (click)="showPlanningDialog=false">
-          <section class="planning-dialog" role="dialog" aria-modal="true" aria-label="GIS and planning data" (click)="$event.stopPropagation()">
-            <div class="stepper">
-              <div class="step done"><span>✓</span><small>Select an area</small></div>
-              <div class="step active"><span>2</span><small>GIS & planning data</small></div>
-              <div class="step"><span>3</span><small>Optimal volume</small></div>
-            </div>
-            <div class="planning-content">
-              <div class="planning-stats">
-                <p><b>Maximum permitted buildable area:</b> {{ activePlot.buildableAreaMaxM2 | number }} m²</p>
-                <p><b>Occupation:</b> {{ occupation | number }} m²</p>
-                <p><b>Maximum permitted height:</b> {{ activePlot.maxHeightStories * 4 }} m</p>
-              </div>
-              <div class="planning-fields">
-                <label>Target dwellings<input type="number" [ngModel]="store.getState().vpoParams.targetUnits" (ngModelChange)="store.updateVPOParams({targetUnits: $event})"></label>
-                <label>Buildable area<input type="number" [ngModel]="store.getState().vpoParams.buildableAreaM2" (ngModelChange)="store.updateVPOParams({buildableAreaM2: $event})"></label>
-                <label>Max height<input type="number" [ngModel]="store.getState().vpoParams.maxHeightStories" (ngModelChange)="store.updateVPOParams({maxHeightStories: $event})"></label>
-              </div>
-              <h3>Urban planning data:</h3>
-              <ul><li>Setbacks</li><li>Boundaries</li><li>Local planning regulations</li></ul>
-              <h3>Typologies <span>Recommended by AI</span></h3>
-              <div class="typology-grid">
-                @for (type of typologies; track type) {
-                  <button type="button" [class.selected]="selectedTypology === type" (click)="selectedTypology=type">
-                    <strong>{{ type }}</strong><span class="typology-sketch" [class.u-shape]="type === 'U-shaped'"></span>@if (type === 'U-shaped') {
-                    <small>AI recommendation</small>
-                  }
-                </button>
-              }
-            </div>
-            <div class="planning-actions"><button type="button" class="btn-secondary" (click)="showPlanningDialog=false">Close</button><button type="button" class="btn-primary" (click)="acceptPlanning()">Accept & continue</button></div>
-          </div>
-        </section>
-      </div>
-    }
-    
-    @if (importError) {
-      <div class="map-error">{{ importError }}</div>
-    }
-    </div>
-    `,
-    styles: [`
-    :host{display:block;height:100%;min-height:0}.gis-shell{position:relative;width:100%;height:100%;min-height:520px;overflow:hidden;background:#e9eee9}.map-container{position:absolute;inset:0;z-index:1}.map-building-card{position:absolute;top:14px;left:16px;z-index:20;background:#fff;border:1px solid #d9e2dc;border-radius:5px;padding:12px 14px;min-width:245px;box-shadow:0 2px 7px rgba(0,0,0,.12);display:grid;gap:4px}.map-building-card strong{font-size:14px}.building-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.map-building-card.collapsed{min-width:180px}.icon-button{width:24px;height:24px;border:0;background:#fff;display:grid;place-items:center;cursor:pointer;padding:0}.icon-button img,.map-tools img{width:18px;height:18px;object-fit:contain}.map-tools button.active{background:#f7fbf8;border-left:2px solid #087021}.map-building-card span{font-size:10px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.map-link{justify-self:start;border:0;background:#fff;color:#1f2937;padding:0;text-decoration:underline;cursor:pointer}.map-tools{position:absolute;top:92px;left:16px;z-index:20;display:grid;gap:2px;background:#fff;border:1px solid #d9e2dc;border-radius:4px;overflow:hidden;box-shadow:0 2px 7px rgba(0,0,0,.12)}.map-tools button,.map-tools label{width:42px;height:42px;display:grid;place-items:center;border:0;background:#fff;color:#1f2937;cursor:pointer;font-size:22px}.map-tools button:hover{background:#f7fbf8}.map-tools label{font-size:18px}.map-tools input{display:none}.map-bottom-actions{position:absolute;right:16px;bottom:16px;z-index:20;display:flex;gap:6px}.map-action{background:#fff;border:1px solid #d9e2dc;border-radius:4px;color:#087021;padding:9px 12px;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 2px 7px rgba(0,0,0,.08)}.map-action input{display:none}.map-action.active{background:#f1f8f2;border-color:#087021}.planning-backdrop{position:absolute;inset:0;z-index:50;background:rgba(15,23,42,.10);display:grid;place-items:center;padding:20px}.planning-dialog{width:min(760px,calc(100% - 20px));max-height:calc(100% - 30px);overflow:auto;background:#fff;border:1px solid #d9e2dc;box-shadow:0 10px 35px rgba(15,23,42,.22);border-radius:5px}.stepper{display:grid;grid-template-columns:1fr 1fr 1fr;padding:18px 26px 12px;border-bottom:1px solid #e5ebe7}.step{position:relative;text-align:center;color:#a4b0a7;font-weight:700;font-size:11px}.step:before{content:"";position:absolute;left:50%;right:-50%;top:10px;height:2px;background:#dce6df}.step:last-child:before{display:none}.step span{position:relative;z-index:1;display:grid;place-items:center;width:20px;height:20px;margin:0 auto 7px;border-radius:50%;border:2px solid #c7d5cc;background:#fff;color:#9aaa9f}.step.done span,.step.active span{border-color:#087021;color:#087021}.step.done span{background:#fff}.step.active small,.step.done small{color:#087021}.planning-content{padding:18px 24px 20px}.planning-stats p{margin:0 0 14px}.planning-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0 18px}.planning-fields label{display:grid;gap:5px;font-size:11px;font-weight:700;color:#475569}.planning-fields input{border:1px solid #cfdad2;padding:8px;border-radius:3px}.planning-content h3{font-size:13px;margin:16px 0 8px}.planning-content h3 span{float:right;color:#6b1fa5;font-size:10px}.planning-content ul{margin:0 0 16px;padding-left:20px;color:#334155}.typology-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.typology-grid button{min-height:132px;text-align:left;background:#fff;border:1px solid #d9e2dc;border-radius:5px;padding:10px;cursor:pointer;position:relative}.typology-grid button.selected{border:2px solid #6b1fa5}.typology-grid strong{display:block;font-size:12px}.typology-sketch{display:block;height:65px;margin-top:8px;border:1px solid #aab5ad;transform:skew(-25deg) rotate(-35deg);width:48px;margin-left:25px;box-shadow:8px 8px 0 -7px #fff,8px 8px 0 -6px #aab5ad}.typology-sketch.u-shape{width:55px;border-right-color:transparent;border-bottom-color:transparent;transform:skew(-25deg) rotate(-35deg)}.typology-grid small{position:absolute;bottom:8px;left:10px;color:#6b1fa5;font-weight:800}.planning-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.layer-drawer{position:absolute;top:14px;right:16px;bottom:62px;width:min(330px,calc(100% - 32px));z-index:40;background:#fff;border:1px solid #d9e2dc;border-radius:5px;box-shadow:0 6px 24px rgba(0,0,0,.16);overflow:auto}.layer-drawer-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid #e5ebe7}.layer-drawer-header button{border:0;background:transparent;font-size:20px;cursor:pointer}.layer-group{padding:10px 12px;border-bottom:1px solid #eef2ef}.layer-group-title{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;background:transparent;text-align:left;font-size:11px;font-weight:800;color:#087021;margin-bottom:4px;padding:0;cursor:pointer}.layer-count{min-width:18px;height:18px;border-radius:9px;background:#c4ddca;color:#087021;display:grid;place-items:center;font-size:9px}.layer-group-hint{display:block;color:#64748b;font-size:9px;line-height:1.35;margin-bottom:5px}.layer-row{display:flex;align-items:center;gap:8px;padding:7px 2px}.layer-swatch{width:12px;height:12px;border-radius:2px;border:1px solid rgba(0,0,0,.15);flex:none}.layer-copy{display:grid;gap:2px;min-width:0;flex:1}.layer-copy strong{font-size:11px;font-weight:700}.layer-copy small{font-size:9px;color:#64748b}.layer-row input{accent-color:#087021}.map-tool-note{position:absolute;left:16px;top:380px;z-index:25;max-width:280px;padding:8px 10px;background:#fff;border:1px solid #c4ddca;color:#35553d;border-radius:4px;font-size:10px;box-shadow:0 2px 7px rgba(0,0,0,.08)}.map-error{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);z-index:70;background:#fff4f2;color:#b42318;border:1px solid #e0a4a0;padding:8px 12px;border-radius:4px;font-size:11px}.map-container.map-hidden{visibility:hidden}.spatial-3d-preview{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,#f8fbf9,#eef5f0);visibility:hidden;opacity:0;pointer-events:none;transition:none}.spatial-3d-preview.visible{visibility:visible;opacity:1;pointer-events:auto}.spatial-3d-header{position:absolute;left:18px;top:18px;z-index:2;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d9e2dc;border-radius:5px;padding:10px 12px;box-shadow:0 2px 7px rgba(0,0,0,.08)}.spatial-3d-header strong{font-size:13px}.spatial-3d-header span{font-size:10px;color:#64748b}.context-button{margin-left:4px;border:1px solid #087021;background:#fff;color:#087021;border-radius:4px;padding:6px 8px;font-size:10px;font-weight:800;cursor:pointer}.context-panel{position:absolute;right:18px;top:18px;width:min(340px,calc(100% - 36px));z-index:5;background:#fff;border:1px solid #d9e2dc;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.14);padding:14px}.context-panel-head{display:flex;justify-content:space-between;align-items:center}.context-panel-head button{border:0;background:transparent;font-size:20px;cursor:pointer}.context-mock{display:inline-block;margin-top:8px;padding:4px 6px;border-radius:3px;background:#fffdf4;border:1px solid #eadca8;color:#67551b;font-size:9px;font-weight:800}.context-panel dl{display:grid;gap:7px;margin:12px 0}.context-panel dl div{display:grid;grid-template-columns:100px 1fr;gap:8px;font-size:10px}.context-panel dt{color:#64748b}.context-panel dd{margin:0;color:#1f2937}.context-panel>small{color:#64748b;font-size:9px}.spatial-3d-preview svg{display:block;width:100%;height:100%}.site-plane{fill:#e5eee7;stroke:#b8cdbd;stroke-width:2}.envelope-plane{fill:#c4ddca;fill-opacity:.55;stroke:#087021;stroke-width:2;stroke-dasharray:8 6}.mock-building polygon{fill:#fff;stroke:#087021;stroke-width:2}.mock-building polygon:nth-child(1){fill:#d9e9dc}.mock-building polygon:nth-child(4){fill:#eef6ef}.floor-line{stroke:#6e9b7a;stroke-width:1.2;opacity:.7}.spatial-axis-label{fill:#334155;font-size:15px;font-weight:700}.spatial-3d-hint{position:absolute;left:18px;bottom:18px;background:#fff;border:1px solid #d9e2dc;border-radius:5px;padding:9px 11px;color:#64748b;font-size:10px}@media(max-width:760px){.planning-fields{grid-template-columns:1fr}.typology-grid{grid-template-columns:1fr 1fr}.map-building-card{left:10px;top:10px}.map-tools{left:10px;top:90px}.map-bottom-actions{right:10px;bottom:10px}.planning-backdrop{padding:8px}}
-  `],
+    templateUrl: './gis-viewer.component.html',
+    styleUrls: ['./gis-viewer.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [DecimalPipe, FormsModule]
 })
 export class GisViewerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) private mapContainerRef!: ElementRef<HTMLDivElement>;

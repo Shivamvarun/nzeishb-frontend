@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { AppState, VpoParams } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 @Component({
     selector: 'app-vpo-form', templateUrl: '../../components/vpo-form/vpo-form.component.html', styleUrls: ['../../components/vpo-form/vpo-form.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [DecimalPipe]
 })
 export class VpoFormComponent {
   state: AppState = this.store.getState();

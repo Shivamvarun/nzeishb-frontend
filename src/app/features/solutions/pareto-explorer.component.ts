@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Subscription } from 'rxjs';
@@ -12,7 +14,7 @@ interface Point { readonly variant: Variant; readonly x: number; readonly y: num
     templateUrl: '../../components/pareto-explorer/pareto-explorer.component.html',
     styleUrls: ['../../components/pareto-explorer/pareto-explorer.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [DecimalPipe, FormsModule]
 })
 export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('pareto3d', { static: true }) private pareto3dRef!: ElementRef<HTMLDivElement>;

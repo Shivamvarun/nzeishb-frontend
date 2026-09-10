@@ -7,8 +7,7 @@ import { Inject } from '@angular/core';
     selector: 'app-catalog',
     templateUrl: './catalog.component.html',
     styleUrls: ['./catalog.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CatalogComponent implements OnInit {
   modules: readonly CatalogModule[] = [];
