@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 
@@ -6,6 +6,7 @@ import { StoreService } from '../../core/state/store.service';
     selector: 'app-design-workspace',
     templateUrl: './design-workspace.component.html',
     styleUrls: ['./design-workspace.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DesignWorkspaceComponent {

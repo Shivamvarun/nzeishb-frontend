@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { AppComponent } from './app.component';
@@ -107,5 +107,5 @@ const aiApiProvider = environment.useMockAi
         DesignWorkspaceComponent,
         SolutionsWorkspaceComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, MarkdownModule.forRoot()], providers: [...apiProviders, aiApiProvider, provideHttpClient(withInterceptorsFromDi())] })
+    bootstrap: [AppComponent], imports: [BrowserModule, FormsModule, MarkdownModule.forRoot()], providers: [...apiProviders, aiApiProvider, provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class AppModule {}

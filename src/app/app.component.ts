@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActiveView } from './core/models/app.models';
 import { StoreService } from './core/state/store.service';
 
 @Component({
     selector: 'app-root', templateUrl: './app.component.html', styleUrls: ['./app.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppComponent {

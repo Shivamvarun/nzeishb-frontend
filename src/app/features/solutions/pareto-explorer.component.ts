@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,7 @@ interface Point { readonly variant: Variant; readonly x: number; readonly y: num
     selector: 'app-pareto-explorer',
     templateUrl: '../../components/pareto-explorer/pareto-explorer.component.html',
     styleUrls: ['../../components/pareto-explorer/pareto-explorer.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
@@ -155,7 +156,7 @@ export class ParetoExplorerComponent implements AfterViewInit, OnDestroy {
       const material = new THREE.MeshStandardMaterial({ color: selected ? 0xf59e0b : 0x7e3db3, roughness: .4, metalness: .05 });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(x, y, z);
-      mesh.userData = v.id;
+      mesh.userData = { id: v.id };
       this.pointGroup.add(mesh);
     });
   }

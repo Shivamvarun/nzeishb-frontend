@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppState, Variant } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
@@ -21,6 +21,7 @@ interface ProfileAxis {
     selector: 'app-comparator',
     templateUrl: '../../components/comparator/comparator.component.html',
     styleUrls: ['../../components/comparator/comparator.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ComparatorComponent implements OnDestroy {

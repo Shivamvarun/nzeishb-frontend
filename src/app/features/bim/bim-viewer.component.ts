@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STATIC_IFC } from '../../core/ai/static-ifc';
@@ -73,6 +73,7 @@ interface BimElementInfo {
     .viewer-hint { position: absolute; right: 16px; bottom: 16px; left: auto; padding: 8px 10px; border-radius: 8px; color: #1f2937; background: rgba(255,255,255,.92); font-size: .8rem; pointer-events: none; }
     @media (max-width: 760px) { .bim-viewer { min-height: 620px; } .property-panel { top: auto; bottom: 54px; } }
   `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BimViewerComponent implements AfterViewInit, OnDestroy {

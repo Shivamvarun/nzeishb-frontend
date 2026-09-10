@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { AppState, Variant } from '../../core/models/app.models';
@@ -10,6 +10,7 @@ Chart.register(...registerables);
     selector: 'app-dashboard',
     templateUrl: '../../components/dashboard/dashboard.component.html',
     styleUrls: ['../../components/dashboard/dashboard.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {

@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/state/store.service';
 import { AppState } from '../../core/models/app.models';
 
 @Component({
     selector: 'app-solutions-workspace', templateUrl: './solutions-workspace.component.html', styleUrls: ['./solutions-workspace.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SolutionsWorkspaceComponent implements OnDestroy {

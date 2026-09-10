@@ -16,7 +16,7 @@
     </nav>
 
     <div class="header-actions">
-      <button class="btn-primary header-save" [disabled]="(state$ | async)?.isSaving" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Saving…' : 'Save scenario' }}</button>
+      <button class="btn-primary header-save" [disabled]="$safeNavigationMigration((state$ | async)?.isSaving)" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Saving…' : 'Save scenario' }}</button>
     </div>
   </header>
 

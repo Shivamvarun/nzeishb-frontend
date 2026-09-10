@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState, VpoParams } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 @Component({
     selector: 'app-vpo-form', templateUrl: '../../components/vpo-form/vpo-form.component.html', styleUrls: ['../../components/vpo-form/vpo-form.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class VpoFormComponent {

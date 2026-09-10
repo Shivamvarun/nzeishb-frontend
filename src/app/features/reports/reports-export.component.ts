@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState, ArtifactKind } from '../../core/models/app.models';
 import { StoreService } from '../../core/state/store.service';
 
@@ -6,6 +6,7 @@ import { StoreService } from '../../core/state/store.service';
     selector: 'app-reports-export',
     templateUrl: '../../components/reports-export/reports-export.component.html',
     styleUrls: ['../../components/reports-export/reports-export.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ReportsExportComponent {

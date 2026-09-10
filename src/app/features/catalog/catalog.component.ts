@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CATALOG_API, CatalogApiPort } from '../../core/api/catalog/catalog-api.port';
 import { CatalogModule } from '../../core/api/catalog/catalog-api.models';
 import { Inject } from '@angular/core';
@@ -7,6 +7,7 @@ import { Inject } from '@angular/core';
     selector: 'app-catalog',
     templateUrl: './catalog.component.html',
     styleUrls: ['./catalog.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CatalogComponent implements OnInit {
