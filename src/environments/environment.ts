@@ -4,7 +4,7 @@ export const environment = {
   /**
    * Only ai-service has a real, working backend right now. Every other
    * port (workspace, spatial, scenario, ...) stays on its Mock adapter
-   * until its backend is actually wired up — see app.config.ts, which
+   * until its backend is actually wired up — see core/http/http.config.ts, which
    * switches AI_API independently via `useMockAi` below.
    */
   apiBaseUrl: '/api/v1',

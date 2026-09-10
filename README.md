@@ -38,11 +38,11 @@ src/app/core/api/<domain>/
 Concrete integrations live under:
 
 ```text
-src/app/core/api/adapters/http/
-src/app/core/api/adapters/mock/
+src/app/core/http/adapters/http/
+src/app/core/http/adapters/mock/
 ```
 
-The HTTP/mock implementation is selected by Angular DI in `app.config.ts`.
+The HTTP/mock implementation is selected by Angular DI in `core/http/http.config.ts`.
 
 ## Backend integration
 

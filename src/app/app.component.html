@@ -33,28 +33,28 @@
 
     <section class="workspace-view">
       @if (isView('spatial')) {
-        <app-gis-viewer></app-gis-viewer>
+        <app-spatial></app-spatial>
       }
       @if (isView('catalog')) {
         <app-catalog></app-catalog>
       }
       @if (isView('scenario')) {
-        <app-design-workspace></app-design-workspace>
+        <app-scenario></app-scenario>
       }
       @if (isView('optimization')) {
-        <app-pareto-explorer></app-pareto-explorer>
+        <app-optimization></app-optimization>
       }
       @if (isView('bim')) {
-        <app-bim-viewer></app-bim-viewer>
+        <app-bim></app-bim>
       }
       @if (isView('solutions')) {
-        <app-solutions-workspace></app-solutions-workspace>
+        <app-solutions></app-solutions>
       }
       @if (isView('reports')) {
-        <app-reports-export></app-reports-export>
+        <app-reports></app-reports>
       }
     </section>
   </main>
 
-  <app-rag-chatbot></app-rag-chatbot>
+  <app-normative-chat></app-normative-chat>
 </div>

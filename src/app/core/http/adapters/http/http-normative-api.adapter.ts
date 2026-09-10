@@ -1,0 +1,16 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { NormativeApiPort } from '../../../api/normative/normative-api.port';
+import { API_ROUTES } from '../../../config/api.config';
+import { ChatReply } from '../../../api/normative/normative-api.models';
+
+@Injectable()
+export class HttpNormativeApiAdapter implements NormativeApiPort {
+  constructor(private readonly http: HttpClient) {}
+
+  askNormative(question: string, scenarioId: string): Promise<ChatReply> {
+    return firstValueFrom(this.http.post<ChatReply>(`${environment.apiBaseUrl}${API_ROUTES.normative}`, { question, scenarioId }));
+  }
+}
