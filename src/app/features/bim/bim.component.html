@@ -1,55 +1,51 @@
-<div class="bim-viewer">
-  <div class="bim-toolbar" role="toolbar" aria-label="BIM viewer controls">
-    <label>
-      Floor
-      <select [ngModel]="isolatedFloorLabel" (ngModelChange)="setFloor($event)">
-        <option value="all">All</option>
-        @for (storey of storeys; track storey) {
-        <option [value]="storey.index">{{ storey.name }}</option>
-        }
-      </select>
-    </label>
-    <button type="button" class="icon-btn" title="Reset camera" (click)="resetCamera()">Reset</button>
-    <button type="button" class="icon-btn" [class.active]="sectionEnabled" title="Section cut"
-      (click)="toggleSection()">Section</button>
-    <button type="button" class="icon-btn" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ?
-      'Ortho' : 'Persp' }}</button>
-    <button type="button" class="primary-btn" [disabled]="isGenerating" (click)="generateIfc()">{{ isGenerating ?
-      'Generating IFC…' : 'Generate IFC' }}</button>
+<div class="relative h-full min-h-[520px] w-full max-[760px]:min-h-[620px]">
+  <div class="absolute top-3.5 left-3.5 z-[3] flex flex-wrap items-center gap-2 rounded-lg border border-border bg-[rgba(255,255,255,.96)] p-2" role="toolbar" aria-label="BIM viewer controls">
+    <app-select
+      inline
+      label="Floor"
+      className="w-auto rounded-md border-[rgba(148,163,184,.24)] px-2 py-[7px]"
+      [options]="floorOptions"
+      [ngModel]="isolatedFloorLabel"
+      (ngModelChange)="setFloor('' + $event)">
+    </app-select>
+    <app-button variant="outlined" className="rounded-md border-[rgba(148,163,184,.22)] px-2.5 py-2 font-bold text-ink" title="Reset camera" (click)="resetCamera()">Reset</app-button>
+    <app-button variant="outlined" [className]="sectionEnabled ? 'rounded-md border-brand bg-tint px-2.5 py-2 font-bold text-ink' : 'rounded-md border-[rgba(148,163,184,.22)] px-2.5 py-2 font-bold text-ink'" title="Section cut" (click)="toggleSection()">Section</app-button>
+    <app-button variant="outlined" className="rounded-md border-[rgba(148,163,184,.22)] px-2.5 py-2 font-bold text-ink" title="Switch projection" (click)="toggleProjection()">{{ useOrthographic ? 'Ortho' : 'Persp' }}</app-button>
+    <app-button variant="contained" className="px-2.5 py-2" [disabled]="isGenerating" (click)="generateIfc()">{{ isGenerating ? 'Generating IFC…' : 'Generate IFC' }}</app-button>
   </div>
   @if (generationError) {
-  <div class="generation-error">{{ generationError }}</div>
+  <div class="absolute top-[70px] left-3.5 z-[4] rounded border border-danger-border bg-danger-bg px-2.5 py-2 text-[11px] text-danger">{{ generationError }}</div>
   }
   @if (loadStatus) {
-  <div class="bim-status" role="status" aria-live="polite">{{ loadStatus }}</div>
+  <div class="absolute top-1/2 left-1/2 z-[4] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-[rgba(255,255,255,.96)] px-4 py-3 text-[.9rem] text-ink shadow-[0_8px_24px_rgba(15,23,42,.08)]" role="status" aria-live="polite">{{ loadStatus }}</div>
   }
-  <div #container class="bim-container" (click)="selectElement($event)"></div>
+  <div #container class="h-full w-full overflow-hidden rounded-lg bg-tint-3" (click)="selectElement($event)"></div>
   @if (selectedElement) {
-  <aside class="property-panel">
+  <aside class="absolute top-[76px] right-3.5 z-[3] w-[min(280px,calc(100%-28px))] rounded-lg border border-border bg-[rgba(255,255,255,.97)] p-3.5 text-ink max-[760px]:top-auto max-[760px]:bottom-[54px]">
     <div class="panel-title">Element properties</div>
-    <dl>
-      <div>
-        <dt>ID</dt>
-        <dd>{{ selectedElement.id }}</dd>
+    <dl class="mt-2.5 grid gap-2">
+      <div class="grid grid-cols-[76px_1fr] gap-2.5">
+        <dt class="text-muted">ID</dt>
+        <dd class="m-0">{{ selectedElement.id }}</dd>
       </div>
-      <div>
-        <dt>Type</dt>
-        <dd>{{ selectedElement.type }}</dd>
+      <div class="grid grid-cols-[76px_1fr] gap-2.5">
+        <dt class="text-muted">Type</dt>
+        <dd class="m-0">{{ selectedElement.type }}</dd>
       </div>
-      <div>
-        <dt>Floor</dt>
-        <dd>{{ floorLabel(selectedElement.floor) }}</dd>
+      <div class="grid grid-cols-[76px_1fr] gap-2.5">
+        <dt class="text-muted">Floor</dt>
+        <dd class="m-0">{{ floorLabel(selectedElement.floor) }}</dd>
       </div>
-      <div>
-        <dt>Area</dt>
-        <dd>{{ selectedElement.areaM2 }} m2</dd>
+      <div class="grid grid-cols-[76px_1fr] gap-2.5">
+        <dt class="text-muted">Area</dt>
+        <dd class="m-0">{{ selectedElement.areaM2 }} m2</dd>
       </div>
-      <div>
-        <dt>Material</dt>
-        <dd>{{ selectedElement.material }}</dd>
+      <div class="grid grid-cols-[76px_1fr] gap-2.5">
+        <dt class="text-muted">Material</dt>
+        <dd class="m-0">{{ selectedElement.material }}</dd>
       </div>
     </dl>
   </aside>
   }
-  <div class="viewer-hint">Drag rotate | wheel zoom | right button pan</div>
+  <div class="pointer-events-none absolute right-4 bottom-4 left-auto rounded-lg bg-[rgba(255,255,255,.92)] px-2.5 py-2 text-[.8rem] text-ink">Drag rotate | wheel zoom | right button pan</div>
 </div>

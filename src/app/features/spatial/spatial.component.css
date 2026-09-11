@@ -1,4 +1,4 @@
-:host {
+﻿:host {
   display: block;
   height: 100%;
   min-height: 0;
@@ -10,7 +10,7 @@
   height: 100%;
   min-height: 520px;
   overflow: hidden;
-  background: #e9eee9;
+  background: var(--color-map-bg);
 }
 
 .map-container {
@@ -24,8 +24,8 @@
   top: 14px;
   left: 16px;
   z-index: 20;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   padding: 12px 14px;
   min-width: 245px;
@@ -53,7 +53,7 @@
   width: 24px;
   height: 24px;
   border: 0;
-  background: #fff;
+  background: var(--color-surface);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -68,13 +68,13 @@
 }
 
 .map-tools button.active {
-  background: #f7fbf8;
-  border-left: 2px solid #087021;
+  background: var(--color-tint-3);
+  border-left: 2px solid var(--color-brand);
 }
 
 .map-building-card span {
   font-size: 10px;
-  color: #64748b;
+  color: var(--color-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -83,8 +83,8 @@
 .map-link {
   justify-self: start;
   border: 0;
-  background: #fff;
-  color: #1f2937;
+  background: var(--color-surface);
+  color: var(--color-ink);
   padding: 0;
   text-decoration: underline;
   cursor: pointer;
@@ -97,8 +97,8 @@
   z-index: 20;
   display: grid;
   gap: 2px;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 2px 7px rgba(0, 0, 0, .12);
@@ -111,14 +111,14 @@
   display: grid;
   place-items: center;
   border: 0;
-  background: #fff;
-  color: #1f2937;
+  background: var(--color-surface);
+  color: var(--color-ink);
   cursor: pointer;
   font-size: 22px;
 }
 
 .map-tools button:hover {
-  background: #f7fbf8;
+  background: var(--color-tint-3);
 }
 
 .map-tools label {
@@ -139,10 +139,10 @@
 }
 
 .map-action {
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: #087021;
+  color: var(--color-brand);
   padding: 9px 12px;
   font-size: 11px;
   font-weight: 800;
@@ -155,8 +155,8 @@
 }
 
 .map-action.active {
-  background: #f1f8f2;
-  border-color: #087021;
+  background: var(--color-tint);
+  border-color: var(--color-brand);
 }
 
 .planning-backdrop {
@@ -173,8 +173,8 @@
   width: min(760px, calc(100% - 20px));
   max-height: calc(100% - 30px);
   overflow: auto;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   box-shadow: 0 10px 35px rgba(15, 23, 42, .22);
   border-radius: 5px;
 }
@@ -183,13 +183,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 18px 26px 12px;
-  border-bottom: 1px solid #e5ebe7;
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .step {
   position: relative;
   text-align: center;
-  color: #a4b0a7;
+  color: var(--color-step-idle);
   font-weight: 700;
   font-size: 11px;
 }
@@ -201,7 +201,7 @@
   right: -50%;
   top: 10px;
   height: 2px;
-  background: #dce6df;
+  background: var(--color-step-line);
 }
 
 .step:last-child:before {
@@ -217,24 +217,24 @@
   height: 20px;
   margin: 0 auto 7px;
   border-radius: 50%;
-  border: 2px solid #c7d5cc;
-  background: #fff;
-  color: #9aaa9f;
+  border: 2px solid var(--color-step-ring);
+  background: var(--color-surface);
+  color: var(--color-step-num);
 }
 
 .step.done span,
 .step.active span {
-  border-color: #087021;
-  color: #087021;
+  border-color: var(--color-brand);
+  color: var(--color-brand);
 }
 
 .step.done span {
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .step.active small,
 .step.done small {
-  color: #087021;
+  color: var(--color-brand);
 }
 
 .planning-content {
@@ -257,11 +257,11 @@
   gap: 5px;
   font-size: 11px;
   font-weight: 700;
-  color: #475569;
+  color: var(--color-muted-2);
 }
 
 .planning-fields input {
-  border: 1px solid #cfdad2;
+  border: 1px solid var(--color-line);
   padding: 8px;
   border-radius: 3px;
 }
@@ -273,14 +273,14 @@
 
 .planning-content h3 span {
   float: right;
-  color: #6b1fa5;
+  color: var(--color-accent);
   font-size: 10px;
 }
 
 .planning-content ul {
   margin: 0 0 16px;
   padding-left: 20px;
-  color: #334155;
+  color: var(--color-slate);
 }
 
 .typology-grid {
@@ -292,8 +292,8 @@
 .typology-grid button {
   min-height: 132px;
   text-align: left;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
@@ -301,7 +301,7 @@
 }
 
 .typology-grid button.selected {
-  border: 2px solid #6b1fa5;
+  border: 2px solid var(--color-accent);
 }
 
 .typology-grid strong {
@@ -313,11 +313,11 @@
   display: block;
   height: 65px;
   margin-top: 8px;
-  border: 1px solid #aab5ad;
+  border: 1px solid var(--color-sketch);
   transform: skew(-25deg) rotate(-35deg);
   width: 48px;
   margin-left: 25px;
-  box-shadow: 8px 8px 0 -7px #fff, 8px 8px 0 -6px #aab5ad;
+  box-shadow: 8px 8px 0 -7px var(--color-surface), 8px 8px 0 -6px var(--color-sketch);
 }
 
 .typology-sketch.u-shape {
@@ -331,7 +331,7 @@
   position: absolute;
   bottom: 8px;
   left: 10px;
-  color: #6b1fa5;
+  color: var(--color-accent);
   font-weight: 800;
 }
 
@@ -349,8 +349,8 @@
   bottom: 62px;
   width: min(330px, calc(100% - 32px));
   z-index: 40;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, .16);
   overflow: auto;
@@ -361,7 +361,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 14px;
-  border-bottom: 1px solid #e5ebe7;
+  border-bottom: 1px solid var(--color-divider);
 }
 
 .layer-drawer-header button {
@@ -373,7 +373,7 @@
 
 .layer-group {
   padding: 10px 12px;
-  border-bottom: 1px solid #eef2ef;
+  border-bottom: 1px solid var(--color-layer-divider);
 }
 
 .layer-group-title {
@@ -386,7 +386,7 @@
   text-align: left;
   font-size: 11px;
   font-weight: 800;
-  color: #087021;
+  color: var(--color-brand);
   margin-bottom: 4px;
   padding: 0;
   cursor: pointer;
@@ -396,8 +396,8 @@
   min-width: 18px;
   height: 18px;
   border-radius: 9px;
-  background: #c4ddca;
-  color: #087021;
+  background: var(--color-tint-border);
+  color: var(--color-brand);
   display: grid;
   place-items: center;
   font-size: 9px;
@@ -405,7 +405,7 @@
 
 .layer-group-hint {
   display: block;
-  color: #64748b;
+  color: var(--color-muted);
   font-size: 9px;
   line-height: 1.35;
   margin-bottom: 5px;
@@ -440,11 +440,11 @@
 
 .layer-copy small {
   font-size: 9px;
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .layer-row input {
-  accent-color: #087021;
+  accent-color: var(--color-brand);
 }
 
 .map-tool-note {
@@ -454,9 +454,9 @@
   z-index: 25;
   max-width: 280px;
   padding: 8px 10px;
-  background: #fff;
-  border: 1px solid #c4ddca;
-  color: #35553d;
+  background: var(--color-surface);
+  border: 1px solid var(--color-tint-border);
+  color: var(--color-note);
   border-radius: 4px;
   font-size: 10px;
   box-shadow: 0 2px 7px rgba(0, 0, 0, .08);
@@ -468,9 +468,9 @@
   bottom: 70px;
   transform: translateX(-50%);
   z-index: 70;
-  background: #fff4f2;
-  color: #b42318;
-  border: 1px solid #e0a4a0;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-border);
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 11px;
@@ -484,7 +484,7 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(180deg, #f8fbf9, #eef5f0);
+  background: linear-gradient(180deg, var(--color-plot-bg), var(--color-model-base));
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
@@ -505,8 +505,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   padding: 10px 12px;
   box-shadow: 0 2px 7px rgba(0, 0, 0, .08);
@@ -518,14 +518,14 @@
 
 .spatial-3d-header span {
   font-size: 10px;
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .context-button {
   margin-left: 4px;
-  border: 1px solid #087021;
-  background: #fff;
-  color: #087021;
+  border: 1px solid var(--color-brand);
+  background: var(--color-surface);
+  color: var(--color-brand);
   border-radius: 4px;
   padding: 6px 8px;
   font-size: 10px;
@@ -539,8 +539,8 @@
   top: 18px;
   width: min(340px, calc(100% - 36px));
   z-index: 5;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, .14);
   padding: 14px;
@@ -564,9 +564,9 @@
   margin-top: 8px;
   padding: 4px 6px;
   border-radius: 3px;
-  background: #fffdf4;
-  border: 1px solid #eadca8;
-  color: #67551b;
+  background: var(--color-warn-bg);
+  border: 1px solid var(--color-warn-border);
+  color: var(--color-warn-text);
   font-size: 9px;
   font-weight: 800;
 }
@@ -585,16 +585,16 @@
 }
 
 .context-panel dt {
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .context-panel dd {
   margin: 0;
-  color: #1f2937;
+  color: var(--color-ink);
 }
 
 .context-panel>small {
-  color: #64748b;
+  color: var(--color-muted);
   font-size: 9px;
 }
 
@@ -605,41 +605,41 @@
 }
 
 .site-plane {
-  fill: #e5eee7;
-  stroke: #b8cdbd;
+  fill: var(--color-site-plane);
+  stroke: var(--color-site-stroke);
   stroke-width: 2;
 }
 
 .envelope-plane {
-  fill: #c4ddca;
+  fill: var(--color-tint-border);
   fill-opacity: .55;
-  stroke: #087021;
+  stroke: var(--color-brand);
   stroke-width: 2;
   stroke-dasharray: 8 6;
 }
 
 .mock-building polygon {
-  fill: #fff;
-  stroke: #087021;
+  fill: var(--color-surface);
+  stroke: var(--color-brand);
   stroke-width: 2;
 }
 
 .mock-building polygon:nth-child(1) {
-  fill: #d9e9dc;
+  fill: var(--color-mock-roof);
 }
 
 .mock-building polygon:nth-child(4) {
-  fill: #eef6ef;
+  fill: var(--color-mock-side);
 }
 
 .floor-line {
-  stroke: #6e9b7a;
+  stroke: var(--color-floor-line);
   stroke-width: 1.2;
   opacity: .7;
 }
 
 .spatial-axis-label {
-  fill: #334155;
+  fill: var(--color-slate);
   font-size: 15px;
   font-weight: 700;
 }
@@ -648,11 +648,11 @@
   position: absolute;
   left: 18px;
   bottom: 18px;
-  background: #fff;
-  border: 1px solid #d9e2dc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 5px;
   padding: 9px 11px;
-  color: #64748b;
+  color: var(--color-muted);
   font-size: 10px;
 }
 

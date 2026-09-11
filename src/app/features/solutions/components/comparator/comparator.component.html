@@ -1,5 +1,4 @@
-
-<div class="comparator-shell">
+<div class="min-h-full overflow-visible rounded-[7px] border border-border bg-surface p-4">
   <div class="panel-header">
     <div>
       <span class="eyebrow">SOLUTION COMPARISON</span>
@@ -8,36 +7,24 @@
     </div>
   </div>
 
-  <div class="picker-grid">
-    <label>Variant A
-      <select [ngModel]="state.comparedVariants[0].id" (ngModelChange)="setCompared(0, $event)">
-        @for (variant of state.variants; track variant) {
-          <option [value]="variant.id">{{ variant.name }}</option>
-        }
-      </select>
-    </label>
-    <label>Variant B
-      <select [ngModel]="state.comparedVariants[1].id" (ngModelChange)="setCompared(1, $event)">
-        @for (variant of state.variants; track variant) {
-          <option [value]="variant.id">{{ variant.name }}</option>
-        }
-      </select>
-    </label>
+  <div class="mb-4 grid grid-cols-2 gap-3.5 max-[760px]:grid-cols-1">
+    <app-select label="Variant A" [options]="variantOptions" [ngModel]="state.comparedVariants[0].id" (ngModelChange)="setCompared(0, '' + $event)"></app-select>
+    <app-select label="Variant B" [options]="variantOptions" [ngModel]="state.comparedVariants[1].id" (ngModelChange)="setCompared(1, '' + $event)"></app-select>
   </div>
 
-  <div class="comparison-grid">
-    <section class="comparison-column">
-      <h3>{{ state.comparedVariants[0].name }}</h3>
-      <p>{{ state.comparedVariants[0].tag }} · {{ state.comparedVariants[0].stories }} floors · {{ state.comparedVariants[0].housingUnits }} dwellings</p>
+  <div class="mb-4 grid grid-cols-2 gap-3.5 max-[760px]:grid-cols-1">
+    <section class="rounded-md border border-border bg-tint-3 p-3.5">
+      <h3 class="mb-[5px] mt-0 text-ink-heading">{{ state.comparedVariants[0].name }}</h3>
+      <p class="m-0 text-xs text-muted">{{ state.comparedVariants[0].tag }} · {{ state.comparedVariants[0].stories }} floors · {{ state.comparedVariants[0].housingUnits }} dwellings</p>
     </section>
-    <section class="comparison-column">
-      <h3>{{ state.comparedVariants[1].name }}</h3>
-      <p>{{ state.comparedVariants[1].tag }} · {{ state.comparedVariants[1].stories }} floors · {{ state.comparedVariants[1].housingUnits }} dwellings</p>
+    <section class="rounded-md border border-border bg-tint-3 p-3.5">
+      <h3 class="mb-[5px] mt-0 text-ink-heading">{{ state.comparedVariants[1].name }}</h3>
+      <p class="m-0 text-xs text-muted">{{ state.comparedVariants[1].tag }} · {{ state.comparedVariants[1].stories }} floors · {{ state.comparedVariants[1].housingUnits }} dwellings</p>
     </section>
   </div>
 
-  <div class="comparison-analysis-grid">
-    <section class="kpi-table-panel" aria-label="KPI comparison">
+  <div class="my-2.5 mb-[18px] grid grid-cols-[minmax(0,1.75fr)_minmax(310px,.85fr)] items-stretch gap-4 max-[980px]:grid-cols-1">
+    <section class="flex min-h-[390px] flex-col" aria-label="KPI comparison">
       <div class="analysis-heading">
         <strong>KPI comparison</strong>
         <span>Best value per KPI is highlighted</span>
@@ -58,13 +45,13 @@
       </div>
     </section>
 
-    <aside class="radar-panel" aria-label="KPI profile chart">
+    <aside class="flex min-h-[390px] flex-col max-[980px]:min-h-[360px]" aria-label="KPI profile chart">
       <div class="analysis-heading">
         <strong>KPI profile</strong>
         <span>Normalised comparison</span>
       </div>
-      <div class="radar-canvas-wrap">
-        <svg class="kpi-radar" viewBox="0 0 420 315" role="img" aria-label="Normalized KPI profile comparison">
+      <div class="relative box-border flex min-h-[340px] w-full flex-1 items-center justify-center px-2.5 py-2">
+        <svg class="kpi-radar block h-[330px] w-full max-w-[430px] overflow-visible" viewBox="0 0 420 315" role="img" aria-label="Normalized KPI profile comparison">
           <g class="radar-grid">
             @for (grid of profileGrid; track grid) {
               <polygon [attr.points]="grid"></polygon>
@@ -93,12 +80,12 @@
     </aside>
   </div>
 
-  <section class="comparison-3d" aria-label="3D comparison preview">
-    <div class="comparison-3d-header">
-      <strong>3D solution preview</strong>
-      <span>Interactive comparison-ready mock geometry</span>
+  <section class="mt-4 overflow-hidden rounded-md border border-border bg-plot-bg" aria-label="3D comparison preview">
+    <div class="flex items-center justify-between gap-3 border-b border-row-border px-3.5 py-3">
+      <strong class="text-[13px] text-ink">3D solution preview</strong>
+      <span class="text-[10px] text-muted">Interactive comparison-ready mock geometry</span>
     </div>
-    <svg viewBox="0 0 1000 290" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Two isometric building previews">
+    <svg class="block h-[290px] w-full max-[760px]:h-[230px]" viewBox="0 0 1000 290" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Two isometric building previews">
       <polygon class="model-base" points="120,230 360,170 485,215 245,275" />
       <g class="model-left">
         <polygon points="175,175 300,142 378,170 253,203" />

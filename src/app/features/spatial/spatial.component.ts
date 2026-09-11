@@ -8,13 +8,15 @@ import { GeoJsonPolygon, Plot } from '../../core/models/app.models';
 import { SPATIAL_CONTEXT_API, SpatialContextApiPort } from '../../core/api/spatial/spatial-context-api.port';
 import { SpatialContextSnapshot } from '../../core/api/spatial/spatial-context-api.models';
 import { environment } from '../../../environments/environment';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { InputComponent } from '../../shared/components/input/input.component';
 
 @Component({
   selector: 'app-spatial',
   templateUrl: './spatial.component.html',
   styleUrls: ['./spatial.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [DecimalPipe, FormsModule]
+  imports: [DecimalPipe, FormsModule, ButtonComponent, InputComponent]
 })
 export class SpatialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) private mapContainerRef!: ElementRef<HTMLDivElement>;
@@ -26,6 +28,8 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
   showPlanningDialog = false;
   selectedTypology = 'U-shaped';
   readonly typologies = ['Linear', 'Corner', 'U-shaped', 'Closed block'];
+  readonly mapToolClass =
+    'size-full rounded-none border-0 bg-surface p-0 text-[22px] font-normal text-ink hover:bg-tint-3';
   readonly layerGroups = [
     {
       name: 'Land / cadastre', hint: 'Parcel identity and land-bank information', layers: [

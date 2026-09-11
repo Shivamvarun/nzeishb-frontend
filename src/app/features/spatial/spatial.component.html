@@ -2,8 +2,8 @@
   <div #mapContainer class="map-container" [class.map-hidden]="mapMode === '3d'"></div>
   <div class="spatial-3d-preview" [class.visible]="mapMode === '3d'" aria-label="3D spatial mock preview">
     <div class="spatial-3d-header"><strong>3D spatial preview</strong><span>PoC mock geometry ·
-        SpatialContext-ready</span><button type="button" class="context-button" (click)="loadSpatialContext()">{{
-        contextLoading ? 'Loading…' : 'SpatialContext' }}</button></div>
+        SpatialContext-ready</span><app-button variant="outlined" size="small" className="ml-1 text-[10px]" (click)="loadSpatialContext()">{{
+        contextLoading ? 'Loading…' : 'SpatialContext' }}</app-button></div>
     <svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet">
       <polygon class="site-plane" points="130,405 450,300 770,405 450,515" />
       <polygon class="envelope-plane" points="210,380 450,300 690,380 450,460" />
@@ -26,8 +26,7 @@
       boundary.</div>
     @if (spatialContext) {
     <aside class="context-panel">
-      <div class="context-panel-head"><strong>SpatialContext</strong><button type="button" (click)="spatialContext=null"
-          aria-label="Close SpatialContext">×</button></div>
+      <div class="context-panel-head"><strong>SpatialContext</strong><app-button variant="text" className="border-0 p-0 text-[20px] font-normal text-ink" ariaLabel="Close SpatialContext" (click)="spatialContext=null">×</app-button></div>
       @if (spatialContext.isMock) {
       <span class="context-mock">MOCK DATA</span>
       }
@@ -61,42 +60,42 @@
   <div class="map-building-card" [class.collapsed]="buildingCardCollapsed">
     <div class="building-card-head">
       <strong>Building data</strong>
-      <button type="button" class="icon-button" title="{{ buildingCardCollapsed ? 'Expand' : 'Collapse' }}"
-        [attr.aria-label]="buildingCardCollapsed ? 'Expand building data' : 'Collapse building data'"
+      <app-button variant="text" className="grid size-6 place-items-center border-0 bg-surface p-0" [title]="buildingCardCollapsed ? 'Expand' : 'Collapse'"
+        [ariaLabel]="buildingCardCollapsed ? 'Expand building data' : 'Collapse building data'"
         (click)="buildingCardCollapsed = !buildingCardCollapsed">
-        <img [src]="buildingCardCollapsed ? iconPaths.expand : iconPaths.collapse" alt="">
-      </button>
+        <img class="size-[18px] object-contain" [src]="buildingCardCollapsed ? iconPaths.expand : iconPaths.collapse" alt="">
+      </app-button>
     </div>
     @if (!buildingCardCollapsed) {
     <span>{{ activePlot.name }}</span>
-    <button type="button" class="map-link" (click)="showPlanningDialog = true">GIS & planning data</button>
+    <app-button variant="text" className="justify-self-start p-0 font-normal text-ink underline" (click)="showPlanningDialog = true">GIS & planning data</app-button>
     }
   </div>
 
   <div class="map-tools" aria-label="Map tools">
-    <button type="button" title="Zoom in" aria-label="Zoom in" (click)="zoomIn()">+</button>
-    <button type="button" title="Zoom out" aria-label="Zoom out" (click)="zoomOut()">−</button>
-    <button type="button" title="Fit parcel" aria-label="Fit parcel" (click)="renderPlot(activePlot)">□</button>
-    <button type="button" title="Edit parcel" aria-label="Edit parcel" [class.active]="drawingMode"
+    <app-button class="size-[42px]" variant="text" [className]="mapToolClass" title="Zoom in" ariaLabel="Zoom in" (click)="zoomIn()">+</app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapToolClass" title="Zoom out" ariaLabel="Zoom out" (click)="zoomOut()">−</app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapToolClass" title="Fit parcel" ariaLabel="Fit parcel" (click)="renderPlot(activePlot)">□</app-button>
+    <app-button class="size-[42px]" variant="text" [className]="drawingMode ? mapToolClass + ' border-l-2 border-l-brand bg-tint-3' : mapToolClass" title="Edit parcel" ariaLabel="Edit parcel" [active]="drawingMode"
       (click)="toggleDrawing()">
-      <img [src]="iconPaths.edit" alt="">
-    </button>
-    <button type="button" title="Delete drawing" aria-label="Delete drawing" (click)="clearDrawing()">
-      <img [src]="iconPaths.delete" alt="">
-    </button>
-    <button type="button" title="2D map" aria-label="2D map" [class.active]="mapMode === '2d'"
+      <img class="size-[18px] object-contain" [src]="iconPaths.edit" alt="">
+    </app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapToolClass" title="Delete drawing" ariaLabel="Delete drawing" (click)="clearDrawing()">
+      <img class="size-[18px] object-contain" [src]="iconPaths.delete" alt="">
+    </app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapMode === '2d' ? mapToolClass + ' border-l-2 border-l-brand bg-tint-3' : mapToolClass" title="2D map" ariaLabel="2D map" [active]="mapMode === '2d'"
       (click)="setMapMode('2d')">
-      <img [src]="iconPaths.twoD" alt="">
-    </button>
-    <button type="button" title="3D spatial view" aria-label="3D spatial view" [class.active]="mapMode === '3d'"
+      <img class="size-[18px] object-contain" [src]="iconPaths.twoD" alt="">
+    </app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapMode === '3d' ? mapToolClass + ' border-l-2 border-l-brand bg-tint-3' : mapToolClass" title="3D spatial view" ariaLabel="3D spatial view" [active]="mapMode === '3d'"
       (click)="setMapMode('3d')">
-      <img [src]="iconPaths.rotation" alt="">
-    </button>
-    <button type="button" title="Rotate 3D preview" aria-label="Rotate 3D preview" [class.active]="rotationMode"
-      (click)="toggleRotationMode()">↻</button>
-    <button type="button" title="Fullscreen map" aria-label="Fullscreen map" (click)="toggleFullscreen()">
-      <img [src]="iconPaths.expand" alt="">
-    </button>
+      <img class="size-[18px] object-contain" [src]="iconPaths.rotation" alt="">
+    </app-button>
+    <app-button class="size-[42px]" variant="text" [className]="rotationMode ? mapToolClass + ' border-l-2 border-l-brand bg-tint-3' : mapToolClass" title="Rotate 3D preview" ariaLabel="Rotate 3D preview" [active]="rotationMode"
+      (click)="toggleRotationMode()">↻</app-button>
+    <app-button class="size-[42px]" variant="text" [className]="mapToolClass" title="Fullscreen map" ariaLabel="Fullscreen map" (click)="toggleFullscreen()">
+      <img class="size-[18px] object-contain" [src]="iconPaths.expand" alt="">
+    </app-button>
   </div>
 
   @if (rotationMode) {
@@ -108,22 +107,21 @@
     <label class="map-action">GeoJSON<input type="file" accept=".geojson,application/geo+json,.json"
         (change)="onGeoJsonSelected($event)" /></label>
     <label class="map-action">CAD / DXF<input type="file" accept=".dxf,.dwg" (change)="onCadSelected($event)" /></label>
-    <button type="button" class="map-action" [class.active]="showLayerDrawer"
-      (click)="showLayerDrawer=!showLayerDrawer">Layers</button>
+    <app-button variant="outlined" size="small" [className]="showLayerDrawer ? 'rounded bg-tint shadow-[0_2px_7px_rgba(0,0,0,.08)]' : 'rounded shadow-[0_2px_7px_rgba(0,0,0,.08)]'" [active]="showLayerDrawer"
+      (click)="showLayerDrawer=!showLayerDrawer">Layers</app-button>
   </div>
 
   @if (showLayerDrawer) {
   <aside class="layer-drawer" aria-label="Layer catalogue">
-    <div class="layer-drawer-header"><strong>Layers</strong><button type="button" (click)="showLayerDrawer=false"
-        aria-label="Close layers">×</button></div>
+    <div class="layer-drawer-header"><strong>Layers</strong><app-button variant="text" className="border-0 p-0 text-[20px] font-normal text-ink" ariaLabel="Close layers" (click)="showLayerDrawer=false">×</app-button></div>
     @for (group of layerGroups; track group) {
     <div class="layer-group">
-      <button type="button" class="layer-group-title" (click)="toggleLayerGroup(group.name)">
+      <app-button variant="text" fullWidth className="mb-1 justify-between border-0 bg-transparent p-0 text-left text-[11px] font-extrabold text-brand" (click)="toggleLayerGroup(group.name)">
         <span>{{ isLayerGroupCollapsed(group.name) ? '▸' : '▾' }} {{ group.name }}</span>
         @if (activeLayerCount(group) > 0) {
         <span class="layer-count">{{ activeLayerCount(group) }}</span>
         }
-      </button>
+      </app-button>
       @if (!isLayerGroupCollapsed(group.name)) {
       <small class="layer-group-hint">{{ group.hint }}</small>
       }
@@ -158,12 +156,9 @@
           <p><b>Maximum permitted height:</b> {{ activePlot.maxHeightStories * 4 }} m</p>
         </div>
         <div class="planning-fields">
-          <label>Target dwellings<input type="number" [ngModel]="store.getState().vpoParams.targetUnits"
-              (ngModelChange)="store.updateVPOParams({targetUnits: $event})"></label>
-          <label>Buildable area<input type="number" [ngModel]="store.getState().vpoParams.buildableAreaM2"
-              (ngModelChange)="store.updateVPOParams({buildableAreaM2: $event})"></label>
-          <label>Max height<input type="number" [ngModel]="store.getState().vpoParams.maxHeightStories"
-              (ngModelChange)="store.updateVPOParams({maxHeightStories: $event})"></label>
+          <app-input label="Target dwellings" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.targetUnits" (ngModelChange)="store.updateVPOParams({targetUnits: +$event})"></app-input>
+          <app-input label="Buildable area" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.buildableAreaM2" (ngModelChange)="store.updateVPOParams({buildableAreaM2: +$event})"></app-input>
+          <app-input label="Max height" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.maxHeightStories" (ngModelChange)="store.updateVPOParams({maxHeightStories: +$event})"></app-input>
         </div>
         <h3>Urban planning data:</h3>
         <ul>
@@ -174,17 +169,17 @@
         <h3>Typologies <span>Recommended by AI</span></h3>
         <div class="typology-grid">
           @for (type of typologies; track type) {
-          <button type="button" [class.selected]="selectedTypology === type" (click)="selectedTypology=type">
-            <strong>{{ type }}</strong><span class="typology-sketch" [class.u-shape]="type === 'U-shaped'"></span>@if
+          <app-button variant="outlined" fullWidth [className]="selectedTypology === type ? 'relative min-h-[132px] items-start justify-start rounded-[5px] border-2 border-accent p-2.5 text-left font-normal text-ink' : 'relative min-h-[132px] items-start justify-start rounded-[5px] p-2.5 text-left font-normal text-ink'" [active]="selectedTypology === type" (click)="selectedTypology=type">
+            <strong class="block text-xs">{{ type }}</strong><span class="typology-sketch" [class.u-shape]="type === 'U-shaped'"></span>@if
             (type === 'U-shaped') {
-            <small>AI recommendation</small>
+            <small class="absolute bottom-2 left-2.5 font-extrabold text-accent">AI recommendation</small>
             }
-          </button>
+          </app-button>
           }
         </div>
-        <div class="planning-actions"><button type="button" class="btn-secondary"
-            (click)="showPlanningDialog=false">Close</button><button type="button" class="btn-primary"
-            (click)="acceptPlanning()">Accept & continue</button></div>
+        <div class="planning-actions"><app-button variant="outlined"
+            (click)="showPlanningDialog=false">Close</app-button><app-button variant="contained"
+            (click)="acceptPlanning()">Accept & continue</app-button></div>
       </div>
     </section>
   </div>

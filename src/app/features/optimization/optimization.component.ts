@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/services/store.service';
 import { AppState, Variant } from '../../core/models/app.models';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 interface Point { readonly variant: Variant; readonly x: number; readonly y: number; readonly r: number; }
 
@@ -14,7 +15,7 @@ interface Point { readonly variant: Variant; readonly x: number; readonly y: num
     templateUrl: './optimization.component.html',
     styleUrls: ['./optimization.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [DecimalPipe, FormsModule]
+    imports: [DecimalPipe, FormsModule, ButtonComponent]
 })
 export class OptimizationComponent implements AfterViewInit, OnDestroy {
   @ViewChild('pareto3d', { static: true }) private pareto3dRef!: ElementRef<HTMLDivElement>;

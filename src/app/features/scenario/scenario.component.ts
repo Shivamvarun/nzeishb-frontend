@@ -7,7 +7,6 @@ import { VpoFormComponent } from './components/vpo-form/vpo-form.component';
 @Component({
     selector: 'app-scenario',
     templateUrl: './scenario.component.html',
-    styleUrls: ['./scenario.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [DecimalPipe, VpoFormComponent]
 })

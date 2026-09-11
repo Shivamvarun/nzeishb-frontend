@@ -11,12 +11,14 @@ import { ScenarioComponent } from './features/scenario/scenario.component';
 import { VpoFormComponent } from './features/scenario/components/vpo-form/vpo-form.component';
 import { SolutionsComponent } from './features/solutions/solutions.component';
 import { SpatialComponent } from './features/spatial/spatial.component';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 @Component({
     selector: 'app-root', templateUrl: './app.component.html', styleUrls: ['./app.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       AsyncPipe,
+      HeaderComponent,
       VpoFormComponent,
       SpatialComponent,
       CatalogComponent,
@@ -31,7 +33,5 @@ import { SpatialComponent } from './features/spatial/spatial.component';
 export class AppComponent {
   readonly state$ = this.store.state$;
   constructor(private readonly store: StoreService) {}
-  setView(view: ActiveView): void { this.store.setActiveView(view); }
   isView(view: ActiveView): boolean { return this.store.getState().activeView === view; }
-  saveScenario(): void { void this.store.saveScenario(); }
 }

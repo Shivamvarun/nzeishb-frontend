@@ -5,6 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STATIC_IFC } from '../../core/config/static-ifc';
 import { StoreService } from '../../core/services/store.service';
 import { IfcModelService, IfcStoreyView, ParsedIfcModel } from './services/ifc-model.service';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { SelectComponent } from '../../shared/components/select/select.component';
+import { SelectOption } from '../../shared/components/select/select.models';
 
 interface BimElementInfo {
   id: string;
@@ -17,9 +20,8 @@ interface BimElementInfo {
 @Component({
     selector: 'app-bim',
     templateUrl: './bim.component.html',
-    styleUrls: ['./bim.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule]
+    imports: [FormsModule, ButtonComponent, SelectComponent]
 })
 export class BimComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: true }) private containerRef!: ElementRef<HTMLDivElement>;
@@ -52,6 +54,13 @@ export class BimComponent implements AfterViewInit, OnDestroy {
 
   get isolatedFloorLabel(): string {
     return this.isolatedFloor === null ? 'all' : String(this.isolatedFloor);
+  }
+
+  get floorOptions(): readonly SelectOption[] {
+    return [
+      { value: 'all', label: 'All' },
+      ...this.storeys.map(storey => ({ value: String(storey.index), label: storey.name }))
+    ];
   }
 
   constructor(

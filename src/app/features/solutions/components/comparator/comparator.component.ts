@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppState, Variant } from '../../../../core/models/app.models';
 import { StoreService } from '../../../../core/services/store.service';
+import { SelectComponent } from '../../../../shared/components/select/select.component';
+import { SelectOption } from '../../../../shared/components/select/select.models';
 
 interface KpiRow {
   label: string;
@@ -23,7 +25,7 @@ interface ProfileAxis {
     templateUrl: './comparator.component.html',
     styleUrls: ['./comparator.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule]
+    imports: [FormsModule, SelectComponent]
 })
 export class ComparatorComponent implements OnDestroy {
   state: AppState = this.store.getState();
@@ -40,6 +42,10 @@ export class ComparatorComponent implements OnDestroy {
     this.subscription = this.store.state$.subscribe(current => {
       this.state = current;
     });
+  }
+
+  get variantOptions(): readonly SelectOption[] {
+    return this.state.variants.map(variant => ({ value: variant.id, label: variant.name }));
   }
 
   get rows(): KpiRow[] {

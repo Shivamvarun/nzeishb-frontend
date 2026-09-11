@@ -2,45 +2,45 @@
   <div class="panel-header">
     <div>
       <div class="panel-title">Urban planning parameters</div>
-      <small>{{ state.activeScenario.name }}</small>
+      <small class="text-muted">{{ state.activeScenario.name }}</small>
     </div>
     <span class="badge-tag">CU02</span>
   </div>
 
-  <div class="form-group">
-    <div class="form-label"><span>Maximum height</span><span class="form-value">{{ state.vpoParams.maxHeightStories }}</span></div>
-    <input type="range" min="2" [max]="state.activePlot.maxHeightStories" [value]="state.vpoParams.maxHeightStories" (input)="update('maxHeightStories', $any($event.target).valueAsNumber)">
-    <small>PGOU limit: {{ state.activePlot.maxHeightStories }} floors</small>
+  <div class="mb-[17px]">
+    <div class="mb-[7px] flex justify-between gap-2.5 text-xs font-bold"><span>Maximum height</span><span class="font-extrabold text-brand">{{ state.vpoParams.maxHeightStories }}</span></div>
+    <input class="w-full accent-brand" type="range" min="2" [max]="state.activePlot.maxHeightStories" [value]="state.vpoParams.maxHeightStories" (input)="update('maxHeightStories', $any($event.target).valueAsNumber)">
+    <small class="mt-[5px] block text-[10px] text-muted">PGOU limit: {{ state.activePlot.maxHeightStories }} floors</small>
   </div>
 
-  <div class="form-group">
-    <div class="form-label"><span>Maximum buildable area</span><span class="form-value">{{ state.vpoParams.buildableAreaM2 | number }} m2</span></div>
-    <input type="range" min="1000" [max]="state.activePlot.buildableAreaMaxM2" step="50" [value]="state.vpoParams.buildableAreaM2" (input)="update('buildableAreaM2', $any($event.target).valueAsNumber)">
-    <small>Limit: {{ state.activePlot.buildableAreaMaxM2 }} m2t</small>
+  <div class="mb-[17px]">
+    <div class="mb-[7px] flex justify-between gap-2.5 text-xs font-bold"><span>Maximum buildable area</span><span class="font-extrabold text-brand">{{ state.vpoParams.buildableAreaM2 | number }} m2</span></div>
+    <input class="w-full accent-brand" type="range" min="1000" [max]="state.activePlot.buildableAreaMaxM2" step="50" [value]="state.vpoParams.buildableAreaM2" (input)="update('buildableAreaM2', $any($event.target).valueAsNumber)">
+    <small class="mt-[5px] block text-[10px] text-muted">Limit: {{ state.activePlot.buildableAreaMaxM2 }} m2t</small>
   </div>
 
-  <div class="form-group">
-    <div class="form-label"><span>Housing objective</span><span class="form-value">{{ state.vpoParams.targetUnits }}</span></div>
-    <input type="range" min="10" [max]="state.activePlot.maxUnits" [value]="state.vpoParams.targetUnits" (input)="update('targetUnits', $any($event.target).valueAsNumber)">
+  <div class="mb-[17px]">
+    <div class="mb-[7px] flex justify-between gap-2.5 text-xs font-bold"><span>Housing objective</span><span class="font-extrabold text-brand">{{ state.vpoParams.targetUnits }}</span></div>
+    <input class="w-full accent-brand" type="range" min="10" [max]="state.activePlot.maxUnits" [value]="state.vpoParams.targetUnits" (input)="update('targetUnits', $any($event.target).valueAsNumber)">
   </div>
 
-  <button class="btn-primary full-width" [disabled]="state.isOptimizing" (click)="optimize()">{{ state.isOptimizing ? 'Optimizing...' : 'Run NSGA-III generator' }}</button>
+  <app-button class="mt-2" variant="contained" fullWidth [disabled]="state.isOptimizing" (click)="optimize()">{{ state.isOptimizing ? 'Optimizing...' : 'Run NSGA-III generator' }}</app-button>
 </div>
 
-<div class="glass-panel scenario-panel">
+<div class="glass-panel mt-3.5">
   <div class="panel-header">
     <div class="panel-title">Scenario history</div>
-    <button type="button" class="btn-secondary compact" (click)="createScenario()">New</button>
+    <app-button variant="outlined" size="small" (click)="createScenario()">New</app-button>
   </div>
 
-  <div class="scenario-list">
+  <div class="grid gap-2">
     @for (scenario of state.scenarioHistory; track scenario) {
-      <div class="scenario-row" [class.active]="scenario.id === state.activeScenario.id">
-        <button type="button" class="scenario-open" (click)="reopenScenario(scenario.id)">
-          <span>{{ scenario.name }}</span>
-          <small>{{ scenario.updated || scenario.created }}</small>
-        </button>
-        <button type="button" class="danger-btn" title="Delete scenario" [attr.aria-label]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</button>
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1.5 rounded-md border border-border bg-surface p-2" [class.border-success]="scenario.id === state.activeScenario.id" [class.bg-tint]="scenario.id === state.activeScenario.id">
+        <app-button variant="text" fullWidth className="min-w-0 justify-start border-0 bg-transparent p-[3px] text-left font-normal text-ink" (click)="reopenScenario(scenario.id)">
+          <span class="block overflow-hidden text-ellipsis whitespace-nowrap text-xs font-bold">{{ scenario.name }}</span>
+          <small class="text-muted">{{ scenario.updated || scenario.created }}</small>
+        </app-button>
+        <app-button variant="outlined" size="small" className="border-danger-border px-2 py-1.5 text-[11px] font-bold text-danger hover:bg-danger-bg" title="Delete scenario" [ariaLabel]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</app-button>
       </div>
     }
   </div>

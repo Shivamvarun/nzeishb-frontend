@@ -1,73 +1,75 @@
 @if (!isOpen) {
-  <button type="button" class="arva-ai-launcher" (click)="isOpen=true" aria-label="Pregunta a AVRA AI">
-    <span class="ai-person-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"></path></svg>
+  <app-button variant="text" className="items-center gap-2 border-0 bg-transparent p-0 font-normal" ariaLabel="Pregunta a AVRA AI" (click)="isOpen=true">
+    <span class="grid size-12 place-items-center rounded-full border-2 border-surface bg-brand shadow-[0_2px_8px_rgba(0,0,0,.18)]" aria-hidden="true">
+      <svg class="size-[25px] fill-none stroke-surface [stroke-width:1.8]" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"></path></svg>
     </span>
-    <span class="ai-launcher-label">Pregunta a AVRA AI</span>
-  </button>
+    <span class="rounded border border-border bg-surface px-3 py-[9px] text-[13px] text-ink shadow-[0_2px_8px_rgba(0,0,0,.12)]">Pregunta a AVRA AI</span>
+  </app-button>
 }
 
 @if (isOpen) {
-  <section class="arva-chat" [class.expanded]="isExpanded" role="dialog" aria-modal="false" aria-label="AVRA AI">
-    <header class="arva-chat-header">
-      <span class="ai-title-pill">✦ AVRA AI</span>
-      <div class="chat-head-actions">
-        <button type="button" title="Nueva conversación" aria-label="Nueva conversación" (click)="clearChat()">✎</button>
-        <button
-          type="button"
-          class="chat-action-image"
+  <section class="arva-chat flex h-[425px] w-[400px] flex-col overflow-hidden rounded border border-border bg-surface shadow-[0_10px_35px_rgba(0,0,0,.2)]" [class.expanded]="isExpanded" role="dialog" aria-modal="false" aria-label="AVRA AI">
+    <header class="flex items-center justify-between border-b border-divider bg-surface px-4 py-3.5">
+      <span class="inline-flex items-center rounded bg-accent px-[15px] py-2.5 text-[13px] font-extrabold text-surface">✦ AVRA AI</span>
+      <div class="flex gap-0.5">
+        <app-button variant="text" class="size-[30px]" className="size-[30px] rounded-[3px] border-0 bg-transparent p-0 text-[19px] font-normal text-[var(--color-chat-icon)] hover:bg-tint-3 hover:text-brand" title="Nueva conversación" ariaLabel="Nueva conversación" (click)="clearChat()">✎</app-button>
+        <app-button
+          variant="text"
+          class="size-[30px]"
+          className="inline-flex size-[30px] items-center justify-center rounded-[3px] border-0 bg-transparent p-[3px] hover:bg-tint-3"
           [title]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'"
-          [attr.aria-label]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'"
-          [class.active]="isExpanded"
+          [ariaLabel]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'"
+          [active]="isExpanded"
           (click)="toggleExpanded()">
           <img
+            class="block size-6 object-contain"
             [src]="isExpanded ? 'assets/icons/arva-ai-contract.png' : 'assets/icons/arva-ai-expand.png'"
             [alt]="isExpanded ? 'Contraer AVRA AI' : 'Expandir AVRA AI'" />
-          </button>
-          <button type="button" title="Cerrar" aria-label="Cerrar" (click)="isOpen=false">×</button>
-        </div>
-      </header>
-      <div class="arva-chat-body">
-        @for (item of suggestions; track item) {
-          <button class="suggestion" type="button" (click)="suggest(item.query)">
-            <span class="suggestion-icon">▱</span>
-            <span>{{ item.label }}</span>
-          </button>
-        }
-        @for (msg of state.chatMessages; track msg) {
-          <div class="chat-message" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
-            <markdown [data]="msg.text"></markdown>
-            @for (citation of msg.citations; track citation) {
-              <small>{{ citation.document }} · {{ citation.provision }} @if (citation.s3Uri) {
-                <button type="button" class="citation-download" (click)="downloadCitation(citation.s3Uri)">Download source</button>
-              }</small>
-            }
-          </div>
-        }
-        @if (isSending) {
-          <div class="chat-message bot thinking-message" role="status" aria-live="polite">
-            <span>AVRA AI is thinking</span>
-            <span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="sr-only">Please wait while AVRA AI prepares a response.</span>
-          </div>
-        }
+        </app-button>
+        <app-button variant="text" class="size-[30px]" className="size-[30px] rounded-[3px] border-0 bg-transparent p-0 text-[19px] font-normal text-[var(--color-chat-icon)] hover:bg-tint-3 hover:text-brand" title="Cerrar" ariaLabel="Cerrar" (click)="isOpen=false">×</app-button>
       </div>
-      <div class="arva-chat-input">
-        <input #fileInput type="file" hidden accept=".ifc,.pdf,model/ifc,application/pdf" (change)="onFileSelected($event)">
-        <button type="button" class="attach-button" (click)="fileInput.click()" [disabled]="isSending || uploadState === 'uploading'" aria-label="Attach file" title="Attach IFC or PDF">📎</button>
-        <input [(ngModel)]="inputText" [placeholder]="inputPlaceholder" (keyup.enter)="sendMessage()" [disabled]="isSending">
-        <button type="button" (click)="sendMessage()" [disabled]="isSending" aria-label="Enviar">➤</button>
-      </div>
-      @if (attachedFile) {
-        <div class="chat-file" [class.failed]="uploadState === 'failed'">
-          <span>📎 {{ attachedFile.name }}</span>@if (uploadState === 'uploading') {
-          <span>Uploading…</span>
-          }@if (uploadState === 'uploaded') {
-          <span>Uploaded ✓ <button type="button" (click)="downloadFile()">Download</button></span>
-          }@if (uploadState === 'failed') {
-          <span>{{ uploadError }}</span>
-          }<button type="button" (click)="removeFile()" aria-label="Remove file">×</button>
+    </header>
+    <div class="flex flex-1 flex-col gap-2.5 overflow-auto bg-surface p-3.5">
+      @for (item of suggestions; track item) {
+        <app-button variant="text" fullWidth className="justify-start gap-[9px] border-0 bg-tint-3 p-[11px] text-left text-[13px] font-normal text-ink hover:bg-[var(--color-suggestion-hover)]" (click)="suggest(item.query)">
+          <span class="text-[19px] text-ink">▱</span>
+          <span>{{ item.label }}</span>
+        </app-button>
+      }
+      @for (msg of state.chatMessages; track msg) {
+        <div class="chat-message max-w-[92%] self-start rounded-[5px] bg-surface px-[11px] py-2.5 text-[13px] leading-normal text-ink" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
+          <markdown [data]="msg.text"></markdown>
+          @for (citation of msg.citations; track citation) {
+            <small class="mt-1.5 block text-[10px] text-muted">{{ citation.document }} · {{ citation.provision }} @if (citation.s3Uri) {
+              <app-button variant="text" className="inline border-0 p-0 text-[10px] font-bold text-brand underline" (click)="downloadCitation(citation.s3Uri)">Download source</app-button>
+            }</small>
+          }
         </div>
       }
-    </section>
-  }
+      @if (isSending) {
+        <div class="chat-message thinking-message flex max-w-[92%] items-center gap-1.5 self-start rounded-[5px] bg-surface px-[11px] py-2.5 text-[13px] italic text-[var(--color-thinking)]" role="status" aria-live="polite">
+          <span>AVRA AI is thinking</span>
+          <span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="sr-only">Please wait while AVRA AI prepares a response.</span>
+        </div>
+      }
+    </div>
+    <div class="m-2.5 flex gap-2 rounded-lg border-2 border-tint-border p-[3px]">
+      <input #fileInput type="file" hidden accept=".ifc,.pdf,model/ifc,application/pdf" (change)="onFileSelected($event)">
+      <app-button variant="text" class="w-[34px]" className="w-[34px] border-0 bg-surface p-0 text-[17px] text-brand" (click)="fileInput.click()" [disabled]="isSending || uploadState === 'uploading'" ariaLabel="Attach file" title="Attach IFC or PDF">📎</app-button>
+      <input class="min-w-0 flex-1 border-0 px-2.5 py-2.5 outline-none" [(ngModel)]="inputText" [placeholder]="inputPlaceholder" (keyup.enter)="sendMessage()" [disabled]="isSending">
+      <app-button variant="contained" class="w-10" className="w-10 rounded border-0 p-0 text-lg" (click)="sendMessage()" [disabled]="isSending" ariaLabel="Enviar">➤</app-button>
+    </div>
+    @if (attachedFile) {
+      <div class="chat-file mx-2.5 mb-2 flex items-center gap-2 rounded border border-tint-border px-[9px] py-[7px] text-[11px] text-note" [class.failed]="uploadState === 'failed'">
+        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">📎 {{ attachedFile.name }}</span>@if (uploadState === 'uploading') {
+        <span>Uploading…</span>
+        }@if (uploadState === 'uploaded') {
+        <span>Uploaded ✓ <app-button variant="text" className="inline border-0 p-0 font-bold text-brand" (click)="downloadFile()">Download</app-button></span>
+        }@if (uploadState === 'failed') {
+        <span>{{ uploadError }}</span>
+        }<app-button variant="text" className="border-0 p-0 font-bold text-brand" (click)="removeFile()" ariaLabel="Remove file">×</app-button>
+      </div>
+    }
+  </section>
+}

@@ -1,0 +1,24 @@
+<label class="grid w-full min-w-0 gap-[7px]" [attr.for]="fieldId">
+  @if (label()) {
+    <span [class]="labelClasses()">
+      {{ label() }}
+      @if (required()) {
+        <span class="text-danger"> *</span>
+      }
+    </span>
+  }
+  <input
+    [id]="fieldId"
+    [class]="controlClasses()"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [value]="currentValue()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    [attr.aria-invalid]="error() ? true : null"
+    (input)="onInput($event)"
+    (blur)="markTouched()" />
+  @if (error()) {
+    <span [class]="errorClasses">{{ error() }}</span>
+  }
+</label>

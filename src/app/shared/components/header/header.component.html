@@ -1,0 +1,19 @@
+<header class="relative z-[1000] grid h-[68px] grid-cols-[230px_1fr_180px] items-center border-b border-header-border bg-surface px-[22px] max-[1100px]:grid-cols-[180px_1fr_150px] max-[820px]:h-auto max-[820px]:min-h-[68px] max-[820px]:grid-cols-[1fr_auto] max-[820px]:gap-2 max-[820px]:px-3 max-[820px]:py-2">
+  <div class="flex items-center gap-2.5">
+    <div class="grid size-[30px] place-items-center rounded-[3px] bg-brand text-[21px] font-extrabold text-surface">A</div>
+    <div class="grid leading-[1.05]">
+      <strong class="text-sm max-[820px]:text-xs">Junta de Andalucía</strong>
+      <small class="mt-1 text-[9px] text-muted">AVRA · nZEISHB</small>
+    </div>
+  </div>
+
+  <nav class="flex items-stretch justify-center gap-1 self-stretch max-[820px]:col-span-full max-[820px]:row-start-2 max-[820px]:h-11 max-[820px]:justify-start max-[820px]:overflow-x-auto" aria-label="AVRA capabilities">
+    @for (item of navItems; track item.view) {
+      <app-button class="h-full" variant="text" [className]="navClass(item.view)" [active]="isView(item.view)" (click)="setView(item.view)">{{ item.label }}</app-button>
+    }
+  </nav>
+
+  <div class="flex justify-end max-[820px]:col-start-2 max-[820px]:row-start-1">
+    <app-button variant="contained" className="rounded py-[9px]" [disabled]="$safeNavigationMigration((state$ | async)?.isSaving)" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Saving…' : 'Save scenario' }}</app-button>
+  </div>
+</header>

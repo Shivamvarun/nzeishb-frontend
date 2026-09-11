@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState, ArtifactKind } from '../../core/models/app.models';
 import { StoreService } from '../../core/services/store.service';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
     selector: 'app-reports',
     templateUrl: './reports.component.html',
-    styleUrls: ['./reports.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ButtonComponent]
 })
 export class ReportsComponent {
   state: AppState = this.store.getState();

@@ -1,60 +1,65 @@
-<div class="page catalog-page">
-  <div class="page-heading">
+<div class="page mx-auto max-w-[1440px]">
+  <div class="mb-5 flex items-end justify-between gap-6">
     <div>
       <span class="eyebrow">INDUSTRIALISED CATALOGUE</span>
-      <h1>Catalog</h1>
-      <p>Browse the modules, systems and elements that can feed the optimisation context.</p>
+      <h1 class="my-1 text-[28px]">Catalog</h1>
+      <p class="m-0 text-muted">Browse the modules, systems and elements that can feed the optimisation context.</p>
     </div>
     @if (!loading) {
-      <span class="status-pill">{{ modules.length }} modules</span>
+      <span class="rounded-md border border-tint-border bg-tint-2 px-3 py-2 text-xs font-bold text-brand">{{ modules.length }} modules</span>
     }
   </div>
 
   @if (!loading && !error) {
-    <div class="catalog-layout">
-      <section class="surface catalog-list">
-        <div class="filter-row">
-          <button type="button" [class.active]="category === 'All'" (click)="category = 'All'">All</button>
-          <button type="button" [class.active]="category === 'Structure'" (click)="category = 'Structure'">Structure</button>
-          <button type="button" [class.active]="category === 'Facade'" (click)="category = 'Facade'">Facade</button>
-          <button type="button" [class.active]="category === 'Wet core'" (click)="category = 'Wet core'">Wet core</button>
-          <button type="button" [class.active]="category === 'Energy'" (click)="category = 'Energy'">Energy</button>
+    <div class="grid grid-cols-[minmax(0,1.6fr)_minmax(300px,.8fr)] gap-[18px] max-[900px]:grid-cols-1">
+      <section class="rounded-lg border border-border bg-surface p-3.5 shadow-[0_1px_2px_rgba(15,23,42,.04)]">
+        <div class="mb-0 flex gap-2 border-b border-divider pb-3">
+          @for (item of categories; track item) {
+            <app-button
+              [variant]="category === item ? 'outlined' : 'text'"
+              [className]="category === item ? 'bg-tint px-[11px] py-2' : 'px-[11px] py-2'"
+              (click)="category = item">{{ item }}</app-button>
+          }
         </div>
         @for (module of filteredModules; track module) {
-          <button class="catalog-row" type="button" [class.selected]="selected?.id === module.id" (click)="select(module)">
-            <span class="catalog-icon">{{ module.category.slice(0, 1) }}</span>
-            <span class="catalog-copy">
-              <strong>{{ module.name }}</strong>
-              <small>{{ module.category }} · {{ module.id }}</small>
-              <span>{{ module.description }}</span>
+          <app-button
+            variant="text"
+            fullWidth
+            [className]="'!grid grid-cols-[44px_minmax(0,1fr)_130px] items-center gap-3 rounded-none border-0 border-b border-divider bg-surface px-2 py-3.5 text-left font-normal last:border-b-0 ' + (selected?.id === module.id ? 'bg-tint shadow-[inset_3px_0_var(--color-brand)]' : '')"
+            (click)="select(module)">
+            <span class="grid size-9 place-items-center rounded-md bg-tag-cost-bg font-extrabold text-brand">{{ module.category.slice(0, 1) }}</span>
+            <span class="grid min-w-0 gap-[3px]">
+              <strong class="text-ink">{{ module.name }}</strong>
+              <small class="text-muted">{{ module.category }} · {{ module.id }}</small>
+              <span class="text-[13px] text-muted-2">{{ module.description }}</span>
             </span>
-            <span class="catalog-kpis">
-              <b>{{ module.industrializationPct }}%</b><small>industrialised</small>
-              <b>{{ module.repeatabilityPct }}%</b><small>repeatable</small>
+            <span class="grid grid-cols-2 gap-x-3 gap-y-0.5 text-right">
+              <b class="text-brand">{{ module.industrializationPct }}%</b><small class="text-[10px] text-muted">industrialised</small>
+              <b class="text-brand">{{ module.repeatabilityPct }}%</b><small class="text-[10px] text-muted">repeatable</small>
             </span>
-          </button>
+          </app-button>
         }
       </section>
       @if (selected; as item) {
-        <aside class="surface catalog-detail">
+        <aside class="min-h-[300px] rounded-lg border border-border bg-surface p-[22px] shadow-[0_1px_2px_rgba(15,23,42,.04)] max-[900px]:min-h-0">
           <span class="eyebrow">MODULE DETAIL</span>
-          <h2>{{ item.name }}</h2>
-          <span class="category-tag">{{ item.category }}</span>
-          <p>{{ item.description }}</p>
-          <div class="detail-grid">
-            <div><span>Industrialisation</span><strong>{{ item.industrializationPct }}%</strong></div>
-            <div><span>Repeatability</span><strong>{{ item.repeatabilityPct }}%</strong></div>
+          <h2 class="mt-[5px] mb-2">{{ item.name }}</h2>
+          <span class="inline-block rounded bg-tint px-2 py-[5px] text-[11px] font-extrabold text-brand">{{ item.category }}</span>
+          <p class="leading-[1.55] text-muted-2">{{ item.description }}</p>
+          <div class="my-[22px] grid grid-cols-2 gap-2.5">
+            <div class="border border-cell-border bg-tint-4 p-3.5"><span class="block text-xs text-muted">Industrialisation</span><strong class="mt-[5px] block text-[22px] text-ink">{{ item.industrializationPct }}%</strong></div>
+            <div class="border border-cell-border bg-tint-4 p-3.5"><span class="block text-xs text-muted">Repeatability</span><strong class="mt-[5px] block text-[22px] text-ink">{{ item.repeatabilityPct }}%</strong></div>
           </div>
-          <div class="info-callout">This is a PoC catalogue view. The HTTP adapter is ready to bind to the gateway catalog route when the backend contract lands.</div>
+          <div class="bg-tint p-3 text-xs leading-[1.45] text-note">This is a PoC catalogue view. The HTTP adapter is ready to bind to the gateway catalog route when the backend contract lands.</div>
         </aside>
       }
     </div>
   }
 
   @if (loading) {
-    <div class="surface empty-state">Loading catalogue…</div>
+    <div class="rounded-lg border border-border bg-surface p-10 text-muted shadow-[0_1px_2px_rgba(15,23,42,.04)]">Loading catalogue…</div>
   }
   @if (error) {
-    <div class="surface empty-state error">{{ error }}</div>
+    <div class="rounded-lg border border-border bg-surface p-10 text-danger shadow-[0_1px_2px_rgba(15,23,42,.04)]">{{ error }}</div>
   }
 </div>

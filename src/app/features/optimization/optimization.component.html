@@ -1,24 +1,27 @@
-
-<div class="pareto-shell">
-  <section class="surface pareto-main">
-    <div class="pareto-heading">
-      <div><span class="eyebrow">OPTIMISATION SERVICE</span><h1>Pareto front</h1><p>Explore non-dominated building solutions across cost, energy efficiency and industrialisation.</p></div>
-      <span class="result-count">{{ paretoVariants.length }} Pareto candidates</span>
+<div class="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_360px] gap-4 max-[1050px]:grid-cols-1">
+  <section class="surface min-h-0 overflow-auto p-[18px]">
+    <div class="flex items-start justify-between gap-[18px]">
+      <div>
+        <span class="eyebrow text-[10px]">OPTIMISATION SERVICE</span>
+        <h1 class="my-1 text-[26px]">Pareto front</h1>
+        <p class="m-0 text-muted">Explore non-dominated building solutions across cost, energy efficiency and industrialisation.</p>
+      </div>
+      <span class="rounded border border-tint-border bg-tint-2 px-2.5 py-2 text-[11px] font-extrabold text-brand">{{ paretoVariants.length }} Pareto candidates</span>
     </div>
 
-    <div class="pareto-controls">
-      <label>Max cost <input type="range" min="65000" max="100000" step="2500" [(ngModel)]="maxCost"><b>{{ maxCost | number }} €/unit</b></label>
-      <label>Max energy <input type="range" min="10" max="50" step="1" [(ngModel)]="maxEnergy"><b>{{ maxEnergy }} kWh/m²·a</b></label>
-      <label>Min industrialisation <input type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization"><b>{{ minIndustrialization }}%</b></label>
-      <label>Projection <input type="range" min="-40" max="40" step="5" [(ngModel)]="rotation"><b>{{ rotation }}°</b></label>
-      <button type="button" class="view-toggle" [class.active]="viewMode === '3d'" (click)="setViewMode(viewMode === '3d' ? '2d' : '3d')">{{ viewMode === '3d' ? '3D view' : '2D view' }}</button>
-      <button type="button" class="run-button" (click)="runNsga3()" [disabled]="state.isOptimizing">{{ state.isOptimizing ? 'Running…' : 'Run NSGA-III' }}</button>
+    <div class="pareto-controls my-[18px] grid grid-cols-[repeat(4,1fr)_auto] gap-2.5 max-[1050px]:grid-cols-2 max-[600px]:grid-cols-1">
+      <label class="grid gap-[5px] text-[10px] font-bold text-muted">Max cost <input class="w-full accent-brand" type="range" min="65000" max="100000" step="2500" [(ngModel)]="maxCost"><b class="text-[11px] text-ink">{{ maxCost | number }} €/unit</b></label>
+      <label class="grid gap-[5px] text-[10px] font-bold text-muted">Max energy <input class="w-full accent-brand" type="range" min="10" max="50" step="1" [(ngModel)]="maxEnergy"><b class="text-[11px] text-ink">{{ maxEnergy }} kWh/m²·a</b></label>
+      <label class="grid gap-[5px] text-[10px] font-bold text-muted">Min industrialisation <input class="w-full accent-brand" type="range" min="0" max="100" step="5" [(ngModel)]="minIndustrialization"><b class="text-[11px] text-ink">{{ minIndustrialization }}%</b></label>
+      <label class="grid gap-[5px] text-[10px] font-bold text-muted">Projection <input class="w-full accent-brand" type="range" min="-40" max="40" step="5" [(ngModel)]="rotation"><b class="text-[11px] text-ink">{{ rotation }}°</b></label>
+      <app-button class="self-end max-[1050px]:self-auto" variant="outlined" size="small" [className]="viewMode === '3d' ? 'bg-tint text-[11px] font-extrabold' : 'text-[11px] font-extrabold'" [active]="viewMode === '3d'" (click)="setViewMode(viewMode === '3d' ? '2d' : '3d')">{{ viewMode === '3d' ? '3D view' : '2D view' }}</app-button>
+      <app-button class="self-end max-[1050px]:self-auto" variant="contained" size="small" className="px-3 text-[11px] font-extrabold" (click)="runNsga3()" [disabled]="state.isOptimizing">{{ state.isOptimizing ? 'Running…' : 'Run NSGA-III' }}</app-button>
     </div>
 
-    <div class="pareto-plot" aria-label="Three objective Pareto front">
-      <div #pareto3d class="pareto-3d" [class.hidden]="viewMode !== '3d' || !threeAvailable"></div>
-      <div class="pareto-2d" [class.visible]="viewMode === '2d' || !threeAvailable">
-        <svg viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">
+    <div class="pareto-plot relative h-[520px] overflow-hidden rounded-md border border-row-border bg-plot-bg max-[600px]:h-[400px]" aria-label="Three objective Pareto front">
+      <div #pareto3d class="absolute inset-0" [class.invisible]="viewMode !== '3d' || !threeAvailable" [class.pointer-events-none]="viewMode !== '3d' || !threeAvailable"></div>
+      <div class="absolute inset-0" [class.invisible]="viewMode !== '2d' && threeAvailable" [class.pointer-events-none]="viewMode !== '2d' && threeAvailable">
+        <svg class="h-full w-full" viewBox="0 0 800 460" preserveAspectRatio="xMidYMid meet">
           <line x1="70" y1="410" x2="730" y2="410" class="axis"/><line x1="70" y1="410" x2="70" y2="55" class="axis"/>
           <line x1="70" y1="410" x2="150" y2="350" class="axis depth"/>
           <text x="730" y="438" class="axis-label">Cost ↓</text><text x="25" y="58" class="axis-label">Energy ↓</text><text x="120" y="350" class="axis-label">Industrialisation ↑</text>
@@ -34,23 +37,23 @@
       </div>
     </div>
 
-    <div class="objective-legend"><span><i class="cost"></i>Cost: minimise</span><span><i class="energy"></i>Energy: minimise</span><span><i class="indus"></i>Industrialisation: maximise</span></div>
-    <div class="demo-note">Demo mode: NSGA-III is represented by the optimisation API adapter. The browser does not implement the optimisation algorithm; replace the mock adapter with the gateway without changing this view.</div>
+    <div class="flex flex-wrap gap-[18px] pt-3 text-[11px] text-muted"><span><i class="mr-[5px] inline-block size-[9px] rounded-full bg-brand"></i>Cost: minimise</span><span><i class="mr-[5px] inline-block size-[9px] rounded-full bg-energy-legend"></i>Energy: minimise</span><span><i class="mr-[5px] inline-block size-[9px] rounded-full bg-accent"></i>Industrialisation: maximise</span></div>
+    <div class="mt-2.5 rounded border border-warn-border bg-warn-bg px-2.5 py-[9px] text-[10px] leading-snug text-warn-text">Demo mode: NSGA-III is represented by the optimisation API adapter. The browser does not implement the optimisation algorithm; replace the mock adapter with the gateway without changing this view.</div>
   </section>
 
-  <aside class="surface variant-panel">
-    <div class="panel-header"><div><span class="eyebrow">SOLUTION CANDIDATES</span><h2>Solutions</h2></div></div>
+  <aside class="surface min-h-0 overflow-auto p-[18px] max-[1050px]:max-h-[420px]">
+    <div class="panel-header"><div><span class="eyebrow text-[10px]">SOLUTION CANDIDATES</span><h2 class="my-1">Solutions</h2></div></div>
     @for (v of visibleVariants; track v) {
-      <article class="variant-card" [class.selected]="state.selectedVariant.id === v.id">
-        <button type="button" class="variant-select" (click)="selectVariant(v.id)">
-          <div class="variant-header"><strong>{{ v.name }}</strong><span class="tag-badge" [class.tag-cost]="v.tagClass === 'tag-cost'" [class.tag-energy]="v.tagClass === 'tag-energy'" [class.tag-indus]="v.tagClass === 'tag-indus'">{{ v.tag }}</span></div>
-          <div class="solution-kpis"><span><small>Cost</small><b>{{ v.costPerUnit | number }} €</b></span><span><small>Energy</small><b>{{ v.primaryEnergyDemandKwh }}</b></span><span><small>Industrialisation</small><b>{{ v.degreeIndustrialization * 100 | number:'1.0-0' }}%</b></span></div>
-        </button>
-        <div class="solution-actions"><span>{{ isCompared(v.id) ? 'Selected for comparison' : 'Add to comparison' }}</span><button type="button" (click)="compareVariant(v.id,$event)">{{ isCompared(v.id) ? '✓' : '+' }}</button></div>
+      <article class="variant-card mb-2 block w-full cursor-pointer rounded-md border border-border bg-surface p-3 text-left" [class.selected]="state.selectedVariant.id === v.id">
+        <app-button variant="text" fullWidth className="block border-0 bg-transparent p-0 text-left font-normal text-inherit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand" (click)="selectVariant(v.id)">
+          <div class="mb-0 flex items-start justify-between gap-2"><strong class="text-xs">{{ v.name }}</strong><span class="tag-badge" [class.tag-cost]="v.tagClass === 'tag-cost'" [class.tag-energy]="v.tagClass === 'tag-energy'" [class.tag-indus]="v.tagClass === 'tag-indus'">{{ v.tag }}</span></div>
+          <div class="mt-2.5 grid grid-cols-3 gap-1.5"><span class="bg-tint-4 p-2"><small class="block text-[9px] text-muted">Cost</small><b class="mt-0.5 block text-[11px] text-ink">{{ v.costPerUnit | number }} €</b></span><span class="bg-tint-4 p-2"><small class="block text-[9px] text-muted">Energy</small><b class="mt-0.5 block text-[11px] text-ink">{{ v.primaryEnergyDemandKwh }}</b></span><span class="bg-tint-4 p-2"><small class="block text-[9px] text-muted">Industrialisation</small><b class="mt-0.5 block text-[11px] text-ink">{{ v.degreeIndustrialization * 100 | number:'1.0-0' }}%</b></span></div>
+        </app-button>
+        <div class="mt-2 flex items-center justify-between text-[10px] font-bold text-brand"><span>{{ isCompared(v.id) ? 'Selected for comparison' : 'Add to comparison' }}</span><app-button class="size-[25px]" variant="outlined" className="size-[25px] p-0 text-[10px]" (click)="compareVariant(v.id,$event)">{{ isCompared(v.id) ? '✓' : '+' }}</app-button></div>
       </article>
     }
     @if (state.selectedVariant.id !== 'loading-variant') {
-      <div class="selected-solution"><span class="eyebrow">SELECTED SOLUTION</span><strong>{{ state.selectedVariant.name }}</strong><span>{{ state.selectedVariant.housingUnits }} dwellings · {{ state.selectedVariant.stories }} floors</span></div>
+      <div class="mt-3.5 grid gap-1 border border-tint-border bg-tint p-3"><span class="eyebrow text-[10px]">SELECTED SOLUTION</span><strong class="text-xs">{{ state.selectedVariant.name }}</strong><span class="text-[10px] text-muted">{{ state.selectedVariant.housingUnits }} dwellings · {{ state.selectedVariant.stories }} floors</span></div>
     }
   </aside>
 </div>

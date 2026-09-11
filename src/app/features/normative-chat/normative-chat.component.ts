@@ -7,13 +7,14 @@ import { UploadedAiFile } from '../../core/api/ai/ai-api.models';
 import { AI_API, AiApiPort } from '../../core/api/ai/ai-api.port';
 import { ActiveView, AppState } from '../../core/models/app.models';
 import { StoreService } from '../../core/services/store.service';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
     selector: 'app-normative-chat',
     templateUrl: './normative-chat.component.html',
     styleUrls: ['./normative-chat.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule, MarkdownComponent]
+    imports: [FormsModule, MarkdownComponent, ButtonComponent]
 })
 export class NormativeChatComponent implements OnDestroy {
   state: AppState = this.store.getState();

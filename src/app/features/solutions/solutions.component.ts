@@ -4,11 +4,12 @@ import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/services/store.service';
 import { AppState } from '../../core/models/app.models';
 import { ComparatorComponent } from './components/comparator/comparator.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
-    selector: 'app-solutions', templateUrl: './solutions.component.html', styleUrls: ['./solutions.component.css'],
+    selector: 'app-solutions', templateUrl: './solutions.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [DecimalPipe, ComparatorComponent]
+  imports: [DecimalPipe, ComparatorComponent, ButtonComponent]
 })
 export class SolutionsComponent implements OnDestroy {
   state: AppState = this.store.getState();

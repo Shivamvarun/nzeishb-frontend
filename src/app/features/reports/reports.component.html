@@ -1,30 +1,33 @@
-<div class="reports-shell">
-  <section class="surface report-intro">
+<div class="h-full overflow-y-auto">
+  <section class="surface mx-auto max-w-[1000px] p-6">
     <span class="eyebrow">REPORT GENERATION</span>
-    <h1>Reports</h1>
-    <p>Report generation is kept as a thin gateway surface in the PoC. The backend route will provide the generated artifact and its reference when connected.</p>
-    <div class="empty-slot" role="status">Gateway integration slot — no report-generation orchestration is performed in the browser.</div>
-    <div class="demo-artifacts">
-      <div><strong>Demo artifact flow</strong><span>Mock adapters let the UI demonstrate the same artifact contract until the gateway route is connected.</span></div>
-      <div class="demo-artifact-actions">
-        <button class="btn-secondary" [disabled]="isGenerating('report')" (click)="export('report')">{{ isGenerating('report') ? 'Generating…' : 'Generate demo report' }}</button>
-        <button class="btn-secondary" [disabled]="isGenerating('budget')" (click)="export('budget')">{{ isGenerating('budget') ? 'Generating…' : 'Generate demo budget' }}</button>
+    <h1 class="my-[5px]">Reports</h1>
+    <p class="max-w-[760px] leading-[1.55] text-muted">Report generation is kept as a thin gateway surface in the PoC. The backend route will provide the generated artifact and its reference when connected.</p>
+    <div class="mt-[18px] border border-tint-border bg-tint-3 p-4 text-xs text-note" role="status">Gateway integration slot — no report-generation orchestration is performed in the browser.</div>
+    <div class="mt-3 flex items-center justify-between gap-[15px] border border-warn-border bg-warn-bg p-[13px]">
+      <div>
+        <strong class="block">Demo artifact flow</strong>
+        <span class="mt-1 block text-[11px] text-warn-text">Mock adapters let the UI demonstrate the same artifact contract until the gateway route is connected.</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <app-button variant="outlined" [disabled]="isGenerating('report')" (click)="export('report')">{{ isGenerating('report') ? 'Generating…' : 'Generate demo report' }}</app-button>
+        <app-button variant="outlined" [disabled]="isGenerating('budget')" (click)="export('budget')">{{ isGenerating('budget') ? 'Generating…' : 'Generate demo budget' }}</app-button>
       </div>
     </div>
   </section>
 
   @if (state.artifactHistory.length) {
-    <section class="surface history-panel">
+    <section class="surface mx-auto mt-4 max-w-[1000px] bg-surface p-4">
       <h3>Generated artifacts</h3>
       @for (item of state.artifactHistory; track item) {
-        <article class="history-row">
+        <article class="grid grid-cols-[1fr_auto] items-center gap-3 border-t border-row-border py-3 max-[700px]:grid-cols-1">
           <div>
             <strong>{{ item.fileName }}</strong>
-            <span>{{ item.created }} · {{ item.status }}</span>
-            <p>{{ item.preview }}</p>
+            <span class="mt-1 block text-[11px] text-muted">{{ item.created }} · {{ item.status }}</span>
+            <p class="mb-0 text-xs text-muted-2">{{ item.preview }}</p>
           </div>
           @if (item.downloadUrl) {
-            <button class="btn-secondary" (click)="download(item.downloadUrl, item.fileName)">Download</button>
+            <app-button variant="outlined" (click)="download(item.downloadUrl, item.fileName)">Download</app-button>
           }
         </article>
       }
