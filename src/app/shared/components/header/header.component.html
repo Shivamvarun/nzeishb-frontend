@@ -9,7 +9,7 @@
 
   <nav class="flex items-stretch justify-center gap-1 self-stretch max-[820px]:col-span-full max-[820px]:row-start-2 max-[820px]:h-11 max-[820px]:justify-start max-[820px]:overflow-x-auto" aria-label="AVRA capabilities">
     @for (item of navItems; track item.view) {
-      <app-button class="h-full" variant="text" [className]="navClass(item.view)" [active]="isView(item.view)" (click)="setView(item.view)">{{ item.label }}</app-button>
+      <app-button class="h-full" variant="text" [className]="navClass(item.view)" [active]="isView(item.view)" (click)="setView(item.path)">{{ item.label }}</app-button>
     }
   </nav>
 

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
 import { StoreService } from '../../core/services/store.service';
@@ -117,7 +118,11 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
   private subscription: Subscription | undefined;
   private resizeObserver: ResizeObserver | undefined;
 
-  constructor(public readonly store: StoreService, @Inject(SPATIAL_CONTEXT_API) private readonly spatialContextApi: SpatialContextApiPort) { }
+  constructor(
+    public readonly store: StoreService,
+    @Inject(SPATIAL_CONTEXT_API) private readonly spatialContextApi: SpatialContextApiPort,
+    private readonly router: Router
+  ) { }
 
   ngAfterViewInit(): void {
     this.subscription = this.store.state$.subscribe(current => {
@@ -189,7 +194,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
 
   acceptPlanning(): void {
     this.showPlanningDialog = false;
-    this.store.setActiveView('optimization');
+    void this.router.navigate(['/optimization']);
   }
 
 

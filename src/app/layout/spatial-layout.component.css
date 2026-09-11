@@ -1,0 +1,21 @@
+:host {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: calc(100vh - 68px);
+  min-width: 0;
+}
+
+.workspace-view {
+  position: relative;
+  min-width: 0;
+  min-height: calc(100vh - 68px);
+  overflow: hidden;
+  padding: 0;
+  background: var(--color-surface);
+}
+
+@media (max-width: 820px) {
+  :host {
+    grid-template-columns: 1fr;
+  }
+}

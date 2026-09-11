@@ -5,36 +5,8 @@
     <p class="fixed top-[76px] left-1/2 z-[1200] m-0 -translate-x-1/2 rounded border border-error-border bg-danger-bg px-3 py-2 text-xs text-danger shadow-[0_2px_8px_rgba(0,0,0,.08)]" role="status" aria-live="polite">{{ error }}</p>
   }
 
-  <main class="app-main grid min-h-[calc(100vh-68px)] grid-cols-1" [class.spatial-layout]="isView('spatial')">
-    @if (isView('spatial')) {
-      <aside class="z-20 overflow-auto border-r border-header-border bg-surface p-3.5 max-[820px]:hidden">
-        <app-vpo-form></app-vpo-form>
-      </aside>
-    }
-
-    <section class="workspace-view min-h-[calc(100vh-68px)] min-w-0 overflow-auto bg-surface p-3.5 max-[820px]:p-2.5">
-      @if (isView('spatial')) {
-        <app-spatial></app-spatial>
-      }
-      @if (isView('catalog')) {
-        <app-catalog></app-catalog>
-      }
-      @if (isView('scenario')) {
-        <app-scenario></app-scenario>
-      }
-      @if (isView('optimization')) {
-        <app-optimization></app-optimization>
-      }
-      @if (isView('bim')) {
-        <app-bim></app-bim>
-      }
-      @if (isView('solutions')) {
-        <app-solutions></app-solutions>
-      }
-      @if (isView('reports')) {
-        <app-reports></app-reports>
-      }
-    </section>
+  <main class="app-main grid min-h-[calc(100vh-68px)] grid-cols-1">
+    <router-outlet />
   </main>
 
   <app-normative-chat></app-normative-chat>

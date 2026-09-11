@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { ActiveView } from '../../../core/models/app.models';
 import { StoreService } from '../../../core/services/store.service';
 import { ButtonComponent } from '../button/button.component';
@@ -13,20 +14,23 @@ import { ButtonComponent } from '../button/button.component';
 })
 export class HeaderComponent {
   readonly state$ = this.store.state$;
-  readonly navItems: readonly { view: ActiveView; label: string }[] = [
-    { view: 'spatial', label: 'Spatial' },
-    { view: 'catalog', label: 'Catalog' },
-    { view: 'scenario', label: 'Scenario' },
-    { view: 'optimization', label: 'Optimisation' },
-    { view: 'bim', label: 'IFC / BIM' },
-    { view: 'solutions', label: 'Solutions' },
-    { view: 'reports', label: 'Reports' }
+  readonly navItems: readonly { view: ActiveView; path: string; label: string }[] = [
+    { view: 'spatial', path: '/', label: 'Spatial' },
+    { view: 'catalog', path: '/catalog', label: 'Catalog' },
+    { view: 'scenario', path: '/scenario', label: 'Scenario' },
+    { view: 'optimization', path: '/optimization', label: 'Optimisation' },
+    { view: 'bim', path: '/bim', label: 'IFC / BIM' },
+    { view: 'solutions', path: '/solutions', label: 'Solutions' },
+    { view: 'reports', path: '/reports', label: 'Reports' }
   ];
 
-  constructor(private readonly store: StoreService) {}
+  constructor(
+    private readonly store: StoreService,
+    private readonly router: Router
+  ) {}
 
-  setView(view: ActiveView): void {
-    this.store.setActiveView(view);
+  setView(path: string): void {
+    void this.router.navigateByUrl(path);
   }
 
   isView(view: ActiveView): boolean {

@@ -239,11 +239,25 @@
     color: var(--color-indus-text);
   }
 
-  .workspace-view > app-optimization,
-  .workspace-view > app-bim,
-  .workspace-view > app-reports,
-  .workspace-view > app-solutions {
+  .app-main > :not(router-outlet):not(app-spatial-layout) {
+    min-height: calc(100vh - 68px);
+    min-width: 0;
+    overflow: auto;
+    padding: 14px;
+    background: var(--color-surface);
+  }
+
+  .app-main > app-optimization,
+  .app-main > app-bim,
+  .app-main > app-reports,
+  .app-main > app-solutions {
     display: block;
     height: 100%;
+  }
+
+  @media (max-width: 820px) {
+    .app-main > :not(router-outlet):not(app-spatial-layout) {
+      padding: 10px;
+    }
   }
 }
