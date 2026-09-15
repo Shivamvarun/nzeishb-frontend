@@ -1,8 +1,11 @@
 <div class="min-h-screen bg-surface text-ink">
   <app-header></app-header>
 
-  @if ((state$ | async)?.error; as error) {
+  @if (error$ | async; as error) {
     <p class="fixed top-[76px] left-1/2 z-[1200] m-0 -translate-x-1/2 rounded border border-error-border bg-danger-bg px-3 py-2 text-xs text-danger shadow-[0_2px_8px_rgba(0,0,0,.08)]" role="status" aria-live="polite">{{ error }}</p>
+  }
+  @if (success$ | async; as success) {
+    <p class="fixed top-[76px] left-1/2 z-[1200] m-0 -translate-x-1/2 rounded border border-success bg-surface px-3 py-2 text-xs text-success shadow-[0_2px_8px_rgba(0,0,0,.08)]" role="status" aria-live="polite">{{ success }}</p>
   }
 
   <main class="app-main grid min-h-[calc(100vh-68px)] grid-cols-1">

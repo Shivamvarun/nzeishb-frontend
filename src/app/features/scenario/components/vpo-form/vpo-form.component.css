@@ -1,0 +1,40 @@
+.scenario-list {
+  display: grid;
+  gap: 8px;
+}
+
+.scenario-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+}
+
+.scenario-row.active {
+  border-color: #37a85a;
+  background: #f1f8f2;
+}
+
+.scenario-open {
+  min-width: 0;
+}
+
+.scenario-open span {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scenario-open small {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 10px;
+}

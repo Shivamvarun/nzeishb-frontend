@@ -1,5 +1,5 @@
 export type ButtonVariant = 'contained' | 'outlined' | 'text';
-export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonSize = 'small' | 'medium' | 'large' | 'none';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
 export const BUTTON_BASE_CLASSES =
@@ -14,5 +14,6 @@ export const BUTTON_VARIANT_CLASSES: Record<ButtonVariant, string> = {
 export const BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
   small: 'px-2.5 py-[7px] text-[11px]',
   medium: 'px-[14px] py-2.5',
-  large: 'px-[18px] py-3 text-sm'
+  large: 'px-[18px] py-3 text-sm',
+  none: ''
 };

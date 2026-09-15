@@ -3,9 +3,10 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { Subscription } from 'rxjs';
-import { StoreService } from '../../core/services/store.service';
-import { AppState, Variant } from '../../core/models/app.models';
+import { Subscription, merge } from 'rxjs';
+import { OptimizationUseCase } from './use-cases/optimization.use-case';
+import { Variant } from './models/optimization.models';
+import { SolutionsUseCase } from '../solutions/use-cases/solutions.use-case';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 
 interface Point { readonly variant: Variant; readonly x: number; readonly y: number; readonly r: number; }
@@ -20,7 +21,7 @@ interface Point { readonly variant: Variant; readonly x: number; readonly y: num
 export class OptimizationComponent implements AfterViewInit, OnDestroy {
   @ViewChild('pareto3d', { static: true }) private pareto3dRef!: ElementRef<HTMLDivElement>;
 
-  state: AppState = this.store.getState();
+  state = this.compose();
   maxCost = 95000;
   maxEnergy = 45;
   minIndustrialization = 0;
@@ -37,9 +38,12 @@ export class OptimizationComponent implements AfterViewInit, OnDestroy {
   private frameId?: number;
   private readonly onResize = () => this.resize3d();
 
-  constructor(private readonly store: StoreService) {
-    this.subscription = this.store.state$.subscribe(current => {
-      this.state = current;
+  constructor(
+    private readonly optimization: OptimizationUseCase,
+    private readonly solutions: SolutionsUseCase
+  ) {
+    this.subscription = merge(this.optimization.state$, this.solutions.state$).subscribe(() => {
+      this.state = this.compose();
       if (this.renderer) this.render3dPoints();
     });
   }
@@ -81,10 +85,17 @@ export class OptimizationComponent implements AfterViewInit, OnDestroy {
   }
 
   setViewMode(mode: '3d' | '2d'): void { this.viewMode = mode; if (mode === '3d') setTimeout(() => this.resize3d()); }
-  selectVariant(id: string): void { this.store.setSelectedVariant(id); }
-  compareVariant(id: string, event: Event): void { event.stopPropagation(); this.store.toggleComparedVariant(id); }
+  selectVariant(id: string): void { this.solutions.setSelectedVariant(id, this.optimization.getState().variants); }
+  compareVariant(id: string, event: Event): void { event.stopPropagation(); this.solutions.toggleComparedVariant(id, this.optimization.getState().variants); }
   isCompared(id: string): boolean { return this.state.comparedVariants.some(item => item.id === id); }
-  runNsga3(): void { void this.store.optimize(); }
+  runNsga3(): void { void this.optimization.optimize(); }
+
+  private compose() {
+    return {
+      ...this.optimization.getState(),
+      ...this.solutions.getState()
+    };
+  }
 
   private init3d(): void {
     try {

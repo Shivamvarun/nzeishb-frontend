@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { CATALOG_API, CatalogApiPort } from '../../core/api/catalog/catalog-api.port';
-import { CatalogModule } from '../../core/api/catalog/catalog-api.models';
+import { CATALOG_API, CatalogApiPort } from './services/catalog-api.port';
+import { CatalogModule } from './models/catalog.models';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({

@@ -1,13 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
-import { StoreService } from '../../core/services/store.service';
-import { GeoJsonPolygon, Plot } from '../../core/models/app.models';
-import { SPATIAL_CONTEXT_API, SpatialContextApiPort } from '../../core/api/spatial/spatial-context-api.port';
-import { SpatialContextSnapshot } from '../../core/api/spatial/spatial-context-api.models';
+import { ScenarioUseCase } from '../scenario/use-cases/scenario.use-case';
+import { GeoJsonPolygon, Plot, SpatialContextSnapshot } from './models/spatial.models';
+import { SpatialUseCase } from './use-cases/spatial.use-case';
 import { environment } from '../../../environments/environment';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
@@ -21,8 +20,8 @@ import { InputComponent } from '../../shared/components/input/input.component';
 })
 export class SpatialComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) private mapContainerRef!: ElementRef<HTMLDivElement>;
-  inventoryPlots = this.store.getPlots();
-  activePlot = this.store.getState().activePlot;
+  inventoryPlots = this.spatial.getPlots();
+  activePlot = this.spatial.getState().activePlot;
   selectedPlotId = this.inventoryPlots.length ? this.inventoryPlots[0].id : '';
   cadastralRef = '';
   importError = '';
@@ -108,7 +107,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
   drawingPoints: L.LatLng[] = [];
   spatialContext: SpatialContextSnapshot | null = null;
   contextLoading = false;
-  get mockFloors(): number[] { return Array.from({ length: Math.max(3, Math.min(6, this.store.getState().vpoParams.maxHeightStories || 4)) }, (_, i) => i); }
+  get mockFloors(): number[] { return Array.from({ length: Math.max(3, Math.min(6, this.scenario.getState().vpoParams.maxHeightStories || 4)) }, (_, i) => i); }
 
   private map: L.Map | undefined;
   private parcelLayer: L.Layer | undefined;
@@ -119,13 +118,13 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
   private resizeObserver: ResizeObserver | undefined;
 
   constructor(
-    public readonly store: StoreService,
-    @Inject(SPATIAL_CONTEXT_API) private readonly spatialContextApi: SpatialContextApiPort,
+    public readonly spatial: SpatialUseCase,
+    public readonly scenario: ScenarioUseCase,
     private readonly router: Router
   ) { }
 
   ngAfterViewInit(): void {
-    this.subscription = this.store.state$.subscribe(current => {
+    this.subscription = this.spatial.state$.subscribe(current => {
       this.inventoryPlots = current.plots;
       this.activePlot = current.activePlot;
       this.selectedPlotId = current.activePlot.id;
@@ -202,7 +201,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
     if (this.contextLoading) return;
     this.contextLoading = true;
     try {
-      this.spatialContext = await this.spatialContextApi.getContext(this.activePlot.id, this.store.getState().activeScenario.id);
+      this.spatialContext = await this.spatial.getContext(this.activePlot.id, this.scenario.getState().activeScenario.id);
     } catch {
       this.importError = 'SpatialContext gateway route is not available yet.';
     } finally {
@@ -211,9 +210,9 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
   }
 
   selectPlot(plotId: string): void {
-    const selected = this.store.getPlotById(plotId);
+    const selected = this.spatial.getPlotById(plotId);
     if (selected) {
-      this.store.setActivePlot(selected);
+      this.spatial.setActivePlot(selected);
       this.cadastralRef = selected.cadastralRef || '';
       this.importError = '';
     }
@@ -226,7 +225,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
       return;
     }
     try {
-      const found = await this.store.findAndSelectPlot(reference);
+      const found = await this.spatial.findAndSelectPlot(reference);
       this.importError = found ? '' : 'No parcel found with that reference.';
     } catch {
       this.importError = 'Cadastral search is temporarily unavailable.';
@@ -283,7 +282,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
     }
     if (!this.parcelLayer) return;
     const latlngs = ((this.parcelLayer as L.Polygon).getLatLngs() as L.LatLng[][])[0];
-    if (this.isPointInPolygon(latlng, latlngs)) this.store.setActivePlot(this.activePlot);
+    if (this.isPointInPolygon(latlng, latlngs)) this.spatial.setActivePlot(this.activePlot);
   }
 
   private addImportedGeometry(name: string, geometry: GeoJsonPolygon): void {
@@ -303,7 +302,7 @@ export class SpatialComponent implements AfterViewInit, OnDestroy {
       pgouZone: 'Imported',
       decreeLaw1_2025Applied: false
     };
-    this.store.addPlot(plot);
+    this.spatial.addPlot(plot);
     this.importError = '';
   }
 

@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppState, ArtifactKind } from '../../core/models/app.models';
-import { StoreService } from '../../core/services/store.service';
+import { merge } from 'rxjs';
+import { ArtifactKind } from './models/artifact.models';
+import { ReportsUseCase } from './use-cases/reports.use-case';
+import { SolutionsUseCase } from '../solutions/use-cases/solutions.use-case';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
@@ -10,7 +12,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
     imports: [ButtonComponent]
 })
 export class ReportsComponent {
-  state: AppState = this.store.getState();
+  state = this.compose();
   generating = new Set<ArtifactKind>();
 
   readonly artifacts: { kind: ArtifactKind; title: string; description: string; action: string }[] = [
@@ -19,8 +21,13 @@ export class ReportsComponent {
     { kind: 'report', title: 'Regulatory report', description: 'Traceable compliance report with deterministic KPI references.', action: 'Generate report' }
   ];
 
-  constructor(private readonly store: StoreService) {
-    this.store.state$.subscribe(state => this.state = state);
+  constructor(
+    private readonly reports: ReportsUseCase,
+    private readonly solutions: SolutionsUseCase
+  ) {
+    merge(this.reports.state$, this.solutions.state$).subscribe(() => {
+      this.state = this.compose();
+    });
   }
 
   isGenerating(kind: ArtifactKind): boolean { return this.generating.has(kind); }
@@ -36,10 +43,17 @@ export class ReportsComponent {
     link.click();
   }
 
+  private compose() {
+    return {
+      ...this.reports.getState(),
+      selectedVariant: this.solutions.getState().selectedVariant
+    };
+  }
+
   private async createDownload(kind: ArtifactKind): Promise<void> {
     this.generating.add(kind);
     try {
-      const url = await this.store.generateArtifact(kind);
+      const url = await this.reports.generateArtifact(kind);
       this.download(url, `${kind}-${this.state.selectedVariant.id}`);
     } finally {
       this.generating.delete(kind);

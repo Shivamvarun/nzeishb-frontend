@@ -33,14 +33,26 @@
     <app-button variant="outlined" size="small" (click)="createScenario()">New</app-button>
   </div>
 
-  <div class="grid gap-2">
+  <div class="scenario-list">
     @for (scenario of state.scenarioHistory; track scenario) {
-      <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1.5 rounded-md border border-border bg-surface p-2" [class.border-success]="scenario.id === state.activeScenario.id" [class.bg-tint]="scenario.id === state.activeScenario.id">
-        <app-button variant="text" fullWidth className="min-w-0 justify-start border-0 bg-transparent p-[3px] text-left font-normal text-ink" (click)="reopenScenario(scenario.id)">
-          <span class="block overflow-hidden text-ellipsis whitespace-nowrap text-xs font-bold">{{ scenario.name }}</span>
-          <small class="text-muted">{{ scenario.updated || scenario.created }}</small>
+      <div class="scenario-row" [class.active]="scenario.id === state.activeScenario.id">
+        <app-button
+          class="scenario-open"
+          variant="text"
+          size="none"
+          fullWidth
+          [className]="scenarioOpenClass"
+          (click)="reopenScenario(scenario.id)">
+          <span>{{ scenario.name }}</span>
+          <small>{{ scenario.updated || scenario.created }}</small>
         </app-button>
-        <app-button variant="outlined" size="small" className="border-danger-border px-2 py-1.5 text-[11px] font-bold text-danger hover:bg-danger-bg" title="Delete scenario" [ariaLabel]="'Delete scenario ' + scenario.name" (click)="deleteScenario(scenario.id)">Delete</app-button>
+        <app-button
+          variant="outlined"
+          size="none"
+          title="Delete scenario"
+          [ariaLabel]="'Delete scenario ' + scenario.name"
+          [className]="scenarioDeleteClass"
+          (click)="deleteScenario(scenario.id)">Delete</app-button>
       </div>
     }
   </div>

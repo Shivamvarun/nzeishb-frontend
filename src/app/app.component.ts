@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { StoreService } from './core/services/store.service';
+import { ShellService } from './core/shared/services/shell.service';
+import { WorkspaceUseCase } from './features/workspace/use-cases/workspace.use-case';
 import { NormativeChatComponent } from './features/normative-chat/normative-chat.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 
@@ -12,6 +13,10 @@ import { HeaderComponent } from './shared/components/header/header.component';
   imports: [AsyncPipe, RouterOutlet, HeaderComponent, NormativeChatComponent]
 })
 export class AppComponent {
-  readonly state$ = this.store.state$;
-  constructor(private readonly store: StoreService) {}
+  readonly error$ = this.shell.error$;
+  readonly success$ = this.shell.success$;
+  constructor(
+    private readonly shell: ShellService,
+    _workspace: WorkspaceUseCase
+  ) {}
 }

@@ -1,8 +1,9 @@
 import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { AppState, Variant } from '../../../../core/models/app.models';
-import { StoreService } from '../../../../core/services/store.service';
+import { Subscription, merge } from 'rxjs';
+import { Variant } from '../../../optimization/models/optimization.models';
+import { OptimizationUseCase } from '../../../optimization/use-cases/optimization.use-case';
+import { SolutionsUseCase } from '../../use-cases/solutions.use-case';
 import { SelectComponent } from '../../../../shared/components/select/select.component';
 import { SelectOption } from '../../../../shared/components/select/select.models';
 
@@ -28,7 +29,7 @@ interface ProfileAxis {
     imports: [FormsModule, SelectComponent]
 })
 export class ComparatorComponent implements OnDestroy {
-  state: AppState = this.store.getState();
+  state = this.compose();
   private readonly subscription: Subscription;
 
   // Fixed SVG geometry for the KPI profile. This intentionally avoids a
@@ -38,9 +39,12 @@ export class ComparatorComponent implements OnDestroy {
   readonly profileRadius = 104;
   readonly profileAngles = [-90, -18, 54, 126, 198];
 
-  constructor(private readonly store: StoreService) {
-    this.subscription = this.store.state$.subscribe(current => {
-      this.state = current;
+  constructor(
+    private readonly optimization: OptimizationUseCase,
+    private readonly solutions: SolutionsUseCase
+  ) {
+    this.subscription = merge(this.optimization.state$, this.solutions.state$).subscribe(() => {
+      this.state = this.compose();
     });
   }
 
@@ -110,7 +114,14 @@ export class ComparatorComponent implements OnDestroy {
   }
 
   setCompared(slot: 0 | 1, id: string): void {
-    this.store.setComparedVariant(slot, id);
+    this.solutions.setComparedVariant(slot, id, this.optimization.getState().variants);
+  }
+
+  private compose() {
+    return {
+      ...this.optimization.getState(),
+      ...this.solutions.getState()
+    };
   }
 
   winner(row: KpiRow, side: 'a' | 'b'): boolean {

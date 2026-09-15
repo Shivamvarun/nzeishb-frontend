@@ -1,12 +1,10 @@
-import { Component, Inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarkdownComponent } from 'ngx-markdown';
 import { Subscription } from 'rxjs';
-import { placeholderForView, suggestionsForView } from '../../core/helpers/chat-copy';
-import { UploadedAiFile } from '../../core/api/ai/ai-api.models';
-import { AI_API, AiApiPort } from '../../core/api/ai/ai-api.port';
-import { ActiveView, AppState } from '../../core/models/app.models';
-import { StoreService } from '../../core/services/store.service';
+import { ActiveView } from '../../core/shared/models/common.models';
+import { UploadedAiFile } from './models/chat.models';
+import { ChatState, ChatUseCase } from './use-cases/chat.use-case';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
@@ -17,7 +15,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
     imports: [FormsModule, MarkdownComponent, ButtonComponent]
 })
 export class NormativeChatComponent implements OnDestroy {
-  state: AppState = this.store.getState();
+  state: ChatState = this.chat.getState();
   inputText = '';
   isSending = false;
   isOpen = false;
@@ -30,10 +28,9 @@ export class NormativeChatComponent implements OnDestroy {
   private readonly subscription: Subscription;
 
   constructor(
-    private readonly store: StoreService,
-    @Inject(AI_API) private readonly aiApi: AiApiPort
+    private readonly chat: ChatUseCase
   ) {
-    this.subscription = this.store.state$.subscribe(state => {
+    this.subscription = this.chat.state$.subscribe(state => {
       if (state.activeView !== this.lastView) {
         this.lastView = state.activeView;
         this.inputText = '';
@@ -44,11 +41,11 @@ export class NormativeChatComponent implements OnDestroy {
   }
 
   get suggestions() {
-    return suggestionsForView(this.state.activeView);
+    return this.chat.suggestionsForView(this.state.activeView);
   }
 
   get inputPlaceholder(): string {
-    return placeholderForView(this.state.activeView);
+    return this.chat.placeholderForView(this.state.activeView);
   }
 
   ngOnDestroy(): void {
@@ -61,7 +58,7 @@ export class NormativeChatComponent implements OnDestroy {
     this.inputText = '';
     this.isSending = true;
     try {
-      await this.store.askNormative(query);
+      await this.chat.askNormative(query);
     } finally {
       this.isSending = false;
     }
@@ -80,10 +77,8 @@ export class NormativeChatComponent implements OnDestroy {
     this.uploadState = 'uploading';
     this.uploadError = '';
     try {
-      const sessionId = await this.aiApi.createConversation();
-      const result = await this.aiApi.uploadFile(file, sessionId);
-      await this.aiApi.uploadToPresignedUrl(result.url, file);
-      this.attachedFile = { ...this.attachedFile, s3Uri: result.s3Uri };
+      const s3Uri = await this.chat.uploadAttachedFile(file);
+      this.attachedFile = { ...this.attachedFile, s3Uri };
       this.uploadState = 'uploaded';
     } catch (error) {
       this.uploadState = 'failed';
@@ -108,7 +103,7 @@ export class NormativeChatComponent implements OnDestroy {
   }
 
   clearChat(): void {
-    this.store.resetChat();
+    this.chat.resetChat();
     this.inputText = '';
   }
 
@@ -118,7 +113,7 @@ export class NormativeChatComponent implements OnDestroy {
 
   private async openDownload(s3Uri: string): Promise<void> {
     try {
-      const result = await this.aiApi.getDownloadUrl(s3Uri);
+      const result = await this.chat.getDownloadUrl(s3Uri);
       window.open(result.url, '_blank', 'noopener');
     } catch (error) {
       this.uploadError = 'File download is currently unavailable.';

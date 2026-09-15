@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Routes } from '@angular/router';
-import { ActiveView } from './core/models/app.models';
-import { StoreService } from './core/services/store.service';
+import { ActiveView } from './core/shared/models/common.models';
+import { ChatUseCase } from './features/normative-chat/use-cases/chat.use-case';
 import { CatalogComponent } from './features/catalog/catalog.component';
 import { ReportsComponent } from './features/reports/reports.component';
 import { ScenarioComponent } from './features/scenario/scenario.component';
@@ -9,7 +9,7 @@ import { SolutionsComponent } from './features/solutions/solutions.component';
 import { SpatialLayoutComponent } from './layout/spatial-layout.component';
 
 const syncActiveView = (view: ActiveView): CanActivateFn => () => {
-  inject(StoreService).setActiveView(view);
+  inject(ChatUseCase).setActiveView(view);
   return true;
 };
 

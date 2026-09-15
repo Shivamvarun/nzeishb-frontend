@@ -156,9 +156,9 @@
           <p><b>Maximum permitted height:</b> {{ activePlot.maxHeightStories * 4 }} m</p>
         </div>
         <div class="planning-fields">
-          <app-input label="Target dwellings" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.targetUnits" (ngModelChange)="store.updateVPOParams({targetUnits: +$event})"></app-input>
-          <app-input label="Buildable area" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.buildableAreaM2" (ngModelChange)="store.updateVPOParams({buildableAreaM2: +$event})"></app-input>
-          <app-input label="Max height" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="store.getState().vpoParams.maxHeightStories" (ngModelChange)="store.updateVPOParams({maxHeightStories: +$event})"></app-input>
+          <app-input label="Target dwellings" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="scenario.getState().vpoParams.targetUnits" (ngModelChange)="scenario.updateVPOParams({targetUnits: +$event})"></app-input>
+          <app-input label="Buildable area" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="scenario.getState().vpoParams.buildableAreaM2" (ngModelChange)="scenario.updateVPOParams({buildableAreaM2: +$event})"></app-input>
+          <app-input label="Max height" type="number" labelClass="text-[11px] font-bold text-muted-2" className="rounded-[3px] border-line px-2 py-2" [ngModel]="scenario.getState().vpoParams.maxHeightStories" (ngModelChange)="scenario.updateVPOParams({maxHeightStories: +$event})"></app-input>
         </div>
         <h3>Urban planning data:</h3>
         <ul>

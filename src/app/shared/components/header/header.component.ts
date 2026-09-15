@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { ActiveView } from '../../../core/models/app.models';
-import { StoreService } from '../../../core/services/store.service';
+import { ActiveView } from '../../../core/shared/models/common.models';
+import { ChatUseCase } from '../../../features/normative-chat/use-cases/chat.use-case';
+import { ScenarioUseCase } from '../../../features/scenario/use-cases/scenario.use-case';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({
@@ -13,7 +14,7 @@ import { ButtonComponent } from '../button/button.component';
   imports: [AsyncPipe, ButtonComponent]
 })
 export class HeaderComponent {
-  readonly state$ = this.store.state$;
+  readonly state$ = this.scenario.state$;
   readonly navItems: readonly { view: ActiveView; path: string; label: string }[] = [
     { view: 'spatial', path: '/', label: 'Spatial' },
     { view: 'catalog', path: '/catalog', label: 'Catalog' },
@@ -25,7 +26,8 @@ export class HeaderComponent {
   ];
 
   constructor(
-    private readonly store: StoreService,
+    private readonly scenario: ScenarioUseCase,
+    private readonly chat: ChatUseCase,
     private readonly router: Router
   ) {}
 
@@ -34,7 +36,7 @@ export class HeaderComponent {
   }
 
   isView(view: ActiveView): boolean {
-    return this.store.getState().activeView === view;
+    return this.chat.getState().activeView === view;
   }
 
   navClass(view: ActiveView): string {
@@ -45,6 +47,6 @@ export class HeaderComponent {
   }
 
   saveScenario(): void {
-    void this.store.saveScenario();
+    void this.scenario.saveScenario();
   }
 }

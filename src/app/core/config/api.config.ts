@@ -19,7 +19,5 @@ export const API_ROUTES = {
   reports: {
     budget: '/reports/budget',
     generate: '/reports/generate'
-  },
-  audit: '/audit/events',
-  normative: '/normative/query'
+  }
 } as const;

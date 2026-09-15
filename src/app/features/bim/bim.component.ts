@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STATIC_IFC } from '../../core/config/static-ifc';
-import { StoreService } from '../../core/services/store.service';
+import { ReportsUseCase } from '../reports/use-cases/reports.use-case';
+import { SolutionsUseCase } from '../solutions/use-cases/solutions.use-case';
 import { IfcModelService, IfcStoreyView, ParsedIfcModel } from './services/ifc-model.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { SelectComponent } from '../../shared/components/select/select.component';
@@ -64,7 +65,8 @@ export class BimComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private readonly store: StoreService,
+    private readonly reports: ReportsUseCase,
+    private readonly solutions: SolutionsUseCase,
     private readonly ifcModels: IfcModelService
   ) {}
 
@@ -127,13 +129,13 @@ export class BimComponent implements AfterViewInit, OnDestroy {
   }
 
   async generateIfc(): Promise<void> {
-    const variant = this.store.getState().selectedVariant;
+    const variant = this.solutions.getState().selectedVariant;
     if (!variant || variant.id === 'loading-variant' || this.isGenerating) return;
     this.isGenerating = true;
     this.generationError = '';
     try {
-      const url = await this.store.generateArtifact('ifc');
-      const item = this.store.getState().artifactHistory.find(artifact => artifact.kind === 'ifc' && artifact.variantId === variant.id && artifact.downloadUrl === url);
+      const url = await this.reports.generateArtifact('ifc');
+      const item = this.reports.getState().artifactHistory.find(artifact => artifact.kind === 'ifc' && artifact.variantId === variant.id && artifact.downloadUrl === url);
       const fileName = item?.fileName ?? `ifc-${variant.id}`;
       const link = document.createElement('a');
       link.href = url;
