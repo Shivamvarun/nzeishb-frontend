@@ -130,50 +130,6 @@
     font-weight: 800;
   }
 
-  .btn-primary {
-    background: var(--color-brand);
-    color: var(--color-surface);
-    border: 1px solid var(--color-brand);
-    padding: 10px 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 800;
-  }
-
-  .btn-secondary {
-    background: var(--color-surface);
-    color: var(--color-brand);
-    border: 1px solid var(--color-brand);
-    padding: 9px 13px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 700;
-  }
-
-  .full-width {
-    width: 100%;
-  }
-
-  .metric-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    padding: 14px;
-  }
-
-  .metric-label {
-    display: block;
-    color: var(--color-muted);
-    font-size: 12px;
-  }
-
-  .metric-value {
-    display: block;
-    color: var(--color-ink);
-    font-size: 24px;
-    font-weight: 800;
-    margin-top: 5px;
-  }
-
   .comparison-table {
     width: 100%;
     border-collapse: collapse;
@@ -203,17 +159,6 @@
   .variant-card.selected {
     border-color: var(--color-brand);
     background: var(--color-tint-2);
-  }
-
-  .variant-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-
-  .variant-title {
-    font-weight: 800;
   }
 
   .tag-badge {

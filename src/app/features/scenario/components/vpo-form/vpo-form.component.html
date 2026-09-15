@@ -27,7 +27,7 @@
   <app-button class="mt-2" variant="contained" fullWidth [disabled]="state.isOptimizing" (click)="optimize()">{{ state.isOptimizing ? 'Optimizing...' : 'Run NSGA-III generator' }}</app-button>
 </div>
 
-<div class="glass-panel mt-3.5">
+<div class="glass-panel history-panel">
   <div class="panel-header">
     <div class="panel-title">Scenario history</div>
     <app-button variant="outlined" size="small" (click)="createScenario()">New</app-button>

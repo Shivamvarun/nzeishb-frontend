@@ -1,6 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.history-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 14px;
+  overflow: hidden;
+}
+
 .scenario-list {
   display: grid;
+  align-content: start;
   gap: 8px;
+  min-height: 0;
+  max-height: min(280px, 42vh);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+:host-context(.spatial-sidebar) {
+  flex: 1;
+  height: 100%;
+}
+
+:host-context(.spatial-sidebar) .glass-panel:not(.history-panel) {
+  flex: 0 0 auto;
+}
+
+:host-context(.spatial-sidebar) .history-panel {
+  flex: 1 1 auto;
+}
+
+:host-context(.spatial-sidebar) .scenario-list {
+  max-height: none;
+  flex: 1 1 auto;
 }
 
 .scenario-row {
