@@ -1,0 +1,96 @@
+.analysis-heading {
+  display: block;
+}
+
+.radar-grid polygon {
+  fill: none;
+  stroke: var(--color-radar-grid);
+  stroke-width: 1;
+}
+
+.radar-grid line {
+  stroke: var(--color-radar-grid);
+  stroke-width: 1;
+}
+
+.radar-fill {
+  stroke-width: 1.5;
+}
+
+.radar-fill-a {
+  fill: rgba(16, 185, 129, .16);
+}
+
+.radar-fill-b {
+  fill: rgba(6, 182, 212, .14);
+}
+
+.radar-line {
+  fill: none;
+  stroke-width: 2;
+}
+
+.radar-line-a {
+  stroke: var(--color-radar-a);
+}
+
+.radar-line-b {
+  stroke: var(--color-radar-b);
+}
+
+.radar-labels text {
+  fill: var(--color-muted-2);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.radar-legend text {
+  fill: var(--color-muted);
+  font-size: 8px;
+}
+
+.legend-a {
+  fill: var(--color-radar-a);
+}
+
+.legend-b {
+  fill: var(--color-radar-b);
+}
+
+.model-base {
+  fill: var(--color-model-base);
+  stroke: var(--color-model-base-stroke);
+  stroke-width: 1.5;
+}
+
+.model-left {
+  fill: var(--color-tint-border);
+  stroke: var(--color-brand);
+  stroke-width: 1.5;
+}
+
+.model-right {
+  fill: var(--color-model-right);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.model-window {
+  fill: var(--color-surface);
+  stroke: var(--color-window-stroke);
+  stroke-width: 1;
+}
+
+.model-label {
+  font-size: 12px;
+  font-weight: 800;
+  fill: var(--color-ink);
+}
+
+@media (max-width: 760px) {
+  .analysis-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+}

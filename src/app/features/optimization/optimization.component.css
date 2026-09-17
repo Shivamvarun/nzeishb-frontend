@@ -1,0 +1,39 @@
+.axis {
+  stroke: var(--color-slate);
+  stroke-width: 1.5;
+}
+
+.depth {
+  stroke: var(--color-brand);
+  stroke-dasharray: 5 5;
+}
+
+.axis-label {
+  fill: var(--color-muted-2);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.depth-line {
+  stroke: var(--color-tint-border);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+
+.pareto-point {
+  fill: var(--color-accent);
+  fill-opacity: .75;
+  stroke: var(--color-surface);
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+.pareto-point:hover {
+  fill: var(--color-brand);
+  fill-opacity: 1;
+}
+
+.selected-point {
+  stroke: var(--color-amber);
+  stroke-width: 4;
+}

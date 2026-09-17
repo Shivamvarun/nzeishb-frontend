@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { CATALOG_API, CatalogApiPort } from '../../core/api/catalog/catalog-api.port';
-import { CatalogModule } from '../../core/api/catalog/catalog-api.models';
-import { Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { CATALOG_API, CatalogApiPort } from './services/catalog-api.port';
+import { CatalogModule } from './models/catalog.models';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
-  selector: 'app-catalog',
-  templateUrl: './catalog.component.html',
-  styleUrls: ['./catalog.component.css']
+    selector: 'app-catalog',
+    templateUrl: './catalog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ButtonComponent]
 })
 export class CatalogComponent implements OnInit {
   modules: readonly CatalogModule[] = [];
   category: 'All' | CatalogModule['category'] = 'All';
+  readonly categories: readonly ('All' | CatalogModule['category'])[] = ['All', 'Structure', 'Facade', 'Wet core', 'Energy'];
   selected: CatalogModule | null = null;
   loading = true;
   error = '';

@@ -1,0 +1,83 @@
+﻿
+:root {
+  color-scheme: light;
+
+  --font-sans: Arial, Helvetica, sans-serif;
+  --header-height: 68px;
+  --nav-font-weight: 750;
+
+  --color-ink: #1f2937;
+  --color-ink-heading: #111827;
+  --color-muted: #64748b;
+  --color-muted-2: #475569;
+  --color-slate: #334155;
+  --color-brand: #087021;
+  --color-surface: #fff;
+  --color-border: #d9e2dc;
+  --color-header-border: #dbe4dd;
+  --color-divider: #e5ebe7;
+  --color-row-border: #dfe7e1;
+  --color-line: #cfdad2;
+  --color-input-border: #cbd8cf;
+  --color-tint-border: #c4ddca;
+  --color-cell-border: #e0e9e2;
+  --color-tag-cost-bg: #e9f3eb;
+  --color-tint: #f1f8f2;
+  --color-tint-2: #f5faf6;
+  --color-tint-3: #f7fbf8;
+  --color-tint-4: #f7faf8;
+  --color-tint-5: #f6faf7;
+  --color-plot-bg: #f8fbf9;
+  --color-model-base: #eef5f0;
+  --color-energy: #007b8a;
+  --color-tag-energy-bg: #eaf5f7;
+  --color-indus-text: #8a5a00;
+  --color-tag-indus-bg: #f8f0df;
+  --color-accent: #6b1fa5;
+  --color-energy-legend: #2c9c9a;
+  --color-danger: #b42318;
+  --color-danger-border: #e0a4a0;
+  --color-danger-bg: #fff4f2;
+  --color-error-border: #f0b9b4;
+  --color-warn-bg: #fffdf4;
+  --color-warn-border: #eadca8;
+  --color-warn-text: #67551b;
+  --color-note: #35553d;
+  --color-success: #37a85a;
+  --color-amber: #f59e0b;
+  --color-radar-a: #10b981;
+  --color-radar-b: #06b6d4;
+  --color-map-bg: #e9eee9;
+  --color-chat-fail-border: #e7b5b0;
+  --color-thinking: #52616d;
+  --color-chat-icon: #111;
+  --color-suggestion-hover: #eef6f0;
+  --color-radar-grid: #d8e2dc;
+  --color-model-right: #d9c4e8;
+  --color-model-base-stroke: #b7cbbd;
+  --color-window-stroke: #aabcb0;
+  --color-step-idle: #a4b0a7;
+  --color-step-line: #dce6df;
+  --color-step-ring: #c7d5cc;
+  --color-step-num: #9aaa9f;
+  --color-layer-divider: #eef2ef;
+  --color-site-plane: #e5eee7;
+  --color-site-stroke: #b8cdbd;
+  --color-mock-roof: #d9e9dc;
+  --color-mock-side: #eef6ef;
+  --color-floor-line: #6e9b7a;
+  --color-sketch: #aab5ad;
+
+  --shadow-panel: 0 1px 2px rgba(15, 23, 42, .04);
+  --shadow-overlay: 0 2px 7px rgba(0, 0, 0, .12);
+  --shadow-map-action: 0 2px 7px rgba(0, 0, 0, .08);
+  --shadow-dialog: 0 10px 35px rgba(15, 23, 42, .22);
+  --shadow-error: 0 2px 8px rgba(0, 0, 0, .08);
+  --shadow-chat: 0 10px 35px rgba(0, 0, 0, .2);
+  --shadow-bim-status: 0 8px 24px rgba(15, 23, 42, .08);
+
+  --radius-sm: 4px;
+  --radius-panel: 7px;
+  --radius-lg: 8px;
+}
+

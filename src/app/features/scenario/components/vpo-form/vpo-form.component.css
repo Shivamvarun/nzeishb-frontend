@@ -1,0 +1,78 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.history-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 14px;
+  overflow: hidden;
+}
+
+.scenario-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 0;
+  max-height: min(280px, 42vh);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+:host-context(.spatial-sidebar) {
+  flex: 1;
+  height: 100%;
+}
+
+:host-context(.spatial-sidebar) .glass-panel:not(.history-panel) {
+  flex: 0 0 auto;
+}
+
+:host-context(.spatial-sidebar) .history-panel {
+  flex: 1 1 auto;
+}
+
+:host-context(.spatial-sidebar) .scenario-list {
+  max-height: none;
+  flex: 1 1 auto;
+}
+
+.scenario-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+}
+
+.scenario-row.active {
+  border-color: #37a85a;
+  background: #f1f8f2;
+}
+
+.scenario-open {
+  min-width: 0;
+}
+
+.scenario-open span {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scenario-open small {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 10px;
+}

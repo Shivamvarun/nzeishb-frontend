@@ -1,0 +1,26 @@
+<div [class]="wrapperClasses()">
+  @if (label()) {
+    <label [class]="labelClasses()" [attr.for]="fieldId">
+      {{ label() }}
+      @if (required()) {
+        <span class="text-danger"> *</span>
+      }
+    </label>
+  }
+  <select
+    [id]="fieldId"
+    [class]="controlClasses()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    [attr.aria-invalid]="error() ? true : null"
+    [value]="currentValue()"
+    (change)="onSelect($event)"
+    (blur)="markTouched()">
+    @for (option of options(); track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
+  </select>
+  @if (error()) {
+    <span [class]="errorClasses">{{ error() }}</span>
+  }
+</div>

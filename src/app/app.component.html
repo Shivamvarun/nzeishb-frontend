@@ -1,42 +1,16 @@
-<div class="app-shell">
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-mark">A</div>
-      <div class="brand-copy"><strong>Junta de Andalucía</strong><small>AVRA · nZEISHB</small></div>
-    </div>
+<div class="min-h-screen bg-surface text-ink">
+  <app-header></app-header>
 
-    <nav class="capability-nav" aria-label="AVRA capabilities">
-      <button type="button" [class.active]="isView('spatial')" (click)="setView('spatial')">Spatial</button>
-      <button type="button" [class.active]="isView('catalog')" (click)="setView('catalog')">Catalog</button>
-      <button type="button" [class.active]="isView('scenario')" (click)="setView('scenario')">Scenario</button>
-      <button type="button" [class.active]="isView('optimization')" (click)="setView('optimization')">Optimisation</button>
-      <button type="button" [class.active]="isView('bim')" (click)="setView('bim')">IFC / BIM</button>
-      <button type="button" [class.active]="isView('solutions')" (click)="setView('solutions')">Solutions</button>
-      <button type="button" [class.active]="isView('reports')" (click)="setView('reports')">Reports</button>
-    </nav>
+  @if (error$ | async; as error) {
+    <p class="fixed top-[76px] left-1/2 z-[1200] m-0 -translate-x-1/2 rounded border border-error-border bg-danger-bg px-3 py-2 text-xs text-danger shadow-[0_2px_8px_rgba(0,0,0,.08)]" role="status" aria-live="polite">{{ error }}</p>
+  }
+  @if (success$ | async; as success) {
+    <p class="fixed top-[76px] left-1/2 z-[1200] m-0 -translate-x-1/2 rounded border border-success bg-surface px-3 py-2 text-xs text-success shadow-[0_2px_8px_rgba(0,0,0,.08)]" role="status" aria-live="polite">{{ success }}</p>
+  }
 
-    <div class="header-actions">
-      <button class="btn-primary header-save" [disabled]="(state$ | async)?.isSaving" (click)="saveScenario()">{{ (state$ | async)?.isSaving ? 'Saving…' : 'Save scenario' }}</button>
-    </div>
-  </header>
-
-  <p class="app-error" role="status" aria-live="polite" *ngIf="(state$ | async)?.error as error">{{ error }}</p>
-
-  <main class="app-main" [class.spatial-layout]="isView('spatial')">
-    <aside class="spatial-sidebar" *ngIf="isView('spatial')">
-      <app-vpo-form></app-vpo-form>
-    </aside>
-
-    <section class="workspace-view">
-      <app-gis-viewer *ngIf="isView('spatial')"></app-gis-viewer>
-      <app-catalog *ngIf="isView('catalog')"></app-catalog>
-      <app-design-workspace *ngIf="isView('scenario')"></app-design-workspace>
-      <app-pareto-explorer *ngIf="isView('optimization')"></app-pareto-explorer>
-      <app-bim-viewer *ngIf="isView('bim')"></app-bim-viewer>
-      <app-solutions-workspace *ngIf="isView('solutions')"></app-solutions-workspace>
-      <app-reports-export *ngIf="isView('reports')"></app-reports-export>
-    </section>
+  <main class="app-main grid min-h-[calc(100vh-68px)] grid-cols-1">
+    <router-outlet />
   </main>
 
-  <app-rag-chatbot></app-rag-chatbot>
+  <app-normative-chat></app-normative-chat>
 </div>
