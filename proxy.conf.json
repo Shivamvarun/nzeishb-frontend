@@ -1,8 +1,0 @@
-{
-  "/api/v1/ai": {
-    "target": "https://nzeishb.api.typsadev.com",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
-  }
-}

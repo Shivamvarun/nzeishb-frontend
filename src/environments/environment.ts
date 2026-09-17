@@ -13,18 +13,13 @@ export const environment = {
   /**
    * AI (nZEISHB Agent) integration.
    *
-   * ai-service has no CORS registered (packages/http-contracts's
-   * createPlatformApp doesn't add @fastify/cors), and the api-gateway
-   * doesn't yet proxy /api/v1/ai/* either (apps/api-gateway/src/main.ts
-   * TODO). Rather than opening CORS on the backend, `ng serve`'s dev
-   * proxy (proxy.conf.json) forwards /api/v1/ai/* to
-   * http://localhost:4007 so the browser stays same-origin. aiApiBaseUrl
-   * can therefore stay empty here too — this now matches
-   * environment.prod.ts, and both are already correct for the day the
-   * gateway proxy ships (nothing to change here then).
+   * Calls the hosted API directly from the browser. Other services stay
+   * on Mock adapters until their backends are wired up — see
+   * core/http/http.config.ts, which switches AI_API independently via
+   * `useMockAi` below.
    */
   useMockAi: false,
-  aiApiBaseUrl: '',
+  aiApiBaseUrl: 'https://nzeishb.api.typsadev.com/api/v1',
   aiConversationsPath: '/ai/conversations',
   aiMessagesPath: '/ai/messages',
 

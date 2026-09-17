@@ -55,8 +55,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "nzeishb-frontend:build",
-            "proxyConfig": "proxy.conf.json"
+            "buildTarget": "nzeishb-frontend:build"
           },
           "configurations": {
             "production": {
