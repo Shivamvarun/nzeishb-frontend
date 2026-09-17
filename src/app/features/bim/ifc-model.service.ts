@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { IFCBUILDINGSTOREY, IfcAPI } from 'web-ifc';
-import { STATIC_IFC } from '../../core/ai/static-ifc';
+import { STATIC_IFC, staticAssetUrl } from '../../core/ai/static-ifc';
 import { loadStaticIfcBytes } from './ifc-bytes.loader';
 
 const MERGE_BATCH = 80;
@@ -80,7 +80,7 @@ export class IfcModelService {
 
 async function parseIfcModel(buffer: ArrayBuffer): Promise<ParsedIfcModel> {
   const ifcApi = new IfcAPI();
-  const wasmBase = `${window.location.origin}/${STATIC_IFC.wasmPath}`.replace(/([^:]\/)\/+/g, '$1');
+  const wasmBase = staticAssetUrl(STATIC_IFC.wasmPath);
   ifcApi.SetWasmPath(wasmBase.endsWith('/') ? wasmBase : `${wasmBase}/`, true);
   await ifcApi.Init(file => {
     const name = String(file).split('/').pop() ?? String(file);

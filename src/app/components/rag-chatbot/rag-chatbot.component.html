@@ -25,11 +25,6 @@
     </div>
   </header>
 
-  <div class="chat-help" *ngIf="isHelpOpen">
-    <strong>AVRA AI</strong>
-    <p>Ask about the current design, normative context, solutions or IFC information. AVRA AI explains, searches, summarises and cites; deterministic services remain the source of truth for calculations and optimisation.</p>
-  </div>
-
   <div class="arva-chat-body">
     <button class="suggestion" type="button" *ngFor="let item of suggestions" (click)="suggest(item.query)">
       <span class="suggestion-icon">▱</span>

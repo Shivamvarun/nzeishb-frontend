@@ -9,7 +9,9 @@ import {
   AgentCoreResponseDto,
   AgentCoreSourceDto,
   CreateConversationResultDto,
-  ChatReply
+  ChatReply,
+  DownloadUrlResultDto,
+  UploadUrlResultDto
 } from '../../ai/ai-api.models';
 import { LegalCitation } from '../../../models/app.models';
 
@@ -63,11 +65,27 @@ export class HttpAiApiAdapter implements AiApiPort {
     this.sessionId = null;
     this.sessionRequest = null;
   }
-  async uploadFile(file: File, sessionId: string): Promise<any> {
-    return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/upload-url`, { session_id: sessionId, filename: file.name, content_type: file.type } )).then(r => r.data);
+  async uploadFile(file: File, sessionId: string): Promise<UploadUrlResultDto> {
+    const envelope = await firstValueFrom(
+      this.http.post<ApiEnvelopeDto<UploadUrlResultDto>>(`${this.baseUrl()}/ai/files/upload-url`, {
+        session_id: sessionId,
+        filename: file.name,
+        content_type: file.type
+      })
+    );
+    return envelope.data;
   }
-  async uploadToPresignedUrl(url: string, file: File): Promise<void> { await firstValueFrom(this.http.put(url, file, { headers: { 'Content-Type': file.type }, responseType: 'text' })); }
-  async getDownloadUrl(s3Uri: string): Promise<any> { return firstValueFrom(this.http.post<ApiEnvelopeDto<any>>(`${this.baseUrl()}/ai/files/download-url`, { s3_uri: s3Uri })).then(r => r.data); }
+
+  async uploadToPresignedUrl(url: string, file: File): Promise<void> {
+    await firstValueFrom(this.http.put(url, file, { headers: { 'Content-Type': file.type }, responseType: 'text' }));
+  }
+
+  async getDownloadUrl(s3Uri: string): Promise<DownloadUrlResultDto> {
+    const envelope = await firstValueFrom(
+      this.http.post<ApiEnvelopeDto<DownloadUrlResultDto>>(`${this.baseUrl()}/ai/files/download-url`, { s3_uri: s3Uri })
+    );
+    return envelope.data;
+  }
 
   /** Returns the cached AgentCore session id, creating one if needed. */
   private async ensureSession(): Promise<string> {
