@@ -13,13 +13,13 @@ export const environment = {
   /**
    * AI (nZEISHB Agent) integration.
    *
-   * Calls the hosted API directly from the browser. Other services stay
-   * on Mock adapters until their backends are wired up — see
-   * core/http/http.config.ts, which switches AI_API independently via
-   * `useMockAi` below.
+   * Leave this empty so the browser calls same-origin `/api/v1/ai/*`.
+   * `ng serve` forwards those requests to the local ai-service (port 4007)
+   * via proxy.conf.json. A direct localhost URL is a different origin from
+   * `:4200`, so the browser blocks it unless the API sends CORS.
    */
   useMockAi: false,
-  aiApiBaseUrl: 'https://nzeishb.api.typsadev.com/api/v1',
+  aiApiBaseUrl: '',
   aiConversationsPath: '/ai/conversations',
   aiMessagesPath: '/ai/messages',
 

@@ -5,12 +5,10 @@ export const environment = {
   useMockAi: false,
 
   /**
-   * Production is expected to go through the api-gateway once its
-   * /api/v1/ai/* proxy is implemented (currently a TODO in
-   * apps/api-gateway/src/main.ts). Leaving this empty makes the adapter
-   * fall back to `${apiBaseUrl}` so no code change is needed once the
-   * gateway route exists — only this file changes if a direct ai-service
-   * URL is still required at deploy time.
+   * Leave empty so the browser calls same-origin `/api/v1`.
+   * On Vercel, vercel.json rewrites `/api/*` to
+   * https://nzeishb.api.typsadev.com/api/*. proxy.conf.json is only used
+   * by `ng serve` and does not apply on Vercel.
    */
   aiApiBaseUrl: '',
   aiConversationsPath: '/ai/conversations',
